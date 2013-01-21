@@ -73,6 +73,10 @@
                     {
                         new Option("vis|visualize", "Path to a graphical file to visualize a workflow"), 
                         v => options.VisualisationFilesPath.Add(v)
+                    },
+                    {
+                        new Option("l|log", "Path to a file to write log to"), 
+                        v => options.LogFilesPath.Add(v)
                     }
                 };
 
@@ -102,11 +106,21 @@
                 return Exit(options.Hold, ExitCode.Ok);
             }
 
-            ILogRenderer logRenderer = new CompositeLogRenderer(new List<ILogRenderer>
+            var logRenderers = new List<ILogRenderer>
             {
-                new ColoredConsoleLogRenderer(),
-                new HtmlLogRenderer(File.CreateText(Path.Combine(Directory.GetCurrentDirectory(), "log.html")))
-            });
+                new ColoredConsoleLogRenderer()
+            };
+
+            foreach (var path in options.LogFilesPath)
+            {
+                var currentPath = path;
+                if (Path.GetExtension(path).Equals(".html", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    logRenderers.Add(new HtmlLogRenderer(new Lazy<TextWriter>(() => File.CreateText(currentPath))));
+                }
+            }
+
+            ILogRenderer logRenderer = new CompositeLogRenderer(logRenderers);
 
             using (var runner = new Runner())
             {
@@ -118,7 +132,7 @@
                     WorkflowProjectBuildConfiguration = options.WorkflowProjectBuildConfiguration,
                     LogRenderer = logRenderer,
                     WorkDirectory = string.IsNullOrEmpty(options.WorkDirectory) ? Directory.GetCurrentDirectory() : options.WorkDirectory,
-                    VisualisationFilesPath = options.VisualisationFilesPath
+                    VisualisationFilesPath = options.VisualisationFilesPath,
                 });
 
                 if (!initializationResult.IsSuccess)

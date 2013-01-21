@@ -1,21 +1,22 @@
 ﻿namespace Rosalia.Core.Watchers.Logging
 {
+    using System;
     using System.IO;
     using System.Web;
     using Rosalia.Core.Logging;
 
     public class HtmlLogRenderer : ILogRenderer
     {
-        private readonly TextWriter _writer;
+        private readonly Lazy<TextWriter> _writerProvider;
 
-        public HtmlLogRenderer(TextWriter writer)
+        public HtmlLogRenderer(Lazy<TextWriter> writerProvider)
         {
-            _writer = writer;
+            _writerProvider = writerProvider;
         }
 
         public void Init()
         {
-            _writer.WriteLine(
+            _writerProvider.Value.WriteLine(
 @"<!doctype html>
 <html>
 <head>
@@ -47,22 +48,22 @@
 
         public void AppendMessage(int depth, string message, MessageLevel level)
         {
-            _writer.WriteLine("<div class='item {0}'>", level);
+            _writerProvider.Value.WriteLine("<div class='item {0}'>", level);
             for (var i = 0; i < depth; i++)
             {
-                _writer.WriteLine("<span class='separator'>&nbsp;</span>");
+                _writerProvider.Value.WriteLine("<span class='separator'>&nbsp;</span>");
             }
 
-            _writer.WriteLine("<span class='message'><pre>{0}</pre></span>", HttpUtility.HtmlEncode(message));
-            _writer.WriteLine("</div>");
+            _writerProvider.Value.WriteLine("<span class='message'><pre>{0}</pre></span>", HttpUtility.HtmlEncode(message));
+            _writerProvider.Value.WriteLine("</div>");
         }
 
         public void Dispose()
         {
-            _writer.WriteLine(
+            _writerProvider.Value.WriteLine(
 @"</div></body></html>");
-            _writer.Flush();
-            _writer.Close();
+            _writerProvider.Value.Flush();
+            _writerProvider.Value.Close();
         }
     }
 }
