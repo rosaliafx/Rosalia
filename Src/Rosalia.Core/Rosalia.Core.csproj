@@ -60,7 +60,6 @@
     <Compile Include="Result\ExecutionResult.cs" />
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="Fluent\ResultBuilder.cs" />
-    <Compile Include="Fluent\SequenceBuilder.cs" />
     <Compile Include="IExecutable.cs" />
     <Compile Include="IExecuter.cs" />
     <Compile Include="IIdentifiable.cs" />

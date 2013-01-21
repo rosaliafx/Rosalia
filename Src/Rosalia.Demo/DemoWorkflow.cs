@@ -1,108 +1,66 @@
 ﻿namespace Rosalia.Demo
 {
+    using System.IO;
     using System.Reflection;
-    using System.Security;
     using Rosalia.Core;
     using Rosalia.Core.Logging;
     using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Compression;
-    using Rosalia.TaskLib.Standard;
-    using Rosalia.TaskLib.Svn;
+    using Rosalia.TaskLib.MsBuild;
 
     public class DemoWorkflow : Workflow<DemoContext>
     {
         public override ITask<DemoContext> CreateRootTask()
         {
-            return MainSequence();
-        }
-
-        private SequenceTask<DemoContext> MainSequence()
-        {
             return Sequence
-                .WithSubtask(MainSvnVersion)
+                .WithSubtask((builder, c) => c.Logger.Info("Start executing the demo workflow"))
                 .WithSubtask(new GenerateAssemblyInfo<DemoContext>()
-                    .WithAttribute(c => new AssemblyCompanyAttribute("Zadv"))
-                    .WithAttribute(c => new AssemblyProductAttribute("ZTrac Enterpris"))
-                    .WithAttribute(c => new AssemblyCopyrightAttribute("ZTrac Enterpris"))
-                    .WithAttribute(c => new AssemblyVersionAttribute(c.VersionNumber))
-                    .WithAttribute(c => new AssemblyFileVersionAttribute(c.VersionNumber))
-                    .WithAttribute(c => new AssemblyInformationalVersionAttribute(c.VersionNumber))
-                    .WithAttribute(c => new AllowPartiallyTrustedCallersAttribute())
-                    .ToFile(c => c.WorkDirectory.GetFile("test.cs")))
+                    .WithAttribute(c => new AssemblyCompanyAttribute("DemoCompany"))
+                    .WithAttribute(c => new AssemblyFileVersionAttribute("1.0.0.1"))
+                    .ToFile(context => context.WorkDirectory.GetFile("CommonAssemblyInfo.cs")))
+                .WithSubtask(BuildSolution)
+                .WithSubtask((builder, context) =>
+                {
+                    context.Logger.Info("This task lists current directory files");
+                    foreach (var file in context.WorkDirectory.Files)
+                    {
+                        context.Logger.Info(file.AbsolutePath);
+                    }
+                })
                 .WithSubtask(new CompressTask<DemoContext>()
-                    .FillInput(c => new CompressTaskInput()
-                        .WithFile("a/b/c/testAssemblyInfo.cs", c.WorkDirectory.GetFile("test.cs"))
-                        .ToFile(c.WorkDirectory.GetFile("my_test.zip"))))
-                .WithSubtask(NestedSequence())
-//                .WithSubtask(new MsBuildTask<DemoContext>()
-//                    .FillInput(c => new MsBuildInput()
-//                        //.WithSwitch("verbosity", "m")
-//                        .WithProjectFile(@"C:\Projects\Codemasters\ZTracEnterprise\trunk\DotNet\ZTrac.Enterprise.sln")
-//                        .WithConfiguration("Staging")
-//                        .WithBuildTargets("Rebuild")))
-                .WithSubtask(FailSvnVersion)
-                .WithSubtask((builder, context) => context.Logger.Warning(context.Data.VersionNumber))
-                .WithSubtask(new SimpleExternalToolTask<DemoContext>(context => new SimpleExternalToolTask<DemoContext>.Input("cmd.exe", "/c echo test")))
-                .WithSubtask((result, context) =>
-                {
-                    context.Logger.Info("Hello, Rosalia!");
-                    context.Logger.Warning("Test warning");
-                });
+                    .FillInput(context =>
+                        {
+                            context.Logger.Info("This task compresses all *.cs files in the current directory");
+
+                            var allCsFiles = context.FileSystem
+                                .GetFilesRecursively(context.WorkDirectory)
+                                .Filter(fileName => Path.GetExtension(fileName) == ".cs");
+
+                            var compressTaskInput = new CompressTaskInput();
+
+                            foreach (var file in allCsFiles.All)
+                            {
+                                compressTaskInput.WithFile(Path.GetFileName(file.AbsolutePath), file);
+                            }
+
+                            return compressTaskInput
+                                .ToFile(context.WorkDirectory.GetFile("cs_files.zip"));
+                        }));
         }
 
-        private static ITask<DemoContext> FailSvnVersion
+        protected ITask<DemoContext> BuildSolution
         {
             get
             {
-                return new SvnVersionTask<DemoContext>(
-                    context => new SvnVersionInput(
-                    @"C:\Projects\Codemasters\ZTracEnterprise\trunk\Tools\Svn\svnversion.exe",
-                    @"C:\Projects"))
-                    .ApplyResult((result, context) => { context.VersionNumber = result.Min.Number.ToString(); });
+                return new FailoverTask<DemoContext>(
+                    new MsBuildTask<DemoContext>()
+                        .FillInput(context => new MsBuildInput()
+                            .WithProjectFile("NoFile.sln")), 
+                    new SimpleTask<DemoContext>((builder, context) =>
+                    {
+                        context.Logger.Warning("Build task fails because the solition file does not exist");                                    
+                    }));
             }
-        }
-
-        private static ExtendedTask<DemoContext, SvnVersionInput, SvnVersionResult> MainSvnVersion
-        {
-            get
-            {
-                return new SvnVersionTask<DemoContext>(context => new SvnVersionInput(
-                                                                      @"C:\Projects\Codemasters\ZTracEnterprise\trunk\Tools\Svn\svnversion.exe",
-                                                                      @"C:\Projects\Codemasters\ZTracEnterprise"))
-                    .ApplyResult((result, context) =>
-                    {
-                        context.VersionNumber = string.Format("1.0.{0}.0", result.Min.Number);
-                    });
-            }
-        }
-
-        private SequenceTask<DemoContext> NestedSequence()
-        {
-            return Sequence
-                .WithSubtask(new ForkTask<DemoContext>
-                {
-                    { c => c.Data.FirstName != null, (result, c) => c.Logger.Info("Variant1") },
-                    { c => c.Data.FirstName == null, (result, c) => c.Logger.Info("Variant2") },
-                })
-                .WithSubtask((result, context) => context.Logger.Info("Hello, {0} {1}!", context.Data.FirstName, context.Data.LastName))
-                .WithSubtask((result, context) =>
-                {
-                    var directory = context.WorkDirectory.Parent.Parent;
-
-                    context.Logger.Warning("==== Directories:");
-                    foreach (var item in directory.Directories)
-                    {
-                        context.Logger.Info(item.AbsolutePath);
-                    }
-
-                    context.Logger.Warning("==== Files:");
-                    foreach (var item in directory.Files)
-                    {
-                        context.Logger.Info(item.AbsolutePath);
-                    }
-                })
-                //.WithSubtask((result, context) => { throw new Exception("Fatal error!"); })
-                ;
         }
     }
 }
