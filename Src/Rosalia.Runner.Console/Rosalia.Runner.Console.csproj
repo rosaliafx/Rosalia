@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{95784773-0BE8-44F1-B09B-463A29395260}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rosalia.Runner.Console</RootNamespace>
+    <AssemblyName>Rosalia</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Option.cs" />
+    <Compile Include="OptionsConfig.cs" />
+    <Compile Include="OptionsParser.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ProgramOptions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rosalia.Core.Watchers\Rosalia.Core.Watchers.csproj">
+      <Project>{1BC45CD7-4E32-4F22-937F-97C6A3811DE5}</Project>
+      <Name>Rosalia.Core.Watchers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">
+      <Project>{49D81CA6-AB0A-4CA0-B588-A2A00C8D9E8F}</Project>
+      <Name>Rosalia.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.Runner\Rosalia.Runner.csproj">
+      <Project>{41C7FF25-6812-4A2A-B06C-329C17D14267}</Project>
+      <Name>Rosalia.Runner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.AssemblyInfo\Rosalia.TaskLib.AssemblyInfo.csproj">
+      <Project>{60467fa0-48b8-40e7-a9fc-a99233ce1742}</Project>
+      <Name>Rosalia.TaskLib.AssemblyInfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.Compression\Rosalia.TaskLib.Compression.csproj">
+      <Project>{1008dd05-1953-4681-bb15-c68217927091}</Project>
+      <Name>Rosalia.TaskLib.Compression</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.MsBuild\Rosalia.TaskLib.MsBuild.csproj">
+      <Project>{e19519ea-80f2-4b1e-abaa-d56e14901c4a}</Project>
+      <Name>Rosalia.TaskLib.MsBuild</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.Standard\Rosalia.TaskLib.Standard.csproj">
+      <Project>{7fd16a10-c1d2-4ad2-84a2-2589f15dca38}</Project>
+      <Name>Rosalia.TaskLib.Standard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.Svn\Rosalia.TaskLib.Svn.csproj">
+      <Project>{cef3712d-9af4-450c-9acc-cc08160f903f}</Project>
+      <Name>Rosalia.TaskLib.Svn</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
