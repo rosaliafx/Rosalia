@@ -12,6 +12,8 @@
 
         IDirectory Directory { get; }
 
+        string Name { get; }
+
         void CopyTo(IFile destination);
     }
 }

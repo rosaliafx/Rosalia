@@ -2,9 +2,17 @@
 <package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
   <metadata>
     <id>Rosalia</id>
+    <version>0.1.0.0</version>
+    <authors>Eugene Guryanov</authors>
     <description>Simple workflow execution framework/tool that could be used for build scripts</description>
   </metadata>
   <files>
     <file src='bin\Debug\Rosalia.exe' target='tools' />
+    <file src='C:\Projects\OpenSource\Rosalia\Src\Rosalia.Runner.Console\bin\Debug\ICSharpCode.SharpZipLib.dll' target='tools' />
+    <file src='C:\Projects\OpenSource\Rosalia\Src\Rosalia.Runner.Console\bin\Debug\Nustache.Core.dll' target='tools' />
+    <file src='C:\Projects\OpenSource\Rosalia\Src\Rosalia.Runner.Console\bin\Debug\Rosalia.Core.dll' target='tools' />
+    <file src='C:\Projects\OpenSource\Rosalia\Src\Rosalia.Runner.Console\bin\Debug\Rosalia.Core.Watchers.dll' target='tools' />
+    <file src='C:\Projects\OpenSource\Rosalia\Src\Rosalia.Runner.Console\bin\Debug\Rosalia.Runner.dll' target='tools' />
+    <file src='C:\Projects\OpenSource\Rosalia\Src\Rosalia.Runner.Console\bin\Debug\YamlSerializer.dll' target='tools' />
   </files>
 </package>

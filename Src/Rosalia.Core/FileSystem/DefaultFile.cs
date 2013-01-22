@@ -40,6 +40,11 @@
             get { return new DefaultDirectory(Path.GetDirectoryName(AbsolutePath)); }
         }
 
+        public string Name
+        {
+            get { return Path.GetFileName(AbsolutePath); }
+        }
+
         public void CopyTo(IFile destination)
         {
             if (!Exists)
