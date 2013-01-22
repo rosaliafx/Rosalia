@@ -73,6 +73,10 @@
       <Project>{e19519ea-80f2-4b1e-abaa-d56e14901c4a}</Project>
       <Name>Rosalia.TaskLib.MsBuild</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.NuGet\Rosalia.TaskLib.NuGet.csproj">
+      <Project>{ac5f896f-2c24-4208-9cb3-23af94c3b3aa}</Project>
+      <Name>Rosalia.TaskLib.NuGet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rosalia.TaskLib.Standard\Rosalia.TaskLib.Standard.csproj">
       <Project>{7fd16a10-c1d2-4ad2-84a2-2589f15dca38}</Project>
       <Name>Rosalia.TaskLib.Standard</Name>

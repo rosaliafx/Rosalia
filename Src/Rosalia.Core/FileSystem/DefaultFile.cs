@@ -27,7 +27,7 @@
 
         public Stream WriteStream
         {
-            get { return File.Open(AbsolutePath, FileMode.OpenOrCreate); }
+            get { return File.Open(AbsolutePath, FileMode.Create); }
         }
 
         public long Length

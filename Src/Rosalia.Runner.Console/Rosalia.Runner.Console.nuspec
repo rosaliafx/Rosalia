@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
+  <metadata>
+    <id>Rosalia</id>
+    <description>Simple workflow execution framework/tool that could be used for build scripts</description>
+  </metadata>
+  <files>
+    <file src='bin\Debug\Rosalia.exe' target='tools' />
+  </files>
+</package>

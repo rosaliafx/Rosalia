@@ -2,6 +2,7 @@
 {
     using Rosalia.Core;
     using Rosalia.TaskLib.MsBuild;
+    using Rosalia.TaskLib.NuGet;
 
     public class BuildRosaliaWorkflow : Workflow<BuildRosaliaContext>
     {
@@ -13,17 +14,25 @@
                     .WithSubtask(new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()
                             .WithProjectFile(c.Data.SolutionFile)))
-                    .WithSubtask((builder, context) =>
-                    {
-                        var directory = context.Data.Src.GetDirectory("Rosalia.Runner.Console").GetDirectory("bin").GetDirectory(context.Data.Configuration);
-                        context.FileSystem.CopyFilesToDirectory(
-                            context.FileSystem.GetFilesRecursively(directory).Exclude(file => file.AbsolutePath.EndsWith("pdb")), 
-                            context.Data.Artifacts);
-                    });
+                    .WithSubtask(GenerateNuGetSpec);
             }
         }
 
-        public override void OnBeforeExecute(ExecutionContext<BuildRosaliaContext> context)
+        private static ITask<BuildRosaliaContext> GenerateNuGetSpec
+        {
+            get
+            {
+                return new GenerateNuGetSpecTask<BuildRosaliaContext>()
+                    .FillInput(c =>
+                        new SpecInput()
+                            .Id("Rosalia")
+                            .Description("Simple workflow execution framework/tool that could be used for build scripts")
+                            .WithFile(string.Format(@"bin\{0}\Rosalia.exe", c.Data.Configuration), "tools")
+                            .ToFile(c.Data.Src.GetFile("Rosalia.Runner.Console\\Rosalia.Runner.Console.nuspec")));
+            }
+        }
+
+        protected override void OnBeforeExecute(ExecutionContext<BuildRosaliaContext> context)
         {
             base.OnBeforeExecute(context);
 
