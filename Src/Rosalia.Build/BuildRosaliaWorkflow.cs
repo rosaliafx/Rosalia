@@ -19,7 +19,6 @@
                     .WithSubtask(GenerateNuGetSpec)
                     .WithSubtask(new GeneratePackageTask<BuildRosaliaContext>(
                         GetConsoleRunnerSpecFile));
-
             }
         }
 

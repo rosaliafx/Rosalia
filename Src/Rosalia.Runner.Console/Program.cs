@@ -111,6 +111,17 @@
                 new ColoredConsoleLogRenderer()
             };
 
+            var workDirectory = string.IsNullOrEmpty(options.WorkDirectory) ?
+                    Directory.GetCurrentDirectory() :
+                    options.WorkDirectory;
+
+            if (!Path.IsPathRooted(workDirectory))
+            {
+                workDirectory = Path.Combine(Directory.GetCurrentDirectory(), workDirectory);
+            }
+
+            Directory.SetCurrentDirectory(workDirectory);
+
             foreach (var path in options.LogFilesPath)
             {
                 var currentPath = path;
@@ -124,6 +135,8 @@
 
             using (var runner = new Runner())
             {
+                
+
                 var initializationResult = runner.Init(new RunningOptions
                 {
                     InputFile = options.InputFile,
@@ -131,7 +144,7 @@
                     WorkflowBuildOutputPath = options.WorkflowBuildOutputPath,
                     WorkflowProjectBuildConfiguration = options.WorkflowProjectBuildConfiguration,
                     LogRenderer = logRenderer,
-                    WorkDirectory = string.IsNullOrEmpty(options.WorkDirectory) ? Directory.GetCurrentDirectory() : options.WorkDirectory,
+                    WorkDirectory = workDirectory,
                     VisualisationFilesPath = options.VisualisationFilesPath,
                 });
 
