@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.TaskLib.MsBuild;
     using Rosalia.TaskLib.NuGet;
@@ -30,7 +31,7 @@
                     .FillInput(c =>
                         new SpecInput()
                             .Id("Rosalia")
-                            .Version("0.1.0.9")
+                            .Version("0.1.0.10")
                             .Authors("Eugene Guryanov")
                             .Description("Simple workflow execution framework/tool that could be used for build scripts")
                             .WithFiles(GetLibFiles(c), "lib")
@@ -42,14 +43,14 @@
             }
         }
 
-        private static IEnumerable<IFile> GetLibFiles(ExecutionContext<BuildRosaliaContext> c)
+        private static IEnumerable<IFile> GetLibFiles(TaskContext<BuildRosaliaContext> c)
         {
             return c.FileSystem.GetFilesRecursively(c.Data.Src.GetDirectory(string.Format(@"Rosalia.Runner.Console\bin\{0}", c.Data.Configuration)))
                     .Filter(fileName => fileName.EndsWith(".dll"))
                     .Filter(file => file.Name == "Rosalia.Core.dll" || file.Name == "Rosalia.TaskLib.Standard.dll").All;
         }
 
-        private static IEnumerable<IFile> GetRunnerDllFiles(ExecutionContext<BuildRosaliaContext> c)
+        private static IEnumerable<IFile> GetRunnerDllFiles(TaskContext<BuildRosaliaContext> c)
         {
             return
                 c.FileSystem.GetFilesRecursively(c.Data.Src.GetDirectory(string.Format(@"Rosalia.Runner.Console\bin\{0}", c.Data.Configuration)))
@@ -58,12 +59,12 @@
                     .All;
         }
 
-        private static IFile GetConsoleRunnerSpecFile(ExecutionContext<BuildRosaliaContext> c)
+        private static IFile GetConsoleRunnerSpecFile(TaskContext<BuildRosaliaContext> c)
         {
             return c.Data.Src.GetFile("Rosalia.Runner.Console\\Rosalia.Runner.Console.nuspec");
         }
 
-        protected override void OnBeforeExecute(ExecutionContext<BuildRosaliaContext> context)
+        protected override void OnBeforeExecute(TaskContext<BuildRosaliaContext> context)
         {
             base.OnBeforeExecute(context);
 

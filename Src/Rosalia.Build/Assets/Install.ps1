@@ -17,4 +17,5 @@ $target = $buildProject.Xml.AddProperty("StartProgram", '$(MSBuildProjectDirecto
 $target = $buildProject.Xml.AddProperty("StartWorkingDirectory", '$(MSBuildProjectDirectory)\' + $toolsRelativePath)
 $target = $buildProject.Xml.AddProperty("StartArguments", '/hold ' + $projectRelativePath + '\bin\$(Configuration)\' + $project.Name + '.dll')
 
-$project.Save() #persists the changes
+$buildProject.Save()
+$project.Save()

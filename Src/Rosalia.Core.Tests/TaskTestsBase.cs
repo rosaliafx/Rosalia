@@ -2,6 +2,7 @@
 {
     using Moq;
     using NUnit.Framework;
+    using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Result;
@@ -14,6 +15,7 @@
         private LoggerStub _logger;
         private Mock<IDirectory> _workDirectory;
         private T _data;
+        private EnvironmentStub _environment;
 
         public Mock<IExecuter<T>> Executer
         {
@@ -30,14 +32,19 @@
             get { return _workDirectory; }
         }
 
+        public EnvironmentStub Environment
+        {
+            get { return _environment; }
+        }
+
         protected static void AssertWasNotExecuted(Mock<ITask<T>> child)
         {
-            child.Verify(t => t.Execute(It.IsAny<ExecutionContext<T>>()), Times.Never());
+            child.Verify(t => t.Execute(It.IsAny<TaskContext<T>>()), Times.Never());
         }
 
         protected static void AssertWasExecuted(Mock<ITask<T>> child)
         {
-            child.Verify(t => t.Execute(It.IsAny<ExecutionContext<T>>()), Times.Once());
+            child.Verify(t => t.Execute(It.IsAny<TaskContext<T>>()), Times.Once());
         }
 
         [SetUp]
@@ -47,6 +54,7 @@
             _executer = new Mock<IExecuter<T>>();
             _logger = new LoggerStub();
             _workDirectory = new Mock<IDirectory>();
+            _environment = new EnvironmentStub();
 
             Executer
                 .Setup(x => x.Execute(It.IsAny<ITask<T>>()))
@@ -68,15 +76,20 @@
         protected Mock<ITask<T>> CreateTask(ResultType resultType = ResultType.Success)
         {
             var mock = new Mock<ITask<T>>();
-            mock.Setup(x => x.Execute(It.IsAny<ExecutionContext<T>>()))
+            mock.Setup(x => x.Execute(It.IsAny<TaskContext<T>>()))
                 .Returns(new ExecutionResult(resultType, null));
 
             return mock;
         }
 
-        protected ExecutionContext<T> CreateContext()
+        protected TaskContext<T> CreateContext()
         {
-            return new ExecutionContext<T>(_data, Executer.Object, Logger, WorkDirectory.Object);
+            return new TaskContext<T>(
+                _data, 
+                Executer.Object, 
+                Logger, 
+                WorkDirectory.Object,
+                Environment);
         }
 
         protected ExecutionResult Execute(ITask<T> task)

@@ -6,6 +6,8 @@
     using System.IO;
     using System.Linq;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
+    using Rosalia.Core.Context.Environment;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Result;
@@ -62,8 +64,10 @@
                 var workflowInfo = GetWorkflowInfo(options, lookups);
 
                 _workflow = (IWorkflow)workflowCreator.CreateWorkflow(workflowInfo);
-                _workflow.WorkDirectory = new DefaultDirectory(options.WorkDirectory);
-                _workflow.Init();
+                
+                _workflow.Init(new WorkflowContext(
+                    new DefaultEnvironment(), 
+                    new DefaultDirectory(options.WorkDirectory)));
 
                 _context = contextCreator.CreateContext(workflowInfo);
 

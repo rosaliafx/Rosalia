@@ -2,11 +2,12 @@
 {
     using System;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
     public class SimpleExternalToolTask<TContext> : ExternalToolTask<TContext, SimpleExternalToolTask<TContext>.Input, object>
     {
-        public SimpleExternalToolTask(Func<ExecutionContext<TContext>, Input> contextToInput)
+        public SimpleExternalToolTask(Func<TaskContext<TContext>, Input> contextToInput)
             : base(contextToInput)
         {
         }

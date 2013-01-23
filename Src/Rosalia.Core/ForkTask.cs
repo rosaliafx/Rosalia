@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
     public class ForkTask<T> : AbstractTask<T>, IEnumerable
@@ -25,7 +26,7 @@
             return Children.GetEnumerator();
         }
 
-        public ConditionBuilder<T> If(Predicate<ExecutionContext<T>> condition)
+        public ConditionBuilder<T> If(Predicate<TaskContext<T>> condition)
         {
             return new ConditionBuilder<T>(this, condition);
         }
@@ -50,22 +51,22 @@
                 .Then(child);
         }
 
-        public ForkTask<T> Else(Action<ResultBuilder, ExecutionContext<T>> payload)
+        public ForkTask<T> Else(Action<ResultBuilder, TaskContext<T>> payload)
         {
             return Else(new SimpleTask<T>(payload));
         }
 
-        public void Add(Predicate<ExecutionContext<T>> condition, ITask<T> task)
+        public void Add(Predicate<TaskContext<T>> condition, ITask<T> task)
         {
             _children.Add(new ChildWithCondition(task, condition));
         }
 
-        public void Add(Predicate<ExecutionContext<T>> condition, Action<ResultBuilder, ExecutionContext<T>> payload)
+        public void Add(Predicate<TaskContext<T>> condition, Action<ResultBuilder, TaskContext<T>> payload)
         {
             _children.Add(new ChildWithCondition(new SimpleTask<T>(payload), condition));
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, ExecutionContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
         {
             foreach (var childWithCondition in _children)
             {
@@ -88,7 +89,7 @@
 
         internal class ChildWithCondition
         {
-            public ChildWithCondition(ITask<T> child, Predicate<ExecutionContext<T>> condition, bool breakOnComplete = false)
+            public ChildWithCondition(ITask<T> child, Predicate<TaskContext<T>> condition, bool breakOnComplete = false)
             {
                 BreakOnComplete = breakOnComplete;
                 Child = child;
@@ -97,7 +98,7 @@
 
             public ITask<T> Child { get; private set; }
 
-            public Predicate<ExecutionContext<T>> Condition { get; private set; }
+            public Predicate<TaskContext<T>> Condition { get; private set; }
 
             public bool BreakOnComplete { get; set; }
         }

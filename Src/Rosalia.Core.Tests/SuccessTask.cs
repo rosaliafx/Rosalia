@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Result;
 
     public class SuccessTask<T> : ITask<T>
@@ -18,7 +19,7 @@
 
         public IEnumerable<ITask<T>> Children { get; set; }
 
-        public ExecutionResult Execute(ExecutionContext<T> context)
+        public ExecutionResult Execute(TaskContext<T> context)
         {
             WasExecuted = true;
             return new ExecutionResult(ResultType.Success, null);

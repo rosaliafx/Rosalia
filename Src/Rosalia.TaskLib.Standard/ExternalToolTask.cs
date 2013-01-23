@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
@@ -20,7 +21,7 @@
         {
         }
 
-        protected ExternalToolTask(Func<ExecutionContext<TContext>, TInput> contextToInput)
+        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> contextToInput)
             : base(contextToInput)
         {
         }
@@ -30,7 +31,7 @@
         {
         }
 
-        protected ExternalToolTask(Func<ExecutionContext<TContext>, TInput> contextToInput, Action<TResult, TContext> applyResultToContext)
+        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> contextToInput, Action<TResult, TContext> applyResultToContext)
             : base(contextToInput, applyResultToContext)
         {
         }
@@ -41,7 +42,7 @@
             set { _processStarter = value; }
         }
 
-        protected override TResult Execute(TInput input, ExecutionContext<TContext> context, ResultBuilder resultBuilder)
+        protected override TResult Execute(TInput input, TaskContext<TContext> context, ResultBuilder resultBuilder)
         {
             FillMessageLevelDetectors(_messageLevelDetectors);
 
@@ -88,7 +89,7 @@
         {
         }
 
-        protected virtual string GetToolArguments(TInput input, ExecutionContext<TContext> context)
+        protected virtual string GetToolArguments(TInput input, TaskContext<TContext> context)
         {
             var externalToolAware = input as IExternalToolAware;
             if (externalToolAware != null)
@@ -99,7 +100,7 @@
             return string.Empty;
         }
 
-        protected virtual string GetToolPath(TInput input, ExecutionContext<TContext> context)
+        protected virtual string GetToolPath(TInput input, TaskContext<TContext> context)
         {
             var externalToolAware = input as IExternalToolAware;
             if (externalToolAware != null)
@@ -123,7 +124,7 @@
 
         protected abstract TResult CreateResult(int exitCode, ResultBuilder resultBuilder);
 
-        protected virtual void ProcessOnOutputDataReceived(string message, TInput builder, ResultBuilder resultBuilder, ExecutionContext<TContext> context)
+        protected virtual void ProcessOnOutputDataReceived(string message, TInput builder, ResultBuilder resultBuilder, TaskContext<TContext> context)
         {
             foreach (var messageLevelDetector in _messageLevelDetectors)
             {
@@ -139,12 +140,12 @@
             context.Logger.Info(message);
         }
 
-        protected virtual void ProcessOnErrorDataReceived(string message, TInput builder, ResultBuilder resultBuilder, ExecutionContext<TContext> context)
+        protected virtual void ProcessOnErrorDataReceived(string message, TInput builder, ResultBuilder resultBuilder, TaskContext<TContext> context)
         {
             context.Logger.Error(message);
         }
 
-        protected virtual IDirectory GetToolWorkDirectory(ExecutionContext<TContext> context)
+        protected virtual IDirectory GetToolWorkDirectory(TaskContext<TContext> context)
         {
             return context.WorkDirectory;
         }

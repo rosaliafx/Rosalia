@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using NUnit.Framework;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tests;
@@ -35,7 +36,7 @@
                 _messageLevelDetectors = messageLevelDetectors;
             }
 
-            protected override string GetToolPath(object input, Core.ExecutionContext<object> context)
+            protected override string GetToolPath(object input, TaskContext<object> context)
             {
                 return "fake";
             }

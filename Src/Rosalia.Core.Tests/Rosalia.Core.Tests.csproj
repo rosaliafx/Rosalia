@@ -54,6 +54,7 @@
     <Compile Include="ForkTaskTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\DirectoryStub.cs" />
+    <Compile Include="Stubs\EnvironmentStub.cs" />
     <Compile Include="Stubs\LoggerStub.cs" />
     <Compile Include="Stubs\FileStub.cs" />
     <Compile Include="SuccessTask.cs" />

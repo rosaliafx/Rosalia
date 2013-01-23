@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Core
 {
     using System;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Events;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Logging;
@@ -16,6 +17,8 @@
 
         private int _level;
 
+        private WorkflowContext _workflowContext;
+
         public event EventHandler<WorkflowStartEventArgs> WorkflowStart;
 
         public event EventHandler WorkflowComplete;
@@ -25,8 +28,6 @@
         public event EventHandler<TaskEventArgs> TaskStartExecution;
 
         public event EventHandler<TaskWithResultEventArgs> TaskCompleteExecution;
-
-        public IDirectory WorkDirectory { get; set; }
 
         public int TasksCount
         {
@@ -48,8 +49,9 @@
             throw new Exception("Wrong workflow context");
         }
 
-        public virtual void Init()
+        public virtual void Init(WorkflowContext context)
         {
+            _workflowContext = context;
             _rootTask = CreateRootTask();
         }
 
@@ -75,7 +77,7 @@
             }
         }
 
-        protected virtual void OnBeforeExecute(ExecutionContext<TData> context)
+        protected virtual void OnBeforeExecute(TaskContext<TData> context)
         {
             if (WorkflowStart != null)
             {
@@ -89,7 +91,7 @@
         {
             if (TaskStartExecution != null)
             {
-                TaskEventArgs args = new TaskEventArgs(
+                var args = new TaskEventArgs(
                     (IIdentifiable)task,
                     (IIdentifiable)_currentTask,
                     this,
@@ -124,9 +126,14 @@
             return result;
         }
 
-        private ExecutionContext<TData> CreateContext()
+        private TaskContext<TData> CreateContext()
         {
-            return new ExecutionContext<TData>(_inputData, this, this, WorkDirectory);
+            return new TaskContext<TData>(
+                _inputData, 
+                this, 
+                this, 
+                _workflowContext.WorkDirectory,
+                _workflowContext.Environment);
         }
 
         public void Log(MessageLevel level, string message, params object[] args)

@@ -1,12 +1,21 @@
-﻿namespace Rosalia.Core
+﻿namespace Rosalia.Core.Context
 {
+    using Rosalia.Core.Context.Environment;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Logging;
 
-    public class ExecutionContext<T>
+    /// <summary>
+    /// Task execution context.
+    /// </summary>
+    public class TaskContext<T>
     {
-        public ExecutionContext(T data, IExecuter<T> executer, ILogger logger, IDirectory workDirectory)
+        public TaskContext(
+            T data, 
+            IExecuter<T> executer, 
+            ILogger logger, 
+            IDirectory workDirectory, IEnvironment environment)
         {
+            Environment = environment;
             Logger = logger;
             WorkDirectory = workDirectory;
             Data = data;
@@ -23,5 +32,7 @@
         public IDirectory WorkDirectory { get; private set; }
 
         public FileSystemHelper FileSystem { get; private set; }
+
+        public IEnvironment Environment { get; private set; }
     }
 }

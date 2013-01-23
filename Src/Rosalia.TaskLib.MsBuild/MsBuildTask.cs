@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using Microsoft.Win32;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
     using Rosalia.TaskLib.Standard;
@@ -32,7 +33,7 @@
             detectors.Add(message => message.IndexOf(" warning ") >= 0 ? MessageLevel.Warning : (MessageLevel?)null);
         }
 
-        protected override string GetToolPath(MsBuildInput input, Core.ExecutionContext<T> context)
+        protected override string GetToolPath(MsBuildInput input, TaskContext<T> context)
         {
             if (!string.IsNullOrEmpty(input.ExactMsBuildExeLocation))
             {
@@ -43,7 +44,7 @@
             return Path.Combine(toolDirectory, "MsBuild.exe");
         }
 
-        protected override string GetToolArguments(MsBuildInput input, Core.ExecutionContext<T> context)
+        protected override string GetToolArguments(MsBuildInput input, TaskContext<T> context)
         {
             return string.Join(" ", input.Switches.Select(s => s.CommandLinePart)) + " " + input.ProjectFile.AbsolutePath;
         }

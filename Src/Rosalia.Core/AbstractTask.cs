@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Result;
 
@@ -54,7 +55,7 @@
         
         public abstract IEnumerable<ITask<T>> Children { get; }
 
-        public ExecutionResult Execute(ExecutionContext<T> context)
+        public ExecutionResult Execute(TaskContext<T> context)
         {
             var resultBuilder = new ResultBuilder();
 
@@ -101,6 +102,6 @@
                 .Replace(string.Format("`{0}", type.GetGenericArguments().Length), string.Empty);
         }
 
-        protected abstract void Execute(ResultBuilder resultBuilder, ExecutionContext<T> context);
+        protected abstract void Execute(ResultBuilder resultBuilder, TaskContext<T> context);
     }
 }

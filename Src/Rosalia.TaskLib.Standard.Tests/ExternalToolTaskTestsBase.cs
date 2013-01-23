@@ -48,7 +48,7 @@
                {
                    if (!string.IsNullOrEmpty(processOutput))
                    {
-                       foreach (var line in processOutput.Split(new []{ Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                       foreach (var line in processOutput.Split(new []{ System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                        {
                            onInfo(line);
                        }

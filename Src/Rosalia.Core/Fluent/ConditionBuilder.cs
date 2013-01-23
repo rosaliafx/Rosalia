@@ -1,13 +1,14 @@
 ﻿namespace Rosalia.Core.Fluent
 {
     using System;
+    using Rosalia.Core.Context;
 
     public class ConditionBuilder<T>
     {
         private readonly ForkTask<T> _fork;
-        private readonly Predicate<ExecutionContext<T>> _condition;
+        private readonly Predicate<TaskContext<T>> _condition;
 
-        public ConditionBuilder(ForkTask<T> fork, Predicate<ExecutionContext<T>> condition)
+        public ConditionBuilder(ForkTask<T> fork, Predicate<TaskContext<T>> condition)
         {
             _fork = fork;
             _condition = condition;
@@ -19,7 +20,7 @@
             return _fork;
         }
 
-        public ForkTask<T> Then(Action<ResultBuilder, ExecutionContext<T>> payload)
+        public ForkTask<T> Then(Action<ResultBuilder, TaskContext<T>> payload)
         {
             _fork.Add(_condition, payload);
             return _fork;

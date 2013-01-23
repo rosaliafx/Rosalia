@@ -5,6 +5,8 @@
     using System.IO;
     using System.Reflection;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
+    using Rosalia.Core.Context.Environment;
     using Rosalia.Core.FileSystem;
 
     public class WorkflowProjectLookup : AbstractAssemblyWorkflowLookup
@@ -18,8 +20,10 @@
         protected override IEnumerable<Assembly> GetAssemblies(LookupOptions options)
         {
             var buildWorkflow = new BuildWorkflowProjectWorkflow();
-            buildWorkflow.WorkDirectory = new DefaultDirectory(options.RunningOptions.WorkDirectory);
-            buildWorkflow.Init();
+
+            buildWorkflow.Init(new WorkflowContext(
+                new DefaultEnvironment(),
+                new DefaultDirectory(options.RunningOptions.WorkDirectory)));
 
             var buildResult = buildWorkflow.Execute(options.RunningOptions);
 

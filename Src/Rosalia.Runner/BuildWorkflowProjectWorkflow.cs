@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Runner
 {
     using Rosalia.Core;
+    using Rosalia.Core.Context;
     using Rosalia.TaskLib.MsBuild;
 
     public class BuildWorkflowProjectWorkflow : Workflow<RunningOptions>
@@ -13,11 +14,11 @@
                     .WithConfiguration(Configuration(c)));
         }
 
-        private static string Configuration(ExecutionContext<RunningOptions> executionContext)
+        private static string Configuration(TaskContext<RunningOptions> taskContext)
         {
-            if (!string.IsNullOrEmpty(executionContext.Data.WorkflowProjectBuildConfiguration))
+            if (!string.IsNullOrEmpty(taskContext.Data.WorkflowProjectBuildConfiguration))
             {
-                return executionContext.Data.WorkflowProjectBuildConfiguration;
+                return taskContext.Data.WorkflowProjectBuildConfiguration;
             }
 
             return "Debug";

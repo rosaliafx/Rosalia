@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Core
 {
     using System;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
     /// <summary>
@@ -8,14 +9,14 @@
     /// </summary>
     public class SimpleTask<T> : AbstractLeafTask<T>
     {
-        private readonly Action<ResultBuilder, ExecutionContext<T>> _payload;
+        private readonly Action<ResultBuilder, TaskContext<T>> _payload;
 
-        public SimpleTask(Action<ResultBuilder, ExecutionContext<T>> payload)
+        public SimpleTask(Action<ResultBuilder, TaskContext<T>> payload)
         {
             _payload = payload;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, ExecutionContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
         {
             _payload(resultBuilder, context);
         }

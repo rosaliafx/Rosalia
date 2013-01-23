@@ -7,6 +7,7 @@
     using System.Linq.Expressions;
     using Nustache.Core;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
@@ -33,7 +34,7 @@ using {{Name}};
 ";
 
         private readonly IList<Expression<Func<T, Attribute>>> _attributeExpressions = new List<Expression<Func<T, Attribute>>>();
-        private Func<ExecutionContext<T>, IFile> _destination;
+        private Func<TaskContext<T>, IFile> _destination;
 
         public GenerateAssemblyInfo<T> WithAttribute(Expression<Func<T, Attribute>> attribute)
         {
@@ -41,7 +42,7 @@ using {{Name}};
             return this;
         }
 
-        public GenerateAssemblyInfo<T> ToFile(Func<ExecutionContext<T>, IFile> destination)
+        public GenerateAssemblyInfo<T> ToFile(Func<TaskContext<T>, IFile> destination)
         {
             _destination = destination;
             return this;
@@ -59,7 +60,7 @@ using {{Name}};
             return this;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, ExecutionContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
         {
             if (_destination == null)
             {

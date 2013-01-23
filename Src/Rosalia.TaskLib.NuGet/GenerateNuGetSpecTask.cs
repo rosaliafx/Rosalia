@@ -3,12 +3,13 @@
     using System.IO;
     using System.Linq;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.TaskLib.Standard;
 
     public class GenerateNuGetSpecTask<T> : ExtendedTask<T, SpecInput, object>
     {
-        protected override object Execute(SpecInput input, ExecutionContext<T> context, ResultBuilder resultBuilder)
+        protected override object Execute(SpecInput input, TaskContext<T> context, ResultBuilder resultBuilder)
         {
             using (var writer = new StreamWriter(input.Destination.WriteStream))
             {

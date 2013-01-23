@@ -42,6 +42,9 @@
     <Compile Include="AbstractLeafTask.cs" />
     <Compile Include="AbstractNodeTask.cs" />
     <Compile Include="AbstractTask.cs" />
+    <Compile Include="Context\Environment\DefaultEnvironment.cs" />
+    <Compile Include="Context\Environment\IEnvironment.cs" />
+    <Compile Include="Context\WorkflowContext.cs" />
     <Compile Include="Events\LevelEventsArgs.cs" />
     <Compile Include="Events\LogMessageEventArgs.cs" />
     <Compile Include="Events\TaskEventArgs.cs" />
@@ -58,7 +61,7 @@
     <Compile Include="Fluent\ConditionBuilder.cs" />
     <Compile Include="ForkTask.cs" />
     <Compile Include="Result\ExecutionResult.cs" />
-    <Compile Include="ExecutionContext.cs" />
+    <Compile Include="Context\TaskContext.cs" />
     <Compile Include="Fluent\ResultBuilder.cs" />
     <Compile Include="IExecutable.cs" />
     <Compile Include="IExecuter.cs" />

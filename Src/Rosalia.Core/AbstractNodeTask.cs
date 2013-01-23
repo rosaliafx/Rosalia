@@ -1,5 +1,6 @@
 ﻿namespace Rosalia.Core
 {
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Result;
 
@@ -10,7 +11,7 @@
             get { return true; }
         }
 
-        protected ExecutionResult ExecuteChild(ITask<T> child, ExecutionContext<T> context)
+        protected ExecutionResult ExecuteChild(ITask<T> child, TaskContext<T> context)
         {
             return context.Executer.Execute(child);
         }

@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Text;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
     using Rosalia.TaskLib.Standard;
@@ -15,7 +16,7 @@
         private SvnVersion _min;
         private SvnVersion _max;
 
-        public SvnVersionTask(Func<ExecutionContext<T>, SvnVersionInput> contextToInput)
+        public SvnVersionTask(Func<TaskContext<T>, SvnVersionInput> contextToInput)
             : base(contextToInput)
         {
         }
@@ -25,7 +26,7 @@
             return new SvnVersionResult(_min, _max);
         }
 
-        protected override void ProcessOnOutputDataReceived(string message, SvnVersionInput input, ResultBuilder resultBuilder, ExecutionContext<T> context)
+        protected override void ProcessOnOutputDataReceived(string message, SvnVersionInput input, ResultBuilder resultBuilder, TaskContext<T> context)
         {
             base.ProcessOnOutputDataReceived(message, input, resultBuilder, context);
 
@@ -59,12 +60,12 @@
             }
         }
 
-        protected override string GetToolPath(SvnVersionInput input, ExecutionContext<T> context)
+        protected override string GetToolPath(SvnVersionInput input, TaskContext<T> context)
         {
             return input.SvnExePath;
         }
 
-        protected override string GetToolArguments(SvnVersionInput input, ExecutionContext<T> context)
+        protected override string GetToolArguments(SvnVersionInput input, TaskContext<T> context)
         {
             var builder = new StringBuilder();
             builder.Append(input.Commited ? "-c" : string.Empty);

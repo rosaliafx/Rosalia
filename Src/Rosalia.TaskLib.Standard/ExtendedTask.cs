@@ -3,18 +3,19 @@
     using System;
     using System.Linq.Expressions;
     using Rosalia.Core;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
     public abstract class ExtendedTask<TContext, TInput, TResult> : AbstractLeafTask<TContext> where TInput : class
     {
-        private Func<ExecutionContext<TContext>, TInput> _contextToInput;
+        private Func<TaskContext<TContext>, TInput> _contextToInput;
         private Action<TResult, TContext> _applyResultToContext;
 
         protected ExtendedTask() : this(null, null)
         {
         }
 
-        protected ExtendedTask(Func<ExecutionContext<TContext>, TInput> contextToInput) : this(contextToInput, null)
+        protected ExtendedTask(Func<TaskContext<TContext>, TInput> contextToInput) : this(contextToInput, null)
         {
         }
 
@@ -22,13 +23,13 @@
         {
         }
 
-        protected ExtendedTask(Func<ExecutionContext<TContext>, TInput> contextToInput, Action<TResult, TContext> applyResultToContext)
+        protected ExtendedTask(Func<TaskContext<TContext>, TInput> contextToInput, Action<TResult, TContext> applyResultToContext)
         {
             _contextToInput = contextToInput;
             _applyResultToContext = applyResultToContext;
         }
 
-        public ExtendedTask<TContext, TInput, TResult> FillInput(Func<ExecutionContext<TContext>, TInput> fillInputFunc)
+        public ExtendedTask<TContext, TInput, TResult> FillInput(Func<TaskContext<TContext>, TInput> fillInputFunc)
         {
             _contextToInput = fillInputFunc;
             return this;
@@ -46,7 +47,7 @@
             return this;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, ExecutionContext<TContext> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext<TContext> context)
         {
             TInput input = GetInput(context, resultBuilder);
             TResult output = Execute(input, context, resultBuilder);
@@ -56,7 +57,7 @@
             }
         }
 
-        protected virtual void ApplyOutputToContext(TResult output, ExecutionContext<TContext> context, ResultBuilder resultBuilder)
+        protected virtual void ApplyOutputToContext(TResult output, TaskContext<TContext> context, ResultBuilder resultBuilder)
         {
             if (_applyResultToContext != null)
             {
@@ -64,9 +65,9 @@
             }
         }
 
-        protected abstract TResult Execute(TInput input, ExecutionContext<TContext> context, ResultBuilder resultBuilder);
+        protected abstract TResult Execute(TInput input, TaskContext<TContext> context, ResultBuilder resultBuilder);
 
-        protected virtual TInput GetInput(ExecutionContext<TContext> context, ResultBuilder resultBuilder)
+        protected virtual TInput GetInput(TaskContext<TContext> context, ResultBuilder resultBuilder)
         {
             if (_contextToInput == null)
             {

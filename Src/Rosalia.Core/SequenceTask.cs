@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
     public class SequenceTask<T> : AbstractTask<T>
@@ -41,13 +42,13 @@
         /// A shortcut method to add a <code>SimpleTask</code> as a child.
         /// </summary>
         /// <param name="child"><code>SimpleTask</code> payload action</param>
-        public SequenceTask<T> WithSubtask(Action<ResultBuilder, ExecutionContext<T>> child)
+        public SequenceTask<T> WithSubtask(Action<ResultBuilder, TaskContext<T>> child)
         {
             _children.Add(new SimpleTask<T>(child));
             return this;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, ExecutionContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
         {
             foreach (var child in _children)
             {

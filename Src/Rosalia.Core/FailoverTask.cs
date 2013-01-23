@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Core
 {
     using System.Collections.Generic;
+    using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
     public class FailoverTask<T> : AbstractNodeTask<T>
@@ -28,7 +29,7 @@
             }
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, ExecutionContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
         {
             var targetTaskResult = ExecuteChild(_targetTask, context);
             if (targetTaskResult.ResultType != ResultType.Success)
