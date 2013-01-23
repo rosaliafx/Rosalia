@@ -169,3 +169,5 @@ pip-log.txt
 Artifacts/
 Src/WorkDirectory/*.*
 Tools/Rosalia/*.pdb
+*.nuspec
+*.nupkg

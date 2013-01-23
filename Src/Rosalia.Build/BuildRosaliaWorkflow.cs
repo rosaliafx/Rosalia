@@ -30,13 +30,23 @@
                     .FillInput(c =>
                         new SpecInput()
                             .Id("Rosalia")
-                            .Version("0.1.0.0")
+                            .Version("0.1.0.9")
                             .Authors("Eugene Guryanov")
                             .Description("Simple workflow execution framework/tool that could be used for build scripts")
+                            .WithFiles(GetLibFiles(c), "lib")
+                            .WithFile(c.Data.Src.GetFile(@"Rosalia.Build\Assets\Install.ps1").AbsolutePath, "tools")
                             .WithFile(string.Format(@"bin\{0}\Rosalia.exe", c.Data.Configuration), "tools")
                             .WithFiles(GetRunnerDllFiles(c), "tools")
+                            .WithDependency("NuGetPowerTools", version: "0.29")
                             .ToFile(GetConsoleRunnerSpecFile(c)));
             }
+        }
+
+        private static IEnumerable<IFile> GetLibFiles(ExecutionContext<BuildRosaliaContext> c)
+        {
+            return c.FileSystem.GetFilesRecursively(c.Data.Src.GetDirectory(string.Format(@"Rosalia.Runner.Console\bin\{0}", c.Data.Configuration)))
+                    .Filter(fileName => fileName.EndsWith(".dll"))
+                    .Filter(file => file.Name == "Rosalia.Core.dll" || file.Name == "Rosalia.TaskLib.Standard.dll").All;
         }
 
         private static IEnumerable<IFile> GetRunnerDllFiles(ExecutionContext<BuildRosaliaContext> c)
@@ -44,7 +54,7 @@
             return
                 c.FileSystem.GetFilesRecursively(c.Data.Src.GetDirectory(string.Format(@"Rosalia.Runner.Console\bin\{0}", c.Data.Configuration)))
                     .Filter(fileName => fileName.EndsWith(".dll"))
-                    .Exclude(fileName => fileName.Contains(".TaskLib."))
+                    .Exclude(file => file.Name.Contains(".TaskLib.") && !(file.Name == "Rosalia.TaskLib.Standard" || file.Name == "Rosalia.TaskLib.MsBuild"))
                     .All;
         }
 
