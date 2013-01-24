@@ -5,12 +5,14 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
+    using Rosalia.Core.Logging;
     using Rosalia.TaskLib.Standard;
 
     /// <summary>
     /// Extracts version info from a git repository using <c>git describe --tags</c> 
-    /// command.  It is required for this task that a tag was created earlier. Use
-    /// <c>git tag -a [VERSION] -m "[TAG MESSAGE]"</c> to create a tag.
+    /// command.  It is required for this task that a tag was created earlier. 
+    /// Use <c>git tag -a [VERSION] -m "[TAG MESSAGE]"</c> to create a tag.
+    /// Use <c>git push --tags</c> to share tags
     /// (see http://www.kernel.org/pub/software/scm/git/docs/git-tag.html)
     /// Task returns [VERSION] and the number of commits from the tag. 
     /// </summary>
@@ -42,6 +44,13 @@
         protected override void ProcessOnOutputDataReceived(string message, GetVersionInput builder, ResultBuilder resultBuilder, TaskContext<T> context)
         {
             base.ProcessOnOutputDataReceived(message, builder, resultBuilder, context);
+
+            if (message.StartsWith("fatal:"))
+            {
+                context.Logger.Error(message);
+                resultBuilder.Fail();
+                return;
+            }
 
             var part = message.Split('-');
             if (part.Length != 3)

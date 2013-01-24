@@ -52,7 +52,7 @@
         [Test]
         public void Execute_WrongOutput_ShouldFail()
         {
-            AssertProcessParsing(
+            AssertProcessOutputParsing(
                 new SvnVersionTask<object>(c => new SvnVersionInput("fake", "WC_PATH")), 
                 "12:13:14",
                 (svnVersionResult, taskResult) =>
@@ -67,7 +67,7 @@
         [Test]
         public void Execute_UnversionedDirectory_ShouldFail()
         {
-            AssertProcessParsing(
+            AssertProcessOutputParsing(
                 new SvnVersionTask<object>(c => new SvnVersionInput("fake", "WC_PATH")), 
                 "Unversioned directory",
                 (svnVersionResult, taskResult) =>
@@ -82,7 +82,7 @@
         [Test]
         public void Execute_SingleRevisionNumber_ShouldSucceed()
         {
-            AssertProcessParsing(
+            AssertProcessOutputParsing(
                 new SvnVersionTask<object>(c => new SvnVersionInput("fake", "WC_PATH")), 
                 "42",
                 (svnVersionResult, taskResult) =>
@@ -100,7 +100,7 @@
         [Test]
         public void Execute_RevisionsWithTrailNumber_ShouldSucceed()
         {
-            AssertProcessParsing(
+            AssertProcessOutputParsing(
                 new SvnVersionTask<object>(c => new SvnVersionInput("fake", "WC_PATH")),
                 "41MSP:42S",
                 (svnVersionResult, taskResult) =>
@@ -122,7 +122,7 @@
         [Test]
         public void Execute_RevisionRangeNumber_ShouldSucceed()
         {
-            AssertProcessParsing(
+            AssertProcessOutputParsing(
                 new SvnVersionTask<object>(c => new SvnVersionInput("fake", "WC_PATH")), 
                 "41:42",
                 (svnVersionResult, taskResult) =>

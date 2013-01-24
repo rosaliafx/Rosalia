@@ -1,10 +1,11 @@
 ﻿namespace Rosalia.Build
 {
     using System.Collections.Generic;
+    using System.Reflection;
     using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
-    using Rosalia.Core.Logging;
+    using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Git;
     using Rosalia.TaskLib.MsBuild;
     using Rosalia.TaskLib.NuGet;
@@ -16,23 +17,28 @@
             get
             {
                 return Sequence
-                    
+                    //// Get current version from git
                     .WithSubtask(new GetVersionTask<BuildRosaliaContext>(
                         (output, c) =>
-                            {
-                                c.Version = output.Tag + "." + output.CommitsCount;
-                            }))
+                        {
+                            c.Version = output.Tag.Replace("v", string.Empty) + "." + output.CommitsCount;
+                        }))
 
-                    .WithSubtask((builder, context) =>
-                    {
-                        context.Logger.Warning(context.Data.Version);
-                    })
+                    //// Generate common assembly info file
+                    .WithSubtask(new GenerateAssemblyInfo<BuildRosaliaContext>()
+                        .WithAttribute(c => new AssemblyProductAttribute("Rosalia"))
+                        .WithAttribute(c => new AssemblyVersionAttribute(c.Version))
+                        .ToFile(c => c.Data.Src.GetFile("CommonAssemblyInfo.cs")))
 
+                    //// Build solution
                     .WithSubtask(new MsBuildTask<BuildRosaliaContext>()
-                                     .FillInput(c => new MsBuildInput()
-                                                         .WithProjectFile(c.Data.SolutionFile)))
+                        .FillInput(c => new MsBuildInput()
+                            .WithProjectFile(c.Data.SolutionFile)))
 
+                    //// Generate specs for NuGet packages
                     .WithSubtask(GenerateNuGetSpec)
+
+                    //// Generate NuGet packages
                     .WithSubtask(new GeneratePackageTask<BuildRosaliaContext>(GetConsoleRunnerSpecFile));
             }
         }
@@ -45,7 +51,7 @@
                     .FillInput(c =>
                         new SpecInput()
                             .Id("Rosalia")
-                            .Version("0.1.0.10")
+                            .Version(c.Data.Version)
                             .Authors("Eugene Guryanov")
                             .Description("Simple workflow execution framework/tool that could be used for build scripts")
                             .WithFiles(GetLibFiles(c), "lib")
@@ -90,7 +96,5 @@
             data.SolutionFile = data.Src.GetFile("Rosalia.sln");
             data.Artifacts = data.ProjectRootDirectory.GetDirectory("Artifacts");
         }
-
-        
     }
 }

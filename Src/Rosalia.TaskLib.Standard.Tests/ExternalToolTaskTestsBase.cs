@@ -31,7 +31,7 @@
             context.Executer.Execute(task);
         }
 
-        public void AssertProcessParsing(
+        public void AssertProcessOutputParsing(
             ExternalToolTask<TContext, TInput, TResult> task, 
             string processOutput,
             Action<TResult, ExecutionResult> assertResultAction)

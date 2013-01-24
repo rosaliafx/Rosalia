@@ -18,7 +18,7 @@
                 message => MessageLevel.Error
             });
 
-            AssertProcessParsing(
+            AssertProcessOutputParsing(
                 task,
                 "Test message",
                 (result, execution) =>

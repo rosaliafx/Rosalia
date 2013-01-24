@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.NuGet.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Git", "Rosalia.TaskLib.Git\Rosalia.TaskLib.Git.csproj", "{B063CD14-0D42-4E9A-8A9F-E652E461C8FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Git.Tests", "Rosalia.TaskLib.Git.Tests\Rosalia.TaskLib.Git.Tests.csproj", "{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -142,6 +144,10 @@ Global
 		{B063CD14-0D42-4E9A-8A9F-E652E461C8FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B063CD14-0D42-4E9A-8A9F-E652E461C8FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B063CD14-0D42-4E9A-8A9F-E652E461C8FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,5 +169,6 @@ Global
 		{D4FCB5BF-CE2C-4DA0-BDF0-16365EC77730} = {F4E129F0-E359-4BDB-8EA9-C32D39C5AB30}
 		{A10A16F5-10D3-4748-A01B-B9808B3D6E84} = {F4E129F0-E359-4BDB-8EA9-C32D39C5AB30}
 		{7AF172B3-F9C4-44B8-A333-F33F583693B1} = {F4E129F0-E359-4BDB-8EA9-C32D39C5AB30}
+		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB} = {F4E129F0-E359-4BDB-8EA9-C32D39C5AB30}
 	EndGlobalSection
 EndGlobal

@@ -24,7 +24,7 @@
         {
             return new DirectoryStub
             {
-                AbsolutePath = Path.Combine(AbsolutePath, relativePath)
+                AbsolutePath = relativePath
             };
         }
 

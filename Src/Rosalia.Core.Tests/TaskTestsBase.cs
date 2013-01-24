@@ -4,7 +4,6 @@
     using NUnit.Framework;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
-    using Rosalia.Core.Logging;
     using Rosalia.Core.Result;
     using Rosalia.Core.Tests.Stubs;
 
@@ -54,7 +53,11 @@
             _executer = new Mock<IExecuter<T>>();
             _logger = new LoggerStub();
             _workDirectory = new Mock<IDirectory>();
-            _environment = new EnvironmentStub();
+            _environment = new EnvironmentStub
+            {
+                ProgramFiles = new DirectoryStub(),
+                ProgramFilesX86 = new DirectoryStub()
+            };
 
             Executer
                 .Setup(x => x.Execute(It.IsAny<ITask<T>>()))
