@@ -52,6 +52,10 @@
       <Project>{49D81CA6-AB0A-4CA0-B588-A2A00C8D9E8F}</Project>
       <Name>Rosalia.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.Git\Rosalia.TaskLib.Git.csproj">
+      <Project>{B063CD14-0D42-4E9A-8A9F-E652E461C8FA}</Project>
+      <Name>Rosalia.TaskLib.Git</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rosalia.TaskLib.MsBuild\Rosalia.TaskLib.MsBuild.csproj">
       <Project>{E19519EA-80F2-4B1E-ABAA-D56E14901C4A}</Project>
       <Name>Rosalia.TaskLib.MsBuild</Name>

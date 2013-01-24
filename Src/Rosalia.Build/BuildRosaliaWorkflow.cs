@@ -4,6 +4,8 @@
     using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
+    using Rosalia.Core.Logging;
+    using Rosalia.TaskLib.Git;
     using Rosalia.TaskLib.MsBuild;
     using Rosalia.TaskLib.NuGet;
 
@@ -14,9 +16,22 @@
             get
             {
                 return Sequence
+                    
+                    .WithSubtask(new GetVersionTask<BuildRosaliaContext>(
+                        (output, c) =>
+                            {
+                                c.Version = output.Tag + "." + output.CommitsCount;
+                            }))
+
+                    .WithSubtask((builder, context) =>
+                    {
+                        context.Logger.Warning(context.Data.Version);
+                    })
+
                     .WithSubtask(new MsBuildTask<BuildRosaliaContext>()
                                      .FillInput(c => new MsBuildInput()
                                                          .WithProjectFile(c.Data.SolutionFile)))
+
                     .WithSubtask(GenerateNuGetSpec)
                     .WithSubtask(new GeneratePackageTask<BuildRosaliaContext>(GetConsoleRunnerSpecFile));
             }

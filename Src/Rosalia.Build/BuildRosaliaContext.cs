@@ -16,7 +16,9 @@
 
         public IDirectory RosaliaRunnerConsoleBin
         {
-            get { return Src.GetDirectory("Rosalia.Runner.Console\bin").GetDirectory(Configuration); }
+            get { return Src.GetDirectory(@"Rosalia.Runner.Console\bin").GetDirectory(Configuration); }
         }
+
+        public string Version { get; set; }
     }
 }

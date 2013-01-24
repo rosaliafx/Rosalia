@@ -52,7 +52,7 @@
                 throw new Exception(string.Format("File {0} does not exist!", AbsolutePath));
             }
 
-            File.Copy(AbsolutePath, destination.AbsolutePath);
+            File.Copy(AbsolutePath, destination.AbsolutePath, true);
         }
 
         public void CopyTo(IDirectory directory)

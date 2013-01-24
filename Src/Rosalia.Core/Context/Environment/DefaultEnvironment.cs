@@ -4,9 +4,21 @@
 
     public class DefaultEnvironment : IEnvironment
     {
-        public IDirectory ProgramFilesX86 { get; private set; }
+        public IDirectory ProgramFilesX86
+        {
+            get
+            {
+                return new DefaultDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86));
+            }
+        }
 
-        public IDirectory ProgramFiles { get; private set; }
+        public IDirectory ProgramFiles
+        {
+            get
+            {
+                return new DefaultDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles));
+            }
+        }
 
         public string GetVariable(string variable)
         {
