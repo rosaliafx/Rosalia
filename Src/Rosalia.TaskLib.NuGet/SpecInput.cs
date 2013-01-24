@@ -163,6 +163,11 @@
             return this;
         }
 
+        public SpecInput WithFile(IFile file, string target, string exclude = null)
+        {
+            return WithFile(file.AbsolutePath, target, exclude);
+        }
+
         public SpecInput WithFiles(IEnumerable<IFile> files, string target, string exclude = null)
         {
             foreach (var file in files)

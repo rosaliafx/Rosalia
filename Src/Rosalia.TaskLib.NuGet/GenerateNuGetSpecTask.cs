@@ -1,5 +1,6 @@
 ﻿namespace Rosalia.TaskLib.NuGet
 {
+    using System;
     using System.IO;
     using System.Linq;
     using Rosalia.Core.Context;
@@ -8,6 +9,16 @@
 
     public class GenerateNuGetSpecTask<T> : ExtendedTask<T, SpecInput, object>
     {
+        public GenerateNuGetSpecTask(Action<TaskContext<T>, SpecInput> configureInput)
+        {
+            FillInput(context =>
+            {
+                var input = new SpecInput();
+                configureInput(context, input);
+                return input;
+            });
+        }
+
         protected override object Execute(SpecInput input, TaskContext<T> context, ResultBuilder resultBuilder)
         {
             using (var writer = new StreamWriter(input.Destination.WriteStream))

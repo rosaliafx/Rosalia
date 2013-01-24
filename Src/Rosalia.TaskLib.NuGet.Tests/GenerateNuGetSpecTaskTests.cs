@@ -11,8 +11,8 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
-                .FillInput(c => new SpecInput()
+            var task = new GenerateNuGetSpecTask<object>((context, input) =>
+                input
                     .Id("testId")
                     .ToFile(destination));
 
@@ -32,8 +32,8 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
-                .FillInput(c => new SpecInput()
+            var task = new GenerateNuGetSpecTask<object>((context, input) =>
+                input
                     .WithDependency("id1", "v1.0")
                     .WithDependency("id2")
                     .WithDependency("id3", "v1.0", "net40")
@@ -63,8 +63,8 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
-                .FillInput(c => new SpecInput()
+            var task = new GenerateNuGetSpecTask<object>((context, input) =>
+                input
                     .WithReference("My.Reference1.dll")
                     .WithReference("My.Reference2.dll")
                     .ToFile(destination));
@@ -88,8 +88,8 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
-                .FillInput(c => new SpecInput()
+            var task = new GenerateNuGetSpecTask<object>((context, input) =>
+                input
                     .WithFrameworkAssembly("System.ServiceModel", "net40")
                     .WithFrameworkAssembly("System.SomethingElse")
                     .ToFile(destination));
@@ -113,8 +113,8 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
-                .FillInput(c => new SpecInput()
+            var task = new GenerateNuGetSpecTask<object>((context, input) =>
+                input
                     .WithFile(@"bin\Debug\*.dll", "lib")
                     .WithFile(@"bin\Debug\*.pdb", "lib")
                     .WithFile(@"tools\**\*.*", null, @"**\*.log")

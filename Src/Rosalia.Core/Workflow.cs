@@ -3,7 +3,7 @@
     using System;
     using Rosalia.Core.Context;
     using Rosalia.Core.Events;
-    using Rosalia.Core.FileSystem;
+    using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Result;
 
@@ -34,9 +34,9 @@
             get { return SubtasksCount(_rootTask) + 1; }
         }
 
-        protected SequenceTask<TData> Sequence
+        protected SequenceTask<TData> Sequence(params ITask<TData>[] children)
         {
-            get { return new SequenceTask<TData>(); }
+            return new SequenceTask<TData>(children);
         }
 
         public ExecutionResult Execute(object inputData)
@@ -124,6 +124,11 @@
             }
 
             return result;
+        }
+
+        protected ITask<TData> Task(Action<ResultBuilder, TaskContext<TData>> payload)
+        {
+            return new SimpleTask<TData>(payload);
         }
 
         private TaskContext<TData> CreateContext()

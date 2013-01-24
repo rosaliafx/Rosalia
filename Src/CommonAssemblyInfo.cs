@@ -10,4 +10,5 @@
 using System.Reflection;
 
 [assembly: AssemblyProductAttribute("Rosalia")]
-[assembly: AssemblyVersionAttribute("0.1.7.0")]
+[assembly: AssemblyVersionAttribute("0.1.7.1")]
+[assembly: AssemblyFileVersionAttribute("0.1.7.1")]

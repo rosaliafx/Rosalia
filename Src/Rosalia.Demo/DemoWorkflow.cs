@@ -14,7 +14,7 @@
         {
             get
             {
-                return Sequence
+                return Sequence()
                     .WithSubtask((builder, c) => c.Logger.Info("Start executing the demo workflow"))
                     .WithSubtask(CopyActualArtifactsToTools())
                     .WithSubtask(new GenerateAssemblyInfo<DemoContext>()
