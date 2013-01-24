@@ -6,7 +6,7 @@
     {
         IEnumerable<IDirectory> Directories { get; }
 
-        IEnumerable<IFile> Files { get; }
+        FileList Files { get; }
 
         IDirectory Parent { get; }
 

@@ -12,7 +12,7 @@
 
         public IEnumerable<IDirectory> Directories { get; set; }
 
-        public IEnumerable<IFile> Files { get; set; }
+        public FileList Files { get; set; }
 
         public IDirectory Parent { get; set; }
 

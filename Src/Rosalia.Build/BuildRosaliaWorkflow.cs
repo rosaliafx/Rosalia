@@ -9,17 +9,16 @@
 
     public class BuildRosaliaWorkflow : Workflow<BuildRosaliaContext>
     {
-        public SequenceTask<BuildRosaliaContext> MainSequence
+        public override ITask<BuildRosaliaContext> RootTask
         {
             get
             {
                 return Sequence
                     .WithSubtask(new MsBuildTask<BuildRosaliaContext>()
-                        .FillInput(c => new MsBuildInput()
-                            .WithProjectFile(c.Data.SolutionFile)))
+                                     .FillInput(c => new MsBuildInput()
+                                                         .WithProjectFile(c.Data.SolutionFile)))
                     .WithSubtask(GenerateNuGetSpec)
-                    .WithSubtask(new GeneratePackageTask<BuildRosaliaContext>(
-                        GetConsoleRunnerSpecFile));
+                    .WithSubtask(new GeneratePackageTask<BuildRosaliaContext>(GetConsoleRunnerSpecFile));
             }
         }
 
@@ -45,18 +44,18 @@
 
         private static IEnumerable<IFile> GetLibFiles(TaskContext<BuildRosaliaContext> c)
         {
-            return c.FileSystem.GetFilesRecursively(c.Data.Src.GetDirectory(string.Format(@"Rosalia.Runner.Console\bin\{0}", c.Data.Configuration)))
-                    .Filter(fileName => fileName.EndsWith(".dll"))
-                    .Filter(file => file.Name == "Rosalia.Core.dll" || file.Name == "Rosalia.TaskLib.Standard.dll").All;
+            return c.FileSystem.SearchFilesIn(c.Data.RosaliaRunnerConsoleBin)
+                    .Include(file => file.Name == "Rosalia.Core.dll" || file.Name == "Rosalia.TaskLib.Standard.dll");
         }
 
         private static IEnumerable<IFile> GetRunnerDllFiles(TaskContext<BuildRosaliaContext> c)
         {
-            return
-                c.FileSystem.GetFilesRecursively(c.Data.Src.GetDirectory(string.Format(@"Rosalia.Runner.Console\bin\{0}", c.Data.Configuration)))
-                    .Filter(fileName => fileName.EndsWith(".dll"))
-                    .Exclude(file => file.Name.Contains(".TaskLib.") && !(file.Name == "Rosalia.TaskLib.Standard" || file.Name == "Rosalia.TaskLib.MsBuild"))
-                    .All;
+            return c.FileSystem.SearchFilesIn(c.Data.RosaliaRunnerConsoleBin)
+                    .Include(fileName => fileName.EndsWith(".dll"))
+                    .Exclude(
+                        file => file.Name.Contains(".TaskLib.") && 
+                            !(file.Name == "Rosalia.TaskLib.Standard" || 
+                              file.Name == "Rosalia.TaskLib.MsBuild"));
         }
 
         private static IFile GetConsoleRunnerSpecFile(TaskContext<BuildRosaliaContext> c)
@@ -77,9 +76,6 @@
             data.Artifacts = data.ProjectRootDirectory.GetDirectory("Artifacts");
         }
 
-        public override ITask<BuildRosaliaContext> CreateRootTask()
-        {
-            return MainSequence;
-        }
+        
     }
 }

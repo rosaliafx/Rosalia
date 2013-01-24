@@ -18,13 +18,13 @@
             get { return Directory.Exists(AbsolutePath); }
         }
 
-        public IEnumerable<IFile> Files
+        public FileList Files
         {
-            get 
+            get
             {
-                return Directory
-                    .GetFiles(AbsolutePath)
-                    .Select(file => new DefaultFile(file));
+                var files = Directory.GetFiles(AbsolutePath).Select(file => new DefaultFile(file));
+
+                return new FileList(files, this);
             }
         }
 

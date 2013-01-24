@@ -13,5 +13,10 @@
         public IDirectory Artifacts { get; set; }
 
         public string Configuration { get; set; }
+
+        public IDirectory RosaliaRunnerConsoleBin
+        {
+            get { return Src.GetDirectory("Rosalia.Runner.Console\bin").GetDirectory(Configuration); }
+        }
     }
 }

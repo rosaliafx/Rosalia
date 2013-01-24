@@ -8,11 +8,6 @@
     /// </summary>
     public class FileSystemHelper
     {
-        public string GetFileName(IFile file)
-        {
-            return Path.GetFileName(file.AbsolutePath);
-        }
-
         /// <summary>
         /// Writes a string to a file.
         /// </summary>
@@ -31,24 +26,9 @@
         /// </summary>
         /// <param name="directory">target directory</param>
         /// <returns>a list of files</returns>
-        public FileList GetFilesRecursively(IDirectory directory)
+        public FileList SearchFilesIn(IDirectory directory)
         {
-            return new FileList(GetFilesRecursivelySource(directory));
-        }
-
-        public void CopyFilesToDirectory(FileList files, IDirectory destination)
-        {
-            CopyFilesToDirectory(files.All, destination);
-        }
-
-        public void CopyFilesToDirectory(IEnumerable<IFile> files, IDirectory destination)
-        {
-            destination.EnsureExists();
-            foreach (var file in files)
-            {
-                var fileName = GetFileName(file);
-                file.CopyTo(destination.GetFile(fileName));
-            }
+            return new FileList(GetFilesRecursivelySource(directory), directory);
         }
 
         private IEnumerable<IFile> GetFilesRecursivelySource(IDirectory directory)

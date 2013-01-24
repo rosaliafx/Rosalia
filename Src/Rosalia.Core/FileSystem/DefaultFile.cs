@@ -55,6 +55,11 @@
             File.Copy(AbsolutePath, destination.AbsolutePath);
         }
 
+        public void CopyTo(IDirectory directory)
+        {
+            CopyTo(directory.GetFile(Name));
+        }
+
         public void EnsureExists()
         {
             if (Exists)

@@ -30,17 +30,17 @@
         [Test]
         public void GetFilesRecursively_FlatDirectory_ShouldReturnFiles()
         {
-            var directory = new DirectoryStub
-            {
-                Files = new List<IFile>
+            var directory = new DirectoryStub();
+            directory.Files = new FileList(
+                new List<IFile>
                 {
                     new FileStub { AbsolutePath = "file1" },
                     new FileStub { AbsolutePath = "file2" },
                     new FileStub { AbsolutePath = "file3" }
-                }
-            };
+                },
+                directory);
 
-            var list = _fileSystem.GetFilesRecursively(directory).All.ToList();
+            var list = _fileSystem.SearchFilesIn(directory).All.ToList();
 
             Assert.That(list, Is.Not.Null);
             Assert.That(list.Count, Is.EqualTo(3));
@@ -49,28 +49,30 @@
         [Test]
         public void GetFilesRecursively_DirectoryWithSubdirectory_ShouldReturnFiles()
         {
+            var childDirectory = new DirectoryStub();
+            childDirectory.Files = new FileList(
+                new List<IFile>
+                {
+                    new FileStub { AbsolutePath = "file4" }, 
+                    new FileStub { AbsolutePath = "file5" }
+                }, childDirectory);
+
             var directory = new DirectoryStub
             {
-                Files = new List<IFile>
-                {
-                    new FileStub { AbsolutePath = "file1" },
-                    new FileStub { AbsolutePath = "file2" },
-                    new FileStub { AbsolutePath = "file3" }
-                },
                 Directories = new List<IDirectory>
                 {
-                    new DirectoryStub
-                    {
-                        Files = new List<IFile>
-                        {
-                            new FileStub { AbsolutePath = "file4" },
-                            new FileStub { AbsolutePath = "file5" }
-                        }
-                    }                      
+                    childDirectory                      
                 }
             };
 
-            var list = _fileSystem.GetFilesRecursively(directory).All.ToList();
+            directory.Files = new FileList(new List<IFile>
+            {
+                new FileStub { AbsolutePath = "file1" },
+                new FileStub { AbsolutePath = "file2" },
+                new FileStub { AbsolutePath = "file3" }
+            }, directory);
+
+            var list = _fileSystem.SearchFilesIn(directory).All.ToList();
 
             Assert.That(list, Is.Not.Null);
             Assert.That(list.Count, Is.EqualTo(5));

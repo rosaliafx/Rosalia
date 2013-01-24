@@ -52,7 +52,7 @@
         public virtual void Init(WorkflowContext context)
         {
             _workflowContext = context;
-            _rootTask = CreateRootTask();
+            _rootTask = RootTask;
         }
 
         public ExecutionResult Execute(TData inputData)
@@ -85,7 +85,7 @@
             }
         }
 
-        public abstract ITask<TData> CreateRootTask();
+        public abstract ITask<TData> RootTask { get; }
 
         public ExecutionResult Execute(IExecutable<TData> task)
         {

@@ -10,10 +10,12 @@
 
         long Length { get; }
 
-        IDirectory Directory { get; }
-
         string Name { get; }
 
+        IDirectory Directory { get; }
+
         void CopyTo(IFile destination);
+
+        void CopyTo(IDirectory directory);
     }
 }

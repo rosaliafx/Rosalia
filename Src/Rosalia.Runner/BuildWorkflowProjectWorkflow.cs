@@ -6,12 +6,15 @@
 
     public class BuildWorkflowProjectWorkflow : Workflow<RunningOptions>
     {
-        public override ITask<RunningOptions> CreateRootTask()
+        public override ITask<RunningOptions> RootTask
         {
-            return new MsBuildTask<RunningOptions>()
-                .FillInput(c => new MsBuildInput()
-                    .WithProjectFile(c.Data.InputFile)
-                    .WithConfiguration(Configuration(c)));
+            get
+            {
+                return new MsBuildTask<RunningOptions>()
+                    .FillInput(c => new MsBuildInput()
+                                        .WithProjectFile(c.Data.InputFile)
+                                        .WithConfiguration(Configuration(c)));
+            }
         }
 
         private static string Configuration(TaskContext<RunningOptions> taskContext)

@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Core.FileSystem
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -8,13 +9,15 @@
     /// <summary>
     /// Simple file list wrapper that allows to perform typical sorting and filtering operations.
     /// </summary>
-    public class FileList
+    public class FileList : IEnumerable<IFile>
     {
+        private readonly IDirectory _baseDirectory;
         private readonly IEnumerable<IFile> _source;
 
-        public FileList(IEnumerable<IFile> source)
+        public FileList(IEnumerable<IFile> source, IDirectory baseDirectory)
         {
             _source = source;
+            _baseDirectory = baseDirectory;
         }
 
         /// <summary>
@@ -25,19 +28,27 @@
             get { return _source; }
         }
 
-        public FileList Filter(Predicate<IFile> predicate)
+        /// <summary>
+        /// Gets a base directory for the list of files.
+        /// </summary>
+        public IDirectory BaseDirectory
         {
-            return new FileList(All.Where(f => predicate(f)));
+            get { return _baseDirectory; }
+        }
+
+        public FileList Include(Predicate<IFile> predicate)
+        {
+            return new FileList(All.Where(f => predicate(f)), BaseDirectory);
         }
 
         public FileList Exclude(Predicate<IFile> predicate)
         {
-            return Filter(file => !predicate(file));
+            return Include(file => !predicate(file));
         }
 
-        public FileList Filter(Predicate<string> predicate)
+        public FileList Include(Predicate<string> predicate)
         {
-            return Filter(file => predicate(file.AbsolutePath));
+            return Include(file => predicate(file.AbsolutePath));
         }
 
         public FileList Exclude(Predicate<string> predicate)
@@ -45,9 +56,9 @@
             return Exclude(file => predicate(file.AbsolutePath));
         }
 
-        public FileList Filter(Regex regex)
+        public FileList Include(Regex regex)
         {
-            return Filter(file => regex.IsMatch(file.AbsolutePath));
+            return Include(file => regex.IsMatch(file.AbsolutePath));
         }
 
         public FileList Exclude(Regex regex)
@@ -58,13 +69,31 @@
         public FileList FilterWithRegex(string pattern)
         {
             var regex = new Regex(pattern);
-            return Filter(regex);
+            return Include(regex);
         }
 
         public FileList ExcludeWithRegex(string pattern)
         {
             var regex = new Regex(pattern);
             return Exclude(regex);
+        }
+
+        public IEnumerator<IFile> GetEnumerator()
+        {
+            return _source.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void CopyAllTo(IDirectory directory)
+        {
+            foreach (var file in _source)
+            {
+                file.CopyTo(directory);
+            }
         }
     }
 }

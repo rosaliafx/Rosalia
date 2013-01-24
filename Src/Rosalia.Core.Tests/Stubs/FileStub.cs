@@ -60,7 +60,10 @@
 
         public void CopyTo(IFile destination)
         {
-            throw new System.NotImplementedException();
+        }
+
+        public void CopyTo(IDirectory directory)
+        {
         }
 
         public void EnsureExists()
