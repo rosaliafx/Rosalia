@@ -13,10 +13,7 @@
 
         public void Register(IWorkflowEventsAware eventsAware)
         {
-            int level = 0;
-
-//            eventsAware.WorkflowStart += (sender, args) => _renderer.Init();
-//            eventsAware.WorkflowComplete += (sender, args) => _renderer.Dispose();
+            var level = 0;
 
             eventsAware.TaskStartExecution += (sender, args) =>
             {
@@ -29,6 +26,11 @@
 
             eventsAware.LogMessagePost += (sender, args) =>
             {
+                if (args.Template == null)
+                {
+                    args.Template = string.Empty;
+                }
+
                 var formattedMessage = args.Args.Length > 0 ?
                     string.Format(args.Template, args.Args) :
                     args.Template;

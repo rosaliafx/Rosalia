@@ -13,7 +13,8 @@
             T data, 
             IExecuter<T> executer, 
             ILogger logger, 
-            IDirectory workDirectory, IEnvironment environment)
+            IDirectory workDirectory, 
+            IEnvironment environment)
         {
             Environment = environment;
             Logger = logger;
