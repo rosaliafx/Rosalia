@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="BuildRosaliaContext.cs" />
     <Compile Include="BuildRosaliaWorkflow.cs" />
+    <Compile Include="Helpers\ContextExtensions.cs" />
     <Compile Include="Helpers\SpecInputExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

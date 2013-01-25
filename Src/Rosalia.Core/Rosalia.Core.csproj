@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fluent\RepeaterBuilder.cs" />
     <Compile Include="Tasks\AbstractLeafTask.cs" />
     <Compile Include="Tasks\AbstractNodeTask.cs" />
     <Compile Include="Tasks\AbstractTask.cs" />
