@@ -10,6 +10,7 @@
     using Rosalia.TaskLib.Git;
     using Rosalia.TaskLib.MsBuild;
     using Rosalia.TaskLib.NuGet;
+    using Rosalia.TaskLib.NuGet.Tasks;
 
     public class BuildRosaliaWorkflow : Workflow<BuildRosaliaContext>
     {

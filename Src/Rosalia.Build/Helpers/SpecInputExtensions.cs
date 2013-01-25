@@ -2,6 +2,7 @@
 {
     using Rosalia.Core.Context;
     using Rosalia.TaskLib.NuGet;
+    using Rosalia.TaskLib.NuGet.Input;
 
     public static class SpecInputExtensions
     {
@@ -21,6 +22,7 @@
             return input
                 .Id(string.Format("Rosalia.TaskLib.{0}", taskLib))
                 .Description(string.Format("{0} tasks bundle for Rosalia.", taskLib))
+                .Tags("rosalia", "tasklib", taskLib.ToLower())
                 .WithFile(
                    projectDirectory.GetDirectory("bin").GetDirectory(context.Data.Configuration).GetFile(string.Format("Rosalia.TaskLib.{0}.dll", taskLib)),
                    "lib")

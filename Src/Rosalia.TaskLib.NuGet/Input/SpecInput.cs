@@ -1,4 +1,4 @@
-﻿namespace Rosalia.TaskLib.NuGet
+﻿namespace Rosalia.TaskLib.NuGet.Input
 {
     using System.Collections.Generic;
     using System.Globalization;
@@ -46,97 +46,97 @@
 
         public SpecInput Id(string id)
         {
-            _metadata.Add(NuGet.Metadata.Id, id);
+            _metadata[Input.Metadata.Id] = id;
             return this;
         }
 
         public SpecInput Version(string version)
         {
-            _metadata.Add(NuGet.Metadata.Version, version);
+            _metadata[Input.Metadata.Version] = version;
             return this;
         }
 
         public SpecInput Title(string title)
         {
-            _metadata.Add(NuGet.Metadata.Title, title);
+            _metadata[Input.Metadata.Title] = title;
             return this;
         }
 
         public SpecInput Authors(params string[] authors)
         {
-            _metadata.Add(NuGet.Metadata.Authors, string.Join(",", authors));
+            _metadata[Input.Metadata.Authors] = string.Join(",", authors);
             return this;
         }
 
         public SpecInput Owners(params string[] owners)
         {
-            _metadata.Add(NuGet.Metadata.Owners, string.Join(",", owners));
+            _metadata[Input.Metadata.Owners] = string.Join(",", owners);
             return this;
         }
 
         public SpecInput Description(string description)
         {
-            _metadata.Add(NuGet.Metadata.Description, description);
+            _metadata[Input.Metadata.Description] = description;
             return this;
         }
 
         public SpecInput ReleaseNotes(string releaseNotes)
         {
-            _metadata.Add(NuGet.Metadata.ReleaseNotes, releaseNotes);
+            _metadata[Input.Metadata.ReleaseNotes] = releaseNotes;
             return this;
         }
 
         public SpecInput Summary(string summary)
         {
-            _metadata.Add(NuGet.Metadata.Summary, summary);
+            _metadata.Add(Input.Metadata.Summary, summary);
             return this;
         }
 
         public SpecInput Language(string localeId)
         {
-            _metadata.Add(NuGet.Metadata.Language, localeId);
+            _metadata[Input.Metadata.Language] = localeId;
             return this;
         }
 
         public SpecInput Language(CultureInfo locale)
         {
-            _metadata.Add(NuGet.Metadata.Language, locale.Name);
+            _metadata[Input.Metadata.Language] = locale.Name;
             return this;
         }
 
         public SpecInput ProjectUrl(string projectUrl)
         {
-            _metadata.Add(NuGet.Metadata.ProjectUrl, projectUrl);
+            _metadata[Input.Metadata.ProjectUrl] = projectUrl;
             return this;
         }
 
         public SpecInput IconUrl(string iconUrl)
         {
-            _metadata.Add(NuGet.Metadata.IconUrl, iconUrl);
+            _metadata[Input.Metadata.IconUrl] = iconUrl;
             return this;
         }
 
         public SpecInput LicenseUrl(string licenseUrl)
         {
-            _metadata.Add(NuGet.Metadata.LicenseUrl, licenseUrl);
+            _metadata[Input.Metadata.LicenseUrl] = licenseUrl;
             return this;
         }
 
         public SpecInput Copyright(string copyright)
         {
-            _metadata.Add(NuGet.Metadata.Copyright, copyright);
+            _metadata[Input.Metadata.Copyright] = copyright;
             return this;
         }
 
         public SpecInput RequireLicenseAcceptance(bool requireLicenseAcceptance)
         {
-            _metadata.Add(NuGet.Metadata.RequireLicenseAcceptance, requireLicenseAcceptance.ToString().ToLower());
+            _metadata[Input.Metadata.RequireLicenseAcceptance] = requireLicenseAcceptance.ToString().ToLower();
             return this;
         }
 
         public SpecInput Tags(params string[] tags)
         {
-            _metadata.Add(NuGet.Metadata.Tags, string.Join(" ", tags));
+            _metadata[Input.Metadata.Tags] = string.Join(" ", tags);
             return this;
         }
 

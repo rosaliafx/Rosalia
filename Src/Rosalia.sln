@@ -58,6 +58,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Git", "Rosa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Git.Tests", "Rosalia.TaskLib.Git.Tests\Rosalia.TaskLib.Git.Tests.csproj", "{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{3E70758D-0B71-4D12-9EE5-5246C2902D4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.Workflows.PushNugetPackages", "Rosalia.Workflows.PushNugetPackages\Rosalia.Workflows.PushNugetPackages.csproj", "{13489840-90AB-478C-8741-7C08C5F82FD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -148,6 +152,10 @@ Global
 		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13489840-90AB-478C-8741-7C08C5F82FD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13489840-90AB-478C-8741-7C08C5F82FD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13489840-90AB-478C-8741-7C08C5F82FD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13489840-90AB-478C-8741-7C08C5F82FD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -170,5 +178,6 @@ Global
 		{A10A16F5-10D3-4748-A01B-B9808B3D6E84} = {F4E129F0-E359-4BDB-8EA9-C32D39C5AB30}
 		{7AF172B3-F9C4-44B8-A333-F33F583693B1} = {F4E129F0-E359-4BDB-8EA9-C32D39C5AB30}
 		{C81FB8D0-D21F-47BC-864B-E29DC0EC71EB} = {F4E129F0-E359-4BDB-8EA9-C32D39C5AB30}
+		{13489840-90AB-478C-8741-7C08C5F82FD0} = {3E70758D-0B71-4D12-9EE5-5246C2902D4B}
 	EndGlobalSection
 EndGlobal

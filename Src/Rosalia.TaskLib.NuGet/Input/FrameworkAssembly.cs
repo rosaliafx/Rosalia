@@ -1,4 +1,4 @@
-﻿namespace Rosalia.TaskLib.NuGet
+﻿namespace Rosalia.TaskLib.NuGet.Input
 {
     public class FrameworkAssembly
     {

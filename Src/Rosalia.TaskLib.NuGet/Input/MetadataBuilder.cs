@@ -1,7 +1,6 @@
-﻿namespace Rosalia.TaskLib.NuGet
+﻿namespace Rosalia.TaskLib.NuGet.Input
 {
     using System.Collections.Generic;
-    using System.Globalization;
 
     public class MetadataBuilder
     {

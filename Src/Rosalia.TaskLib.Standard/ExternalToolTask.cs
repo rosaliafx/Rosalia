@@ -21,18 +21,23 @@
         {
         }
 
-        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> contextToInput)
-            : base(contextToInput)
+        protected ExternalToolTask(TInput input) : base(input)
         {
         }
 
-        protected ExternalToolTask(Action<TResult, TContext> applyResultToContext)
-            : base(applyResultToContext)
+        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> contextToInput) : base(contextToInput)
         {
         }
 
-        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> contextToInput, Action<TResult, TContext> applyResultToContext)
-            : base(contextToInput, applyResultToContext)
+        protected ExternalToolTask(Action<TResult, TContext> applyResultToContext) : base(applyResultToContext)
+        {
+        }
+
+        protected ExternalToolTask(TInput input, Action<TResult, TContext> applyResultToContext) : base(input, applyResultToContext)
+        {
+        }
+
+        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> contextToInput, Action<TResult, TContext> applyResultToContext) : base(contextToInput, applyResultToContext)
         {
         }
 

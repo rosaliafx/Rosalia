@@ -12,7 +12,11 @@
         private Func<TaskContext<TContext>, TInput> _contextToInput;
         private Action<TResult, TContext> _applyResultToContext;
 
-        protected ExtendedTask() : this(null, null)
+        protected ExtendedTask() : this((Func<TaskContext<TContext>, TInput>) null, null)
+        {
+        }
+
+        protected ExtendedTask(TInput input) : this(context => input)
         {
         }
 
@@ -20,7 +24,11 @@
         {
         }
 
-        protected ExtendedTask(Action<TResult, TContext> applyResultToContext) : this(null, applyResultToContext)
+        protected ExtendedTask(Action<TResult, TContext> applyResultToContext) : this((Func<TaskContext<TContext>, TInput>) null, applyResultToContext)
+        {
+        }
+
+        protected ExtendedTask(TInput input, Action<TResult, TContext> applyResultToContext) : this(context => input)
         {
         }
 

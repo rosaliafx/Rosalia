@@ -3,6 +3,7 @@
     using NUnit.Framework;
     using Rosalia.Core.Tests;
     using Rosalia.Core.Tests.Stubs;
+    using Rosalia.TaskLib.NuGet.Tasks;
 
     public class GenerateNuGetSpecTaskTests : TaskTestsBase<object>
     {

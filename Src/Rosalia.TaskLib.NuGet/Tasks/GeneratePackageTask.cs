@@ -1,7 +1,6 @@
-﻿namespace Rosalia.TaskLib.NuGet
+﻿namespace Rosalia.TaskLib.NuGet.Tasks
 {
     using System;
-    using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;

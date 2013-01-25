@@ -1,10 +1,11 @@
-﻿namespace Rosalia.TaskLib.NuGet
+﻿namespace Rosalia.TaskLib.NuGet.Tasks
 {
     using System;
     using System.IO;
     using System.Linq;
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
+    using Rosalia.TaskLib.NuGet.Input;
     using Rosalia.TaskLib.Standard;
 
     public class GenerateNuGetSpecTask<T> : ExtendedTask<T, SpecInput, object>
