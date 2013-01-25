@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Core
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Rosalia.Core.Context;
     using Rosalia.Core.Events;
@@ -136,6 +137,11 @@
         protected SequenceTask<TData> Sequence(params ITask<TData>[] children)
         {
             return new SequenceTask<TData>(children);
+        }
+
+        protected RepeaterBuilder<TData, TEnumerableItem> ForEach<TEnumerableItem>(Func<TaskContext<TData>, IEnumerable<TEnumerableItem>> enumerableProvider)
+        {
+            return new RepeaterBuilder<TData, TEnumerableItem>(enumerableProvider);
         }
 
         protected virtual void OnWorkflowExecuted()

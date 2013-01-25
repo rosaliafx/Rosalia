@@ -1,13 +1,11 @@
 ﻿namespace Rosalia.Build
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using Rosalia.Build.Helpers;
     using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
-    using Rosalia.Core.Tasks.Flow;
     using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Git;
     using Rosalia.TaskLib.MsBuild;
@@ -35,7 +33,8 @@
                     //// Build solution
                     new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()
-                            .WithProjectFile(c.Data.SolutionFile)),
+                            .WithProjectFile(c.Data.SolutionFile)
+                            .WithConfiguration(c.Data.Configuration)),
                     //// Generate spec for Core NuGet package
                     new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
                         input
@@ -54,19 +53,17 @@
                             .WithFile(c.Data.RosaliaRunnerConsoleExe, "tools")
                             .WithFiles(GetRunnerDllFiles(c), "tools")
                             .WithFiles(c.Data.BuildAssets.Files.Include(fileName => fileName.EndsWith(".pp")), "content")
-                            .WithDependency("Rosalia.Core", version: c.Data.Version)
+                            .WithDependency("Rosalia.Core", c.Data.Version)
                             .WithDependency("NuGetPowerTools", version: "0.29")
                             .ToFile(c.Data.NuSpecRosalia)),
                     //// Generate spec for Task Libs
-                    new RepeatTask<BuildRosaliaContext, GenerateNuGetSpecTask<BuildRosaliaContext>, IDirectory>()
-                        .ForEach(c => c.Data.Src.Directories.Where(d => d.Name.StartsWith("Rosalia.TaskLib") && (!d.Name.EndsWith("Tests")) && d.Name != "Rosalia.TaskLib.Standard"))
+                    ForEach(c => c.FindTaskLibDirectories())
                         .Do((context, directory) =>
                             new GenerateNuGetSpecTask<BuildRosaliaContext>((taskContext, input) => input
                                 .FillCommonProperties(taskContext)
                                 .FillTaskLibProperties(taskContext, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))),
                     //// Generate NuGet packages
-                    new RepeatTask<BuildRosaliaContext, GeneratePackageTask<BuildRosaliaContext>, IFile>()
-                        .ForEach(c => c.Data.Artifacts.Files.Include(fileName => fileName.EndsWith(".nuspec")))
+                    ForEach(c => c.Data.Artifacts.Files.Include(fileName => fileName.EndsWith(".nuspec")))
                         .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>(file)));
             }
         }
