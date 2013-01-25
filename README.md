@@ -9,6 +9,7 @@ Rosalia is an automation tool written in C#. It could be used for
 ## Features ##
 
 - uses MSBuild and native csproj/sln files for direct compiling -- no custom compiler calls;
+- explicit workflow definition -- no (task)->(depends on task) stuff.
 - tasks are defined in pure C#. Debug, refactoring, unit testing and all the features of IDE are available;
 - you can use standard task or define your own as normal C# classes;
 - any external .NET library can be used in task body;
