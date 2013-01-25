@@ -10,7 +10,7 @@
 
         long Length { get; }
 
-        string Name { get; }
+        
 
         IDirectory Directory { get; }
 

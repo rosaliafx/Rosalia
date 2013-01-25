@@ -18,6 +18,11 @@
             get { return Directory.Exists(AbsolutePath); }
         }
 
+        public string Name
+        {
+            get { return Path.GetFileName(AbsolutePath); }
+        }
+
         public FileList Files
         {
             get
@@ -30,7 +35,7 @@
 
         public IEnumerable<IDirectory> Directories
         {
-            get 
+            get
             {
                 return Directory
                     .GetDirectories(AbsolutePath)

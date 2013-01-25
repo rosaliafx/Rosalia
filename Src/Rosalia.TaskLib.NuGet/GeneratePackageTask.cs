@@ -11,6 +11,11 @@
     {
         private readonly Func<TaskContext<T>, IFile> _specFile;
 
+        public GeneratePackageTask(IFile file)
+        {
+            _specFile = context => file;
+        }
+
         public GeneratePackageTask(Func<TaskContext<T>, IFile> specFile)
         {
             _specFile = specFile;

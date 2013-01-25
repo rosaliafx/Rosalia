@@ -10,12 +10,12 @@
     {
         public void Register(IWorkflowEventsAware eventsAware)
         {
-            eventsAware.TaskStartExecution += (sender, args) => 
+            eventsAware.TaskExecuting += (sender, args) => 
                 args.Logger.Info(
                 "Start executing task {0}", 
                 args.CurrentTask.Name);
 
-            eventsAware.TaskCompleteExecution += (sender, args) =>
+            eventsAware.TaskExecuted += (sender, args) =>
             {
                 args.Logger.Log(
                     args.Result.ResultType == ResultType.Success

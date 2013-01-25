@@ -11,6 +11,7 @@
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
+    using Rosalia.Core.Tasks;
 
     public class GenerateAssemblyInfo<T> : AbstractLeafTask<T>
     {

@@ -5,6 +5,7 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Result;
+    using Rosalia.Core.Tasks;
     using Rosalia.Core.Tests.Stubs;
 
     [TestFixture]

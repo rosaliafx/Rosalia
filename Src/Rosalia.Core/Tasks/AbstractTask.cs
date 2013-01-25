@@ -1,8 +1,7 @@
-﻿namespace Rosalia.Core
+﻿namespace Rosalia.Core.Tasks
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq.Expressions;
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Result;

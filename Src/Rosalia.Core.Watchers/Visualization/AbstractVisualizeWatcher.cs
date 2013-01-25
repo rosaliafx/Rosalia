@@ -13,12 +13,12 @@
             var taskIndex = 1;
             var rootComposite = (Composite) null;
 
-            eventsAware.WorkflowStart += (sender, args) =>
+            eventsAware.WorkflowExecuting += (sender, args) =>
             {
                 rootComposite = TaskToComposite(args.RootTask);
             };
 
-            eventsAware.TaskCompleteExecution += (sender, args) =>
+            eventsAware.TaskExecuted += (sender, args) =>
             {
                 var targetComposite = rootComposite.FindItemByTaskId(args.CurrentTask.Id);
                 targetComposite.Result = args.Result;
@@ -27,7 +27,7 @@
                 taskIndex++;
             };
 
-            eventsAware.WorkflowComplete += (sender, args) =>
+            eventsAware.WorkflowExecuted += (sender, args) =>
             {
                 
                 LayoutData layoutData = null;

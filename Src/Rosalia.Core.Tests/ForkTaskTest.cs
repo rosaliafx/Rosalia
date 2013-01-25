@@ -3,6 +3,7 @@
     using System;
     using Moq;
     using NUnit.Framework;
+    using Rosalia.Core.Tasks.Flow;
 
     public class ForkTaskTest : TaskTestsBase<object>
     {

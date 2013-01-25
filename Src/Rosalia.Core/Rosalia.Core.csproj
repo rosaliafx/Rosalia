@@ -39,9 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractLeafTask.cs" />
-    <Compile Include="AbstractNodeTask.cs" />
-    <Compile Include="AbstractTask.cs" />
+    <Compile Include="Tasks\AbstractLeafTask.cs" />
+    <Compile Include="Tasks\AbstractNodeTask.cs" />
+    <Compile Include="Tasks\AbstractTask.cs" />
     <Compile Include="Context\Environment\DefaultEnvironment.cs" />
     <Compile Include="Context\Environment\IEnvironment.cs" />
     <Compile Include="Context\WorkflowContext.cs" />
@@ -50,7 +50,7 @@
     <Compile Include="Events\TaskEventArgs.cs" />
     <Compile Include="Events\TaskWithResultEventArgs.cs" />
     <Compile Include="Events\WorkflowStartEventArgs.cs" />
-    <Compile Include="FailoverTask.cs" />
+    <Compile Include="Tasks\Flow\FailoverTask.cs" />
     <Compile Include="FileSystem\DefaultDirectory.cs" />
     <Compile Include="FileSystem\DefaultFile.cs" />
     <Compile Include="FileSystem\FileList.cs" />
@@ -59,7 +59,7 @@
     <Compile Include="FileSystem\IFile.cs" />
     <Compile Include="FileSystem\IFileSystemItem.cs" />
     <Compile Include="Fluent\ConditionBuilder.cs" />
-    <Compile Include="ForkTask.cs" />
+    <Compile Include="Tasks\Flow\ForkTask.cs" />
     <Compile Include="Result\ExecutionResult.cs" />
     <Compile Include="Context\TaskContext.cs" />
     <Compile Include="Fluent\ResultBuilder.cs" />
@@ -75,10 +75,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultType.cs" />
     <Compile Include="Result\ResultMessage.cs" />
-    <Compile Include="SimpleTask.cs" />
+    <Compile Include="Tasks\Flow\RepeatTask.cs" />
+    <Compile Include="Tasks\SimpleTask.cs" />
     <Compile Include="Watching\IWorkflowWatcher.cs" />
     <Compile Include="Workflow.cs" />
-    <Compile Include="SequenceTask.cs" />
+    <Compile Include="Tasks\Flow\SequenceTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exceptions\" />

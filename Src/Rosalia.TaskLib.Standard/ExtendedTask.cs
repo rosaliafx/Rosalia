@@ -5,6 +5,7 @@
     using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
+    using Rosalia.Core.Tasks;
 
     public abstract class ExtendedTask<TContext, TInput, TResult> : AbstractLeafTask<TContext> where TInput : class
     {

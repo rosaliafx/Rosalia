@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Core.Tests
 {
     using NUnit.Framework;
+    using Rosalia.Core.Tasks.Flow;
 
     public class FailoverTaskTests : TaskTestsBase<object>
     {

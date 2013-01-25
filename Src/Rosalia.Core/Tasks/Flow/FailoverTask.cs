@@ -1,4 +1,4 @@
-﻿namespace Rosalia.Core
+﻿namespace Rosalia.Core.Tasks.Flow
 {
     using System.Collections.Generic;
     using Rosalia.Core.Context;

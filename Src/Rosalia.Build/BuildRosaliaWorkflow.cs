@@ -1,10 +1,13 @@
 ﻿namespace Rosalia.Build
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
+    using Rosalia.Build.Helpers;
     using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
+    using Rosalia.Core.Tasks.Flow;
     using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Git;
     using Rosalia.TaskLib.MsBuild;
@@ -34,22 +37,19 @@
                         .FillInput(c => new MsBuildInput()
                             .WithProjectFile(c.Data.SolutionFile)),
                     //// Generate spec for Core NuGet package
-                    new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) => 
+                    new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
                         input
                             .Id("Rosalia.Core")
-                            .Version(c.Data.Version)
-                            .Authors("Eugene Guryanov")
-                            .Description("Core libs for Rosalia framework")
+                            .FillCommonProperties(c)
+                            .Description("Core libs for Rosalia framework.")
                             .WithFiles(GetCoreLibFiles(c), "lib")
                             .ToFile(c.Data.NuSpecRosaliaCore)),
                     //// Generate specs for NuGet packages
-                    new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) => 
+                    new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
                         input
                             .Id("Rosalia")
-                            .Version(c.Data.Version)
-                            .Authors("Eugene Guryanov")
-                            .Description("Automation tool that allows writing build, install or other workflows in C#")
-                            .Tags("automation", "build", "msbuild", "nant", "psake")
+                            .FillCommonProperties(c)
+                            .Description("Automation tool that allows writing build, install or other workflows in C#. This package automatically integrates Rosalia to your Class Library project.")
                             .WithFile(c.Data.RosaliaPackageInstallScript, "tools")
                             .WithFile(c.Data.RosaliaRunnerConsoleExe, "tools")
                             .WithFiles(GetRunnerDllFiles(c), "tools")
@@ -57,9 +57,17 @@
                             .WithDependency("Rosalia.Core", version: c.Data.Version)
                             .WithDependency("NuGetPowerTools", version: "0.29")
                             .ToFile(c.Data.NuSpecRosalia)),
+                    //// Generate spec for Task Libs
+                    new RepeatTask<BuildRosaliaContext, GenerateNuGetSpecTask<BuildRosaliaContext>, IDirectory>()
+                        .ForEach(c => c.Data.Src.Directories.Where(d => d.Name.StartsWith("Rosalia.TaskLib") && (!d.Name.EndsWith("Tests")) && d.Name != "Rosalia.TaskLib.Standard"))
+                        .Do((context, directory) =>
+                            new GenerateNuGetSpecTask<BuildRosaliaContext>((taskContext, input) => input
+                                .FillCommonProperties(taskContext)
+                                .FillTaskLibProperties(taskContext, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))),
                     //// Generate NuGet packages
-                    new GeneratePackageTask<BuildRosaliaContext>(c => c.Data.NuSpecRosaliaCore),
-                    new GeneratePackageTask<BuildRosaliaContext>(c => c.Data.NuSpecRosalia));
+                    new RepeatTask<BuildRosaliaContext, GeneratePackageTask<BuildRosaliaContext>, IFile>()
+                        .ForEach(c => c.Data.Artifacts.Files.Include(fileName => fileName.EndsWith(".nuspec")))
+                        .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>(file)));
             }
         }
 
@@ -79,9 +87,9 @@
                               file.Name == "Rosalia.TaskLib.MsBuild"));
         }
 
-        protected override void OnBeforeExecute(TaskContext<BuildRosaliaContext> context)
+        protected override void OnWorkflowExecuting(TaskContext<BuildRosaliaContext> context)
         {
-            base.OnBeforeExecute(context);
+            base.OnWorkflowExecuting(context);
 
             var data = context.Data;
 

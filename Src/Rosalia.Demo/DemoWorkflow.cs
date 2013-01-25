@@ -4,6 +4,8 @@
     using System.Reflection;
     using Rosalia.Core;
     using Rosalia.Core.Logging;
+    using Rosalia.Core.Tasks;
+    using Rosalia.Core.Tasks.Flow;
     using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Compression;
     using Rosalia.TaskLib.MsBuild;

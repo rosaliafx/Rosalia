@@ -6,6 +6,8 @@
 
         bool Exists { get; }
 
+        string Name { get; }
+
         void EnsureExists();
     }
 }

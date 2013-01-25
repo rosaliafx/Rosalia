@@ -5,14 +5,14 @@
 
     public interface IWorkflowEventsAware
     {
-        event EventHandler<WorkflowStartEventArgs> WorkflowStart;
+        event EventHandler<WorkflowStartEventArgs> WorkflowExecuting;
 
-        event EventHandler WorkflowComplete;
+        event EventHandler WorkflowExecuted;
 
         event EventHandler<LogMessageEventArgs> LogMessagePost;
 
-        event EventHandler<TaskEventArgs> TaskStartExecution;
+        event EventHandler<TaskEventArgs> TaskExecuting;
 
-        event EventHandler<TaskWithResultEventArgs> TaskCompleteExecution;
+        event EventHandler<TaskWithResultEventArgs> TaskExecuted;
     }
 }

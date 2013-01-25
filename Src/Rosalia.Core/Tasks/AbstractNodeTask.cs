@@ -1,4 +1,4 @@
-﻿namespace Rosalia.Core
+﻿namespace Rosalia.Core.Tasks
 {
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;

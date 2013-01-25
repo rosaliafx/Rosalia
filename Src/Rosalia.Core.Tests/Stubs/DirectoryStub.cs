@@ -10,6 +10,8 @@
 
         public bool Exists { get; set; }
 
+        public string Name { get; set; }
+
         public IEnumerable<IDirectory> Directories { get; set; }
 
         public FileList Files { get; set; }

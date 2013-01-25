@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Xml.Linq;
     using Rosalia.Core.FileSystem;
 
     public class SpecInput
@@ -142,6 +143,40 @@
         public SpecInput WithDependency(string id, string version = null, string frameworkVersion = null)
         {
             Dependencies.Add(new Dependency(id, version, frameworkVersion));
+            return this;
+        }
+
+        /// <summary>
+        /// Reads dependencies from packages.config file.
+        /// </summary>
+        public SpecInput WithDependenciesFromPackagesConfig(IDirectory projectDirectory)
+        {
+            var packagesConfigFile = projectDirectory.GetFile("packages.config");
+            if (packagesConfigFile.Exists)
+            {
+                WithDependenciesFromPackagesConfig(packagesConfigFile);   
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Reads dependencies from packages.config file.
+        /// </summary>
+        public SpecInput WithDependenciesFromPackagesConfig(IFile packagesConfigFile)
+        {
+            var document = XDocument.Load(packagesConfigFile.ReadStream);
+            foreach (var package in document.Descendants("package"))
+            {
+                var versionAttribute = package.Attribute("version");
+                var frameworkVersionAttribute = package.Attribute("targetFramework");
+
+                WithDependency(
+                    package.Attribute("id").Value,
+                    versionAttribute == null ? null : versionAttribute.Value,
+                    frameworkVersionAttribute == null ? null : frameworkVersionAttribute.Value);
+            }
+
             return this;
         }
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Drawing;
+    using Rosalia.Core.Tasks.Flow;
     using Rosalia.Core.Watchers.Visualization.Layout;
     using Size = Rosalia.Core.Watchers.Visualization.Layout.Size;
 

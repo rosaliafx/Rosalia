@@ -9,6 +9,10 @@
 
     public class GenerateNuGetSpecTask<T> : ExtendedTask<T, SpecInput, object>
     {
+        public GenerateNuGetSpecTask()
+        {
+        }
+
         public GenerateNuGetSpecTask(Action<TaskContext<T>, SpecInput> configureInput)
         {
             FillInput(context =>

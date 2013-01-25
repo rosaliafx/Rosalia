@@ -15,11 +15,11 @@
         {
             var level = 0;
 
-            eventsAware.TaskStartExecution += (sender, args) =>
+            eventsAware.TaskExecuting += (sender, args) =>
             {
                 level = args.CurrentTaskDepth;
             };
-            eventsAware.TaskCompleteExecution += (sender, args) =>
+            eventsAware.TaskExecuted += (sender, args) =>
             {
                 level = args.CurrentTaskDepth;
             };

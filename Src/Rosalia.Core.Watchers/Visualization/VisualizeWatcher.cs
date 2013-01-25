@@ -27,7 +27,7 @@
 //            var rootComposite = (Composite) null;
 //            var currentComposite = (Composite) null;
 //
-//            eventsAware.TaskStartExecution += (sender, args) =>
+//            eventsAware.TaskExecuting += (sender, args) =>
 //            {
 //                var composite = new Composite(args.CurrentTask, currentComposite);
 //                composite.Order = taskIndex;
@@ -46,13 +46,13 @@
 //                }
 //            };
 //
-//            eventsAware.TaskCompleteExecution += (sender, args) =>
+//            eventsAware.TaskExecuted += (sender, args) =>
 //            {
 //                currentComposite.Result = args.Result;
 //                currentComposite = currentComposite.Parent;
 //            };
 //
-//            eventsAware.WorkflowComplete += (sender, args) =>
+//            eventsAware.WorkflowExecuted += (sender, args) =>
 //            {
 //                var font = new Font(FontFamily.GenericMonospace, 12);
 //                var orderFont = new Font(FontFamily.GenericMonospace, 10, FontStyle.Bold);
