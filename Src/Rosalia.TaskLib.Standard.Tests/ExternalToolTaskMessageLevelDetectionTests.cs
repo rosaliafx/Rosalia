@@ -6,7 +6,6 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
-    using Rosalia.Core.Tests;
 
     public class ExternalToolTaskMessageLevelDetectionTests : ExternalToolTaskTestsBase<object, object, object>
     {
@@ -23,7 +22,9 @@
                 "Test message",
                 (result, execution) =>
                     {
-                        Assert.That(Logger.HasError());
+                        Logger.AssertHasError();
+
+                        Assert.That(Logger.LastError.Text, Is.EqualTo("Test message"));
                     });
         }
 

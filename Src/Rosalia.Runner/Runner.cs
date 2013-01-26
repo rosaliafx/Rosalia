@@ -1,7 +1,6 @@
 ﻿namespace Rosalia.Runner
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -10,7 +9,6 @@
     using Rosalia.Core.Context.Environment;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Logging;
-    using Rosalia.Core.Result;
     using Rosalia.Core.Watchers.Logging;
     using Rosalia.Core.Watchers.Visualization;
     using Rosalia.Core.Watching;
@@ -29,7 +27,7 @@
             {
                 InitLogger(options);
 
-                _logRenderer.AppendMessage(0, "Initializing...", MessageLevel.Info);
+                _logRenderer.AppendMessage(0, "Initializing...", MessageLevel.Info, MessageType.System);
 
                 options.InputFile = SanitizeInputFilePath(options);
 
@@ -38,7 +36,6 @@
                 IList<IWorkflowWatcher> watchers = new List<IWorkflowWatcher>
                 {
                     new LoggingWatcher(_logRenderer),
-                    new LogTaskStartWatcher(),
                 };
 
                 foreach (var outputPath in options.VisualisationFilesPath)
@@ -76,7 +73,7 @@
                     watcher.Register(_workflow);
                 }
 
-                _logRenderer.AppendMessage(0, "Workflow initialized", MessageLevel.Success);
+                _logRenderer.AppendMessage(0, "Workflow initialized", MessageLevel.Success, MessageType.System);
 
                 return new InitializationResult(_workflow, _context);
             }
@@ -84,7 +81,7 @@
             {
                 if (_logRenderer != null)
                 {
-                    _logRenderer.AppendMessage(0, ex.Message, MessageLevel.Error);
+                    _logRenderer.AppendMessage(0, ex.Message, MessageLevel.Error, MessageType.System);
                 }
 
                 return new InitializationResult();
@@ -126,7 +123,7 @@
 
         protected WorkflowInfo GetWorkflowInfo(RunningOptions options, IList<IWorkflowLookup> lookups)
         {
-            _logRenderer.AppendMessage(1, "Searching for workflows...", MessageLevel.Info);
+            _logRenderer.AppendMessage(1, "Searching for workflows...", MessageLevel.Info, MessageType.System);
 
             var lookupOptions = new LookupOptions(options);
             foreach (var lookup in lookups)
@@ -134,7 +131,7 @@
                 if (lookup.CanHandle(lookupOptions))
                 {
                     var message = string.Format("using lookup {0} for workflow searching", lookup.GetType());
-                    _logRenderer.AppendMessage(1, message, MessageLevel.Info);
+                    _logRenderer.AppendMessage(1, message, MessageLevel.Info, MessageType.System);
                     var foundWorkflows = lookup.Find(lookupOptions);
                     return SelectDefaultWorkflow(foundWorkflows.ToList(), options);
                 }
@@ -145,7 +142,7 @@
 
         private WorkflowInfo SelectDefaultWorkflow(IList<WorkflowInfo> foundWorkflows, RunningOptions options)
         {
-            _logRenderer.AppendMessage(1, string.Format("workflows found: {0}", foundWorkflows.Count), MessageLevel.Info);
+            _logRenderer.AppendMessage(1, string.Format("workflows found: {0}", foundWorkflows.Count), MessageLevel.Info, MessageType.System);
 
             if (foundWorkflows.Count == 0)
             {
@@ -174,7 +171,11 @@
                 throw new Exception("Could not select default workflow to execute.");
             }
 
-            _logRenderer.AppendMessage(1, string.Format("Workflow to execute: {0}", workflowToExecute.WorkflowType.Name), MessageLevel.Info);
+            _logRenderer.AppendMessage(
+                1, 
+                string.Format("Workflow to execute: {0}", workflowToExecute.WorkflowType.Name), 
+                MessageLevel.Info,
+                MessageType.System);
 
             return workflowToExecute;
         }

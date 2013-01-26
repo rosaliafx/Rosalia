@@ -1,7 +1,6 @@
 ﻿namespace Rosalia.Core
 {
     using Rosalia.Core.Context;
-    using Rosalia.Core.Result;
 
     public interface IWorkflow : IWorkflowEventsAware
     {

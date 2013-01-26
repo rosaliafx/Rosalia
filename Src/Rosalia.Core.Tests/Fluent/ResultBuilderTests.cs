@@ -1,32 +1,22 @@
 ﻿namespace Rosalia.Core.Tests.Fluent
 {
-    using System.Linq;
+    using System.Collections.Generic;
     using NUnit.Framework;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
-    using Rosalia.Core.Result;
 
     [TestFixture]
     public class ResultBuilderTests
     {
-        private ResultBuilder _builder;
-
-        [SetUp]
-        public void Init()
-        {
-            _builder = new ResultBuilder();
-        }
-
         [Test]
-        public void AddMessage_ShouldFormat()
+        public void AddMessage_ShouldPassToListener()
         {
-            _builder.AddMessage(MessageLevel.Info, "{0}", "test");
+            var messages = new List<Message>();
+            var builder = new ResultBuilder(messages.Add);
 
-            ExecutionResult result = _builder;
+            builder.AddMessage(MessageLevel.Info, "{0}", "test");
 
-            Assert.That(result.Messages, Is.Not.Null);
-            Assert.That(result.Messages.Count(), Is.EqualTo(1));
-            Assert.That(result.Messages.ToList()[0].Text, Is.EqualTo("test"));
+            Assert.That(messages.Count, Is.EqualTo(1));
         }
     }
 }

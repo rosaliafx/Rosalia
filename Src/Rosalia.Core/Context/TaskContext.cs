@@ -12,12 +12,10 @@
         public TaskContext(
             T data, 
             IExecuter<T> executer, 
-            ILogger logger, 
             IDirectory workDirectory, 
             IEnvironment environment)
         {
             Environment = environment;
-            Logger = logger;
             WorkDirectory = workDirectory;
             Data = data;
             Executer = executer;
@@ -27,8 +25,6 @@
         public T Data { get; private set; }
 
         public IExecuter<T> Executer { get; private set; }
-
-        public ILogger Logger { get; private set; }
 
         public IDirectory WorkDirectory { get; private set; }
 

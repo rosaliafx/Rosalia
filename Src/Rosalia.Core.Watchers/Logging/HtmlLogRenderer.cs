@@ -46,7 +46,7 @@
 <body><div id='log'>");
         }
 
-        public void AppendMessage(int depth, string message, MessageLevel level)
+        public void AppendMessage(int depth, string message, MessageLevel level, MessageType type)
         {
             _writerProvider.Value.WriteLine("<div class='item {0}'>", level);
             for (var i = 0; i < depth; i++)

@@ -1,10 +1,11 @@
 ﻿namespace Rosalia.Core.Tests
 {
+    using System;
     using Moq;
     using NUnit.Framework;
     using Rosalia.Core.Context;
+    using Rosalia.Core.Events;
     using Rosalia.Core.FileSystem;
-    using Rosalia.Core.Result;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tests.Stubs;
 
@@ -12,7 +13,7 @@
     public abstract class TaskTestsBase<T> where T : new()
     {
         private Mock<IExecuter<T>> _executer;
-        private LoggerStub _logger;
+        private MessageCollector _logger;
         private Mock<IDirectory> _workDirectory;
         private T _data;
         private EnvironmentStub _environment;
@@ -22,7 +23,7 @@
             get { return _executer; }
         }
 
-        protected LoggerStub Logger
+        protected MessageCollector Logger
         {
             get { return _logger; }
         }
@@ -35,6 +36,11 @@
         public EnvironmentStub Environment
         {
             get { return _environment; }
+        }
+
+        protected T Data
+        {
+            get { return _data; }
         }
 
         protected static void AssertWasNotExecuted(Mock<ITask<T>> child)
@@ -52,7 +58,7 @@
         {
             _data = new T();
             _executer = new Mock<IExecuter<T>>();
-            _logger = new LoggerStub();
+            _logger = new MessageCollector();
             _workDirectory = new Mock<IDirectory>();
             _environment = new EnvironmentStub
             {
@@ -64,6 +70,10 @@
                 .Setup(x => x.Execute(It.IsAny<ITask<T>>()))
                 .Returns((ITask<T> task) =>
                 {
+                    EventHandler<TaskMessageEventArgs> taskOnMessagePosted = (sender, args) => Logger.RegisterMessage(args.Message);
+
+                    task.MessagePosted += taskOnMessagePosted;
+
                     if (task is AbstractTask<T>)
                     {
                         ((AbstractTask<T>)task).UnswallowedExceptionTypes = new[]
@@ -73,7 +83,11 @@
                         };
                     }
 
-                    return task.Execute(CreateContext());
+                    var result = task.Execute(CreateContext());
+
+                    task.MessagePosted -= taskOnMessagePosted;
+
+                    return result;
                 });
         }
 
@@ -81,7 +95,7 @@
         {
             var mock = new Mock<ITask<T>>();
             mock.Setup(x => x.Execute(It.IsAny<TaskContext<T>>()))
-                .Returns(new ExecutionResult(resultType, null));
+                .Returns(new ExecutionResult(resultType));
 
             return mock;
         }
@@ -89,9 +103,8 @@
         protected TaskContext<T> CreateContext()
         {
             return new TaskContext<T>(
-                _data, 
+                Data, 
                 Executer.Object, 
-                Logger, 
                 WorkDirectory.Object,
                 Environment);
         }

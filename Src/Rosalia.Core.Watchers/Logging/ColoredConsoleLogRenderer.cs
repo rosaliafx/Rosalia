@@ -11,7 +11,7 @@
         {
         }
 
-        public void AppendMessage(int depth, string message, MessageLevel level)
+        public void AppendMessage(int depth, string message, MessageLevel level, MessageType type)
         {
             var indentSize = depth * 2;
             var prefix = string.Format("[{0}] ", level);

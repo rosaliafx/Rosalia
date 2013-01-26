@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq.Expressions;
-    using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Tasks;

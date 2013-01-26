@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using Rosalia.Core.Context;
-    using Rosalia.Core.Result;
+    using Rosalia.Core.Events;
 
     public class SuccessTask<T> : ITask<T>
     {
+        public event EventHandler<TaskMessageEventArgs> MessagePosted;
+
         public bool WasExecuted { get; private set; }
 
         public Guid Id { get; set; }
@@ -22,7 +24,7 @@
         public ExecutionResult Execute(TaskContext<T> context)
         {
             WasExecuted = true;
-            return new ExecutionResult(ResultType.Success, null);
+            return new ExecutionResult(ResultType.Success);
         }
     }
 }

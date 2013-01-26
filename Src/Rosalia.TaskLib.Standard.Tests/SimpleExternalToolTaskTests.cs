@@ -1,9 +1,7 @@
 ﻿namespace Rosalia.TaskLib.Standard.Tests
 {
-    using Moq;
     using NUnit.Framework;
     using Rosalia.Core;
-    using Rosalia.Core.Logging;
     using Rosalia.Core.Tests;
 
     public class SimpleExternalToolTaskTests : TaskTestsBase<SimpleExternalToolTaskTests.MessageContext>
@@ -14,10 +12,9 @@
             var echoTask = new SimpleExternalToolTask<MessageContext>(
                 c => new SimpleExternalToolTask<MessageContext>.Input("cmd.exe", string.Format("/c echo {0}", c.Data.Message)));
 
-            var context = CreateContext();
-            context.Data.Message = "Hello, Rosalia!";
+            Data.Message = "Hello, Rosalia!";
 
-            var result = echoTask.Execute(context);
+            var result = Execute(echoTask);
 
             Assert.That(result.ResultType, Is.EqualTo(ResultType.Success));
         }
@@ -28,12 +25,12 @@
             var echoTask = new SimpleExternalToolTask<MessageContext>(
                 c => new SimpleExternalToolTask<MessageContext>.Input("cmd.exe", string.Format("/c echo {0}", c.Data.Message)));
 
-            var context = CreateContext();
-            context.Data.Message = "Hello, Rosalia!";
+            Data.Message = "Hello, Rosalia!";
 
-            echoTask.Execute(context);
+            Execute(echoTask);
 
-            Assert.That(Logger.HasMessage((level, message, args) => level == MessageLevel.Info && message == "Hello, Rosalia!"));
+            Logger.AssertHasInfo();
+            Assert.That(Logger.LastInfo.Text, Is.EqualTo("Hello, Rosalia!"));
         }
 
         [Test]
@@ -42,12 +39,12 @@
             var echoTask = new SimpleExternalToolTask<MessageContext>(
                 c => new SimpleExternalToolTask<MessageContext>.Input("cmd.exe", string.Format("/c echo {0}", c.Data.Message)));
 
-            var context = CreateContext();
-            context.Data.Message = "Hello, Rosalia!";
+            Data.Message = "Hello, Rosalia!";
 
-            echoTask.Execute(context);
+            Execute(echoTask);
 
-            Assert.That(Logger.HasMessage((level, message, args) => message == "Hello, Rosalia!"));
+            Logger.AssertHasInfo();
+            Assert.That(Logger.LastInfo.Text, Is.EqualTo("Hello, Rosalia!"));
         }
 
         public class MessageContext

@@ -2,7 +2,7 @@
 {
     using System;
     using Moq;
-    using Rosalia.Core.Result;
+    using Rosalia.Core;
     using Rosalia.Core.Tests;
 
     public abstract class ExternalToolTaskTestsBase<TContext, TInput, TResult> : TaskTestsBase<TContext>

@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Rosalia.Core.Result;
     using Rosalia.Core.Watchers.Visualization.Layout;
 
     public class Composite : IComposite

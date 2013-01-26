@@ -29,11 +29,11 @@
             }
         }
 
-        public void AppendMessage(int depth, string message, MessageLevel level)
+        public void AppendMessage(int depth, string message, MessageLevel level, MessageType type)
         {
             foreach (var renderer in _nestedRenderers)
             {
-                renderer.AppendMessage(depth, message, level);
+                renderer.AppendMessage(depth, message, level, type);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿namespace Rosalia.Core.Watchers.Logging
 {
+    using Rosalia.Core.Logging;
     using Rosalia.Core.Watching;
 
     public class LoggingWatcher : IWorkflowWatcher
@@ -17,25 +18,24 @@
 
             eventsAware.TaskExecuting += (sender, args) =>
             {
-                level = args.CurrentTaskDepth;
+                _renderer.AppendMessage(level, string.Format("Start executing task {0}", args.CurrentTask.Name), MessageLevel.Info, MessageType.TaskStart);
+                level++;
             };
+
             eventsAware.TaskExecuted += (sender, args) =>
             {
-                level = args.CurrentTaskDepth;
+                level--;
+
+                _renderer.AppendMessage(
+                    level, 
+                    string.Format("Task {0} executed", args.CurrentTask.Name), 
+                    args.Result.ResultType == ResultType.Success ? MessageLevel.Success : MessageLevel.Error, 
+                    MessageType.TaskStart);
             };
 
-            eventsAware.LogMessagePost += (sender, args) =>
+            eventsAware.MessagePosted += (sender, args) =>
             {
-                if (args.Template == null)
-                {
-                    args.Template = string.Empty;
-                }
-
-                var formattedMessage = args.Args.Length > 0 ?
-                    string.Format(args.Template, args.Args) :
-                    args.Template;
-
-                _renderer.AppendMessage(level, formattedMessage, args.Level);
+                _renderer.AppendMessage(level, args.Message.Text, args.Message.Level, MessageType.TaskMessage);
             };
         }
     }

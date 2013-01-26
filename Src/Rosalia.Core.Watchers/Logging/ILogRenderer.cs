@@ -7,6 +7,6 @@
     {
         void Init();
 
-        void AppendMessage(int depth, string message, MessageLevel level);
+        void AppendMessage(int depth, string message, MessageLevel level, MessageType type);
     }
 }

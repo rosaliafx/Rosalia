@@ -31,7 +31,8 @@
                 (output, result) =>
                     {
                         Assert.That(result.ResultType, Is.EqualTo(ResultType.Failure));
-                        Assert.That(Logger.HasError((s, objects) => s == "fatal: No names found, cannot describe anything."));
+                        Logger.AssertHasError();
+                        Assert.That(Logger.LastError.Text, Is.EqualTo("fatal: No names found, cannot describe anything."));
                     });
         }
     }

@@ -3,8 +3,9 @@
     using System;
     using System.Collections.Generic;
     using Rosalia.Core.Context;
+    using Rosalia.Core.Events;
     using Rosalia.Core.Fluent;
-    using Rosalia.Core.Result;
+    using Rosalia.Core.Logging;
 
     public abstract class AbstractTask<T> : ITask<T>
     {
@@ -14,6 +15,8 @@
         {
             Id = Guid.NewGuid();
         }
+
+        public event EventHandler<TaskMessageEventArgs> MessagePosted;
 
         public Type[] UnswallowedExceptionTypes { get; set; }
 
@@ -56,7 +59,7 @@
 
         public ExecutionResult Execute(TaskContext<T> context)
         {
-            var resultBuilder = new ResultBuilder();
+            var resultBuilder = new ResultBuilder(PostMessage);
 
             try
             {
@@ -99,6 +102,14 @@
             return type.Name
                 .Replace("Task", string.Empty)
                 .Replace(string.Format("`{0}", type.GetGenericArguments().Length), string.Empty);
+        }
+
+        protected void PostMessage(Message message)
+        {
+            if (MessagePosted != null)
+            {
+                MessagePosted(this, new TaskMessageEventArgs(message, this));
+            }
         }
 
         protected abstract void Execute(ResultBuilder resultBuilder, TaskContext<T> context);

@@ -3,10 +3,8 @@
     using System;
     using System.Linq;
     using System.Text;
-    using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
-    using Rosalia.Core.Logging;
     using Rosalia.TaskLib.Standard;
 
     public class SvnVersionTask<T> : ExternalToolTask<T, SvnVersionInput, SvnVersionResult>
@@ -26,25 +24,25 @@
             return new SvnVersionResult(_min, _max);
         }
 
-        protected override void ProcessOnOutputDataReceived(string message, SvnVersionInput input, ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void ProcessOnOutputDataReceived(string message, SvnVersionInput input, ResultBuilder result, TaskContext<T> context)
         {
-            base.ProcessOnOutputDataReceived(message, input, resultBuilder, context);
+            base.ProcessOnOutputDataReceived(message, input, result, context);
 
             var versionString = message;
             if (!string.IsNullOrEmpty(versionString))
             {
                 if (versionString.Equals("Unversioned directory", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    context.Logger.Error("Working copy {0} is not versioned!", input.WorkingCopyPath);
-                    resultBuilder.Fail();
+                    result.AddError("Working copy {0} is not versioned!", input.WorkingCopyPath);
+                    result.Fail();
                     return;
                 }
 
                 var parts = versionString.Split(':');
                 if (parts.Length < 1 || parts.Length > 2)
                 {
-                    context.Logger.Error("Unexpected tool output: {0}", versionString);
-                    resultBuilder.Fail();
+                    result.AddError("Unexpected tool output: {0}", versionString);
+                    result.Fail();
                     return;
                 }
 

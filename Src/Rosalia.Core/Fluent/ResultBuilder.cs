@@ -1,15 +1,17 @@
 ﻿namespace Rosalia.Core.Fluent
 {
     using System;
-    using System.Collections.Generic;
     using Rosalia.Core.Logging;
-    using Rosalia.Core.Result;
 
     public class ResultBuilder
     {
-        private readonly IList<ResultMessage> _messages = new List<ResultMessage>();
-
+        private readonly Action<Message> _messageProcessor;
         private ResultType _resultType = ResultType.Success;
+
+        public ResultBuilder(Action<Message> messageProcessor)
+        {
+            _messageProcessor = messageProcessor;
+        }
 
         public bool IsSuccess
         {
@@ -21,20 +23,15 @@
             get { return _resultType; }
         }
 
-        private IList<ResultMessage> Messages
-        {
-            get { return _messages; }
-        }
-
         public static implicit operator ExecutionResult(ResultBuilder builder)
         {
-            return new ExecutionResult(builder.ResultType, builder.Messages);
+            return new ExecutionResult(builder.ResultType);
         }
 
         public ResultBuilder AddMessage(MessageLevel level, string text, params object[] args)
         {
             var formattedText = string.Format(text, args);
-            _messages.Add(new ResultMessage(level, formattedText));
+            _messageProcessor.Invoke(new Message(formattedText, level));
             return this;
         }
 

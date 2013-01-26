@@ -46,7 +46,7 @@
     <Compile Include="Logging\HtmlLogRenderer.cs" />
     <Compile Include="Logging\ILogRenderer.cs" />
     <Compile Include="Logging\LoggingWatcher.cs" />
-    <Compile Include="Logging\LogTaskStartWatcher.cs" />
+    <Compile Include="Logging\MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visualization\AbstractVisualizeWatcher.cs" />
     <Compile Include="Visualization\Composite.cs" />

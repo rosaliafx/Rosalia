@@ -9,7 +9,7 @@
 
         event EventHandler WorkflowExecuted;
 
-        event EventHandler<LogMessageEventArgs> LogMessagePost;
+        event EventHandler<TaskMessageEventArgs> MessagePosted;
 
         event EventHandler<TaskEventArgs> TaskExecuting;
 

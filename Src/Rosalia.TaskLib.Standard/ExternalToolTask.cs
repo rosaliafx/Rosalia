@@ -47,14 +47,14 @@
             set { _processStarter = value; }
         }
 
-        protected override TResult Execute(TInput input, TaskContext<TContext> context, ResultBuilder resultBuilder)
+        protected override TResult Execute(TInput input, TaskContext<TContext> context, ResultBuilder result)
         {
             FillMessageLevelDetectors(_messageLevelDetectors);
 
             var toolPath = GetToolPath(input, context);
             var toolArguments = GetToolArguments(input, context);
 
-            context.Logger.Info(
+            result.AddInfo(
                 "Start external tool with command line: {0}{1}{2}",
                 Environment.NewLine,
                 toolPath,
@@ -68,26 +68,26 @@
                 {
                     try
                     {
-                        ProcessOnOutputDataReceived(outpuMessage, input, resultBuilder, context);
+                        ProcessOnOutputDataReceived(outpuMessage, input, result, context);
                     }
                     catch (Exception ex)
                     {
-                        HandleExecutionException(ex, resultBuilder);
+                        HandleExecutionException(ex, result);
                     }
                 },
                 errorMessage =>
                 {
                     try
                     {
-                        ProcessOnErrorDataReceived(errorMessage, input, resultBuilder, context);
+                        ProcessOnErrorDataReceived(errorMessage, input, result, context);
                     }
                     catch (Exception ex)
                     {
-                        HandleExecutionException(ex, resultBuilder);
+                        HandleExecutionException(ex, result);
                     }
                 });
 
-            return ProcessExitCode(exitCode, resultBuilder);
+            return ProcessExitCode(exitCode, result);
         }
 
         protected virtual void FillMessageLevelDetectors(IList<Func<string, MessageLevel?>> detectors)
@@ -129,7 +129,7 @@
 
         protected abstract TResult CreateResult(int exitCode, ResultBuilder resultBuilder);
 
-        protected virtual void ProcessOnOutputDataReceived(string message, TInput builder, ResultBuilder resultBuilder, TaskContext<TContext> context)
+        protected virtual void ProcessOnOutputDataReceived(string message, TInput builder, ResultBuilder result, TaskContext<TContext> context)
         {
             foreach (var messageLevelDetector in _messageLevelDetectors)
             {
@@ -137,17 +137,17 @@
 
                 if (level.HasValue)
                 {
-                    context.Logger.Log(level.Value, message);
+                    result.AddMessage(level.Value, message);
                     return;
                 }
             }
 
-            context.Logger.Info(message);
+            result.AddInfo(message);
         }
 
         protected virtual void ProcessOnErrorDataReceived(string message, TInput builder, ResultBuilder resultBuilder, TaskContext<TContext> context)
         {
-            context.Logger.Error(message);
+            resultBuilder.AddError(message);
         }
 
         protected virtual IDirectory GetToolWorkDirectory(TaskContext<TContext> context)

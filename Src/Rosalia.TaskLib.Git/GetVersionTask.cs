@@ -41,14 +41,14 @@
             return _result;
         }
 
-        protected override void ProcessOnOutputDataReceived(string message, GetVersionInput builder, ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void ProcessOnOutputDataReceived(string message, GetVersionInput builder, ResultBuilder result, TaskContext<T> context)
         {
-            base.ProcessOnOutputDataReceived(message, builder, resultBuilder, context);
+            base.ProcessOnOutputDataReceived(message, builder, result, context);
 
             if (message.StartsWith("fatal:"))
             {
-                context.Logger.Error(message);
-                resultBuilder.Fail();
+                result.AddError(message);
+                result.Fail();
                 return;
             }
 

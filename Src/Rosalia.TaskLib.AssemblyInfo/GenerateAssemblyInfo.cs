@@ -65,7 +65,7 @@ using {{Name}};
         {
             if (_destination == null)
             {
-                context.Logger.Error("Destinatin file is not set");
+                resultBuilder.AddError("Destinatin file is not set");
                 resultBuilder.Fail();
                 return;
             }
@@ -100,7 +100,7 @@ using {{Name}};
             var result = Render.StringToString(Template, model);
 
             context.FileSystem.WriteStringToFile(result, _destination(context));
-            context.Logger.Info(result);
+            resultBuilder.AddInfo(result);
         }
 
         private IEnumerable<string> GetArgumetValues(Expression<Func<T, Attribute>> attributeExpression, NewExpression body, T data)

@@ -61,7 +61,8 @@
                     Assert.That(taskResult.ResultType == ResultType.Failure);
                 });
 
-            Assert.That(Logger.HasError((message, args) => message == "Unexpected tool output: {0}" && args.Length == 1 && (string)args[0] == "12:13:14"));
+            Logger.AssertHasError();
+            Assert.That(Logger.LastError.Text, Is.EqualTo("Unexpected tool output: 12:13:14"));
         }
 
         [Test]
@@ -76,7 +77,7 @@
                     Assert.That(taskResult.ResultType == ResultType.Failure);
                 });
 
-            Assert.That(Logger.HasError());
+            Logger.AssertHasError();
         }
 
         [Test]

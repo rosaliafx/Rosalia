@@ -6,20 +6,16 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Events;
     using Rosalia.Core.Fluent;
-    using Rosalia.Core.Logging;
-    using Rosalia.Core.Result;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Flow;
 
-    public abstract class Workflow<TData> : IGenericWorkflow<TData>, IExecuter<TData>, ILogger
+    public abstract class Workflow<TData> : IGenericWorkflow<TData>, IExecuter<TData>
     {
         private TData _inputData;
 
         private ITask<TData> _rootTask;
 
-        private IExecutable<TData> _currentTask;
-
-        private int _level;
+//        private IExecutable<TData> _currentTask;
 
         private WorkflowContext _workflowContext;
 
@@ -27,7 +23,7 @@
 
         public event EventHandler WorkflowExecuted;
 
-        public event EventHandler<LogMessageEventArgs> LogMessagePost;
+        public event EventHandler<TaskMessageEventArgs> MessagePosted;
 
         public event EventHandler<TaskEventArgs> TaskExecuting;
 
@@ -58,7 +54,7 @@
 
         public ExecutionResult Execute(TData inputData)
         {
-            _level = 0;
+//            _level = 0;
             _inputData = inputData;
 
             OnWorkflowExecuting(CreateContext());
@@ -74,34 +70,31 @@
         {
             OnTaskExecuting(task);
 
-            var initialCurrentTask = _currentTask;
+//            var initialCurrentTask = _currentTask;
 
-            _currentTask = task;
-            _level++;
+            task.MessagePosted += OnTaskMessagePosted;
+
+//            _currentTask = task;
+//            _level++;
 
             var context = CreateContext();
             var result = task.Execute(context);
 
-            _currentTask = initialCurrentTask;
-            _level--;
+//            _currentTask = initialCurrentTask;
+//            _level--;
 
             OnTaskExecuted(task, result);
+
+            task.MessagePosted -= OnTaskMessagePosted;
 
             return result;
         }
 
-        public void Log(MessageLevel level, string message, params object[] args)
+        protected virtual void OnTaskMessagePosted(object sender, TaskMessageEventArgs e)
         {
-            if (LogMessagePost != null)
+            if (MessagePosted != null)
             {
-                var eventArgs = new LogMessageEventArgs
-                {
-                    Template = message,
-                    Level = level,
-                    Args = args
-                };
-
-                LogMessagePost(this, eventArgs);
+                MessagePosted(this, new TaskMessageEventArgs(e.Message, e.Source));
             }
         }
 
@@ -111,9 +104,6 @@
             {
                 var args = new TaskWithResultEventArgs(
                     (IIdentifiable)task,
-                    (IIdentifiable)_currentTask,
-                    this,
-                    _level,
                     result);
 
                 TaskExecuted(this, args);
@@ -125,10 +115,7 @@
             if (TaskExecuting != null)
             {
                 var args = new TaskEventArgs(
-                    (IIdentifiable)task,
-                    (IIdentifiable)_currentTask,
-                    this,
-                    _level);
+                    (IIdentifiable)task);
 
                 TaskExecuting(this, args);
             }
@@ -169,7 +156,6 @@
         {
             return new TaskContext<TData>(
                 _inputData, 
-                this, 
                 this, 
                 _workflowContext.WorkDirectory,
                 _workflowContext.Environment);

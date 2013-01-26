@@ -3,7 +3,6 @@
     using System.IO;
     using System.Reflection;
     using Rosalia.Core;
-    using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Flow;
     using Rosalia.TaskLib.AssemblyInfo;
@@ -17,7 +16,7 @@
             get
             {
                 return Sequence()
-                    .WithSubtask((builder, c) => c.Logger.Info("Start executing the demo workflow"))
+                    .WithSubtask((result, c) => result.AddInfo("Start executing the demo workflow"))
                     .WithSubtask(CopyActualArtifactsToTools())
                     .WithSubtask(new GenerateAssemblyInfo<DemoContext>()
                                      .WithAttribute(c => new AssemblyCompanyAttribute("DemoCompany"))
@@ -26,32 +25,28 @@
                     .WithSubtask(BuildSolution)
                     .WithSubtask((builder, context) =>
                                      {
-                                         context.Logger.Info("This task lists current directory files");
+                                         builder.AddInfo("This task lists current directory files");
                                          foreach (var file in context.WorkDirectory.Files)
                                          {
-                                             context.Logger.Info(file.AbsolutePath);
+                                             builder.AddInfo(file.AbsolutePath);
                                          }
                                      })
                     .WithSubtask(new CompressTask<DemoContext>()
-                                     .FillInput(context =>
-                                                    {
-                                                        context.Logger.Info(
-                                                            "This task compresses all *.cs files in the current directory");
+                        .FillInput(context =>
+                            {
+                                var allCsFiles = context.FileSystem
+                                    .SearchFilesIn(context.WorkDirectory)
+                                    .Include(fileName => Path.GetExtension(fileName) == ".cs");
 
-                                                        var allCsFiles = context.FileSystem
-                                                            .SearchFilesIn(context.WorkDirectory)
-                                                            .Include(fileName => Path.GetExtension(fileName) == ".cs");
+                                var compressTaskInput = new CompressTaskInput();
 
-                                                        var compressTaskInput = new CompressTaskInput();
+                                foreach (var file in allCsFiles.All)
+                                {
+                                    compressTaskInput.WithFile(Path.GetFileName(file.AbsolutePath), file);
+                                }
 
-                                                        foreach (var file in allCsFiles.All)
-                                                        {
-                                                            compressTaskInput.WithFile(Path.GetFileName(file.AbsolutePath), file);
-                                                        }
-
-                                                        return compressTaskInput
-                                                            .ToFile(context.WorkDirectory.GetFile("cs_files.zip"));
-                                                    }));
+                                return compressTaskInput.ToFile(context.WorkDirectory.GetFile("cs_files.zip"));
+                            }));
             }
         }
 
@@ -85,7 +80,7 @@
                             .WithProjectFile("NoFile.sln")), 
                     new SimpleTask<DemoContext>((builder, context) =>
                     {
-                        context.Logger.Warning("Build task fails because the solition file does not exist");                                    
+                        builder.AddWarning("Build task fails because the solition file does not exist");                                    
                     }));
             }
         }

@@ -2,7 +2,6 @@
 {
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
-    using Rosalia.Core.Result;
 
     public abstract class AbstractNodeTask<T> : AbstractTask<T>
     {
