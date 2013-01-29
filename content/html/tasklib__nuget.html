@@ -1,0 +1,64 @@
+<!DOCTYPE html><html>
+    <head>
+        <title>Rosalia Docs - NuGet Tasks</title>
+                    <link href='/content/styles/bootstrap.min.css' rel='stylesheet' />
+                    <link href='/content/styles/doc.css' rel='stylesheet' />
+                    <link href='/content/styles/vs.css' rel='stylesheet' />
+            </head>
+    <body>
+        <div id='page'>
+            <header class='navbar navbar-inverse navbar-fixed-top'>
+                <div class='container'>
+                    <a id='mainLogo' href='/index.html'>
+                        <span>Rosalia</span><span class='docs'>Docs</span>
+                    </a>
+                </div>
+            </header>
+
+            <div class='container'>
+                <section>
+                    <nav id='tableOfContents' class='affix'>
+                        <ul>
+<li>
+<a href='/content/html/intro.html'>Introduction</a>
+</li>
+<li>
+<a href='/content/html/tasklib.html'>Task Lib</a>
+<ul>
+<li>
+<a href='/content/html/tasklib__assemblyinfo.html'>Assembly Info</a>
+</li>
+<li>
+<span>NuGet Tasks</span>
+</li>
+</ul>
+</li>
+</ul>
+
+                    </nav>
+                </section>
+                <section id='mainContent'>
+                    <h1>NuGet Tasks</h1>
+
+<h2>GenerateNuGetSpecTask</h2>
+
+<p>Generates NuGet package specification by user-provided data (package id, dependencies etc) and saves it to a file.</p>
+
+<pre><code>new GenerateNuGetSpecTask&lt;MyContext&gt;(c =&gt; new SpecInput()
+    .Id("MyPackageId")
+    /* more options here */);
+</code></pre>
+
+<h3>Examples</h3>
+
+<p>[TBD]</p>
+
+                </section>
+            </div>
+        </div>
+    </body>
+
+            <script type='text/javascript' src='/content/scripts/bootstrap.min.js'></script>
+            <script type='text/javascript' src='/content/scripts/highlight.pack.js'></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+</html>

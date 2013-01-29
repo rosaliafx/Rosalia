@@ -1,0 +1,104 @@
+<!DOCTYPE html><html>
+    <head>
+        <title>Rosalia Docs - Introduction</title>
+                    <link href='/content/styles/bootstrap.min.css' rel='stylesheet' />
+                    <link href='/content/styles/doc.css' rel='stylesheet' />
+                    <link href='/content/styles/vs.css' rel='stylesheet' />
+            </head>
+    <body>
+        <div id='page'>
+            <header class='navbar navbar-inverse navbar-fixed-top'>
+                <div class='container'>
+                    <a id='mainLogo' href='/index.html'>
+                        <span>Rosalia</span><span class='docs'>Docs</span>
+                    </a>
+                </div>
+            </header>
+
+            <div class='container'>
+                <section>
+                    <nav id='tableOfContents' class='affix'>
+                        <ul>
+<li>
+<span>Introduction</span>
+</li>
+<li>
+<a href='/content/html/tasklib.html'>Task Lib</a>
+<ul>
+<li>
+<a href='/content/html/tasklib__assemblyinfo.html'>Assembly Info</a>
+</li>
+<li>
+<a href='/content/html/tasklib__nuget.html'>NuGet Tasks</a>
+</li>
+</ul>
+</li>
+</ul>
+
+                    </nav>
+                </section>
+                <section id='mainContent'>
+                    <h1>Introduction</h1>
+
+<p>Rosalia is an open source automation framework. Its main goal is to allow writing tasks definition in C#. So, with Rosalia you </p>
+
+<ul>
+<li>do not use any foreign DSL (no XML like in MSBuild or NAnt);</li>
+<li>do not use any foreign language/platform (like Ruby for rake);</li>
+<li>define tasks and workflows in C#;</li>
+</ul>
+
+<h2>Quick start</h2>
+
+<p>For quick start just do 2 steps:</p>
+
+<ul>
+<li>create a class library project in your solution;</li>
+<li>install Rosalia NuGet package:</li>
+</ul>
+
+<pre>
+    <code class='bash'>Package-Install "Rosalia"</code>
+</pre>
+
+<p>You will get 2 sample classes in your project:</p>
+
+<pre><code>public class Context
+{
+    public string Message { get; set; }
+}
+
+public class MainWorkflow : Workflow&lt;Context&gt;
+{
+    public override ITask&lt;Context&gt; RootTask
+    {
+        get
+        {
+            return Sequence(
+                //// Task 1
+                Task((result, c) =&gt; result.AddInfo("Hello...")),
+
+                //// Task 2
+                Task((result, c) =&gt; c.Data.Message = "...world"),
+
+                //// Task 3
+                Task((result, c) =&gt; result.AddInfo(c.Data.Message))
+            );
+        }
+    }
+}
+</code></pre>
+
+<h2>How it works</h2>
+
+<p>[TBD]</p>
+
+                </section>
+            </div>
+        </div>
+    </body>
+
+            <script type='text/javascript' src='/content/scripts/bootstrap.min.js'></script>
+            <script type='text/javascript' src='/content/scripts/highlight.pack.js'></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+</html>
