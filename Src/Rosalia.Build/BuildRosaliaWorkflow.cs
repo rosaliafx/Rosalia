@@ -1,7 +1,9 @@
 ﻿namespace Rosalia.Build
 {
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Yaml.Serialization;
     using Rosalia.Build.Helpers;
     using Rosalia.Build.Tasks;
     using Rosalia.Core;
@@ -9,8 +11,8 @@
     using Rosalia.Core.FileSystem;
     using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Git;
+    using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.MsBuild;
-    using Rosalia.TaskLib.NuGet;
     using Rosalia.TaskLib.NuGet.Tasks;
 
     public class BuildRosaliaWorkflow : Workflow<BuildRosaliaContext>
@@ -34,6 +36,25 @@
                         .ToFile(c => c.Data.Src.GetFile("CommonAssemblyInfo.cs")),
                     //// Genarate docs
                     new BuildDocsTask(),
+                    //// Push documentation to GhPages
+                    If(c => c.WorkDirectory.GetFile("private_data.yaml").Exists)
+                        .Then(Sequence(
+                        //// Read private data
+                        Task((builder, c) =>
+                        {
+                            var serializer = new YamlSerializer();
+                            c.Data.PrivateData = (PrivateData)(serializer.DeserializeFromFile(c.WorkDirectory.GetFile("private_data.yaml").AbsolutePath, typeof(PrivateData))[0]);
+                        }),
+                        //// Copy docs artifats to GhPages repo
+                        Task((builder, context) =>
+                        {
+                            var docsHost = context.Data.Src.GetDirectory("Rosalia.Docs");
+                            var files = docsHost
+                                .SearchFilesIn()
+                                .IncludeByRelativePath(relative => relative.Equals("index.html") || relative.StartsWith("content"));
+
+                            files.CopyRelativelyTo(new DefaultDirectory(context.Data.PrivateData.GhPagesRoot));
+                        }))),
                     //// Build solution
                     new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()

@@ -6,21 +6,18 @@
     using System.Linq;
 
     [DebuggerDisplay("{AbsolutePath}")]
-    public class DefaultDirectory : IDirectory
+    public class DefaultDirectory : FileSystemItem, IDirectory
     {
-        public DefaultDirectory(string absolutePath)
+        public DefaultDirectory(string absolutePath) : base(absolutePath)
         {
-            AbsolutePath = absolutePath;
         }
 
-        public string AbsolutePath { get; private set; }
-
-        public bool Exists
+        public override bool Exists
         {
             get { return Directory.Exists(AbsolutePath); }
         }
 
-        public string Name
+        public override string Name
         {
             get { return Path.GetFileName(AbsolutePath); }
         }
@@ -71,7 +68,7 @@
             return new DefaultFile(path);
         }
 
-        public void EnsureExists()
+        public override void EnsureExists()
         {
             if (Exists)
             {

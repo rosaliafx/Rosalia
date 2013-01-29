@@ -63,8 +63,8 @@
     <Content Include="content\scripts\highlight.pack.js" />
     <Content Include="content\styles\vs.css" />
     <Content Include="content\styles\bootstrap.min.css" />
-    <Content Include="content\images\glyphicons-halflings-white.png" />
-    <Content Include="content\images\glyphicons-halflings.png" />
+    <Content Include="content\styles\images\glyphicons-halflings-white.png" />
+    <Content Include="content\styles\images\glyphicons-halflings.png" />
     <Content Include="content\scripts\bootstrap.min.js" />
     <Content Include="content\styles\doc.css" />
     <Content Include="index.html" />

@@ -5,16 +5,13 @@
     using System.IO;
 
     [DebuggerDisplay("{AbsolutePath}")]
-    public class DefaultFile : IFile
+    public class DefaultFile : FileSystemItem, IFile
     {
-        public DefaultFile(string absolutePath)
+        public DefaultFile(string absolutePath) : base(absolutePath)
         {
-            AbsolutePath = absolutePath;
         }
 
-        public string AbsolutePath { get; private set; }
-
-        public bool Exists
+        public override bool Exists
         {
             get
             {
@@ -47,7 +44,7 @@
             get { return new DefaultDirectory(Path.GetDirectoryName(AbsolutePath)); }
         }
 
-        public string Name
+        public override string Name
         {
             get { return Path.GetFileName(AbsolutePath); }
         }
@@ -67,7 +64,7 @@
             CopyTo(directory.GetFile(Name));
         }
 
-        public void EnsureExists()
+        public override void EnsureExists()
         {
             if (Exists)
             {

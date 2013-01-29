@@ -15,8 +15,6 @@
 
         private ITask<TData> _rootTask;
 
-//        private IExecutable<TData> _currentTask;
-
         private WorkflowContext _workflowContext;
 
         public event EventHandler<WorkflowStartEventArgs> WorkflowExecuting;
@@ -54,7 +52,6 @@
 
         public ExecutionResult Execute(TData inputData)
         {
-//            _level = 0;
             _inputData = inputData;
 
             OnWorkflowExecuting(CreateContext());
@@ -70,18 +67,10 @@
         {
             OnTaskExecuting(task);
 
-//            var initialCurrentTask = _currentTask;
-
             task.MessagePosted += OnTaskMessagePosted;
-
-//            _currentTask = task;
-//            _level++;
 
             var context = CreateContext();
             var result = task.Execute(context);
-
-//            _currentTask = initialCurrentTask;
-//            _level--;
 
             OnTaskExecuted(task, result);
 
@@ -124,6 +113,11 @@
         protected SequenceTask<TData> Sequence(params ITask<TData>[] children)
         {
             return new SequenceTask<TData>(children);
+        }
+
+        protected ConditionBuilder<TData> If(Predicate<TaskContext<TData>> condition)
+        {
+            return new ConditionBuilder<TData>(new ForkTask<TData>(), condition);
         }
 
         protected RepeaterBuilder<TData, TEnumerableItem> ForEach<TEnumerableItem>(Func<TaskContext<TData>, IEnumerable<TEnumerableItem>> enumerableProvider)

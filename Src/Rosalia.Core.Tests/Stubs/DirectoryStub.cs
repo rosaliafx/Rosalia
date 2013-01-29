@@ -22,6 +22,11 @@
         {
         }
 
+        public string GetRelativePath(IDirectory directory)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public IDirectory GetRelative(string relativePath)
         {
             return new DirectoryStub

@@ -9,5 +9,7 @@
         string Name { get; }
 
         void EnsureExists();
+
+        string GetRelativePath(IDirectory directory);
     }
 }

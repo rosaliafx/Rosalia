@@ -1,4 +1,4 @@
-﻿namespace Rosalia.TaskLib.Git
+﻿namespace Rosalia.TaskLib.Git.Output
 {
     public class GetVersionOutput
     {

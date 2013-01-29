@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystem\FileSystemExtensions.cs" />
+    <Compile Include="FileSystem\FileSystemItem.cs" />
     <Compile Include="Fluent\RepeaterBuilder.cs" />
     <Compile Include="Logging\Message.cs" />
     <Compile Include="Tasks\AbstractLeafTask.cs" />

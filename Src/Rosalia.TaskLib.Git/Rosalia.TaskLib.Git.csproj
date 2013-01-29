@@ -39,9 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GetVersionOutput.cs" />
-    <Compile Include="GetVersionTask.cs" />
-    <Compile Include="GetVersionInput.cs" />
+    <Compile Include="Input\GitInput.cs" />
+    <Compile Include="Output\GetVersionOutput.cs" />
+    <Compile Include="Tasks\GetVersionTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +53,9 @@
       <Project>{7FD16A10-C1D2-4AD2-84A2-2589F15DCA38}</Project>
       <Name>Rosalia.TaskLib.Standard</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Docs\tasklib\git.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

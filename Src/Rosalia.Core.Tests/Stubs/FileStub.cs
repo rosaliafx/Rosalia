@@ -71,5 +71,10 @@
         public void EnsureExists()
         {
         }
+
+        public string GetRelativePath(IDirectory directory)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

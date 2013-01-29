@@ -1,5 +1,6 @@
 ﻿namespace Rosalia.Build
 {
+    using Rosalia.Build.Tasks;
     using Rosalia.Core.FileSystem;
 
     public class BuildRosaliaContext
@@ -59,5 +60,7 @@
         }
 
         public string Version { get; set; }
+
+        public PrivateData PrivateData { get; set; }
     }
 }

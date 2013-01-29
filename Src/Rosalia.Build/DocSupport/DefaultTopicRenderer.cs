@@ -58,12 +58,12 @@
                 Scripts = hostDirectory
                     .GetDirectory("scripts")
                     .Files
-                    .Select(file => new Resource("/content/scripts/" + file.Name))
+                    .Select(file => new Resource("../scripts/" + file.Name))
                     .ToList(),
                 Styles = hostDirectory
                     .GetDirectory("styles")
                     .Files
-                    .Select(file => new Resource("/content/styles/" + file.Name))
+                    .Select(file => new Resource("../styles/" + file.Name))
                     .ToList()
             };
 

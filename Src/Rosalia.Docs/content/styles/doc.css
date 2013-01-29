@@ -73,11 +73,16 @@ HEADER {
     text-align: center;
 }
 
+#homePage .container {
+    width: 750px;
+}
+
 #homePage HEADER {
     background: none;
     -moz-box-shadow: none;
     box-shadow: none;
     border: none;
+    padding-bottom: 50px;
 }
 
 #homePage HEADER #mainLogo {
@@ -89,4 +94,21 @@ HEADER {
 #homePage HEADER .description {
     font-size: 24px;
     color: #490A3D;
+}
+
+#homePage #nugetQuickStart {
+    padding-bottom: 40px;
+}
+
+#homePage #nugetQuickStart PRE {
+    font-size: 18px;
+    padding: 20px;
+}
+
+#homePage #links {
+    font-size: 18px;
+}
+
+#homePage #links a {
+    padding-right: 20px;
 }

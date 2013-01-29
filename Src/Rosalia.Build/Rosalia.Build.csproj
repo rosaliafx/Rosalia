@@ -71,6 +71,7 @@
     <Compile Include="Helpers\SpecInputExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\BuildDocsTask.cs" />
+    <Compile Include="Tasks\PrivateData.cs" />
     <Compile Include="Tasks\TopicItem.cs" />
   </ItemGroup>
   <ItemGroup>

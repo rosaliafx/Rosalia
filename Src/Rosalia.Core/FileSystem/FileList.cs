@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -34,6 +35,11 @@
         public IDirectory BaseDirectory
         {
             get { return _baseDirectory; }
+        }
+
+        public FileList IncludeByRelativePath(Predicate<string> predicate)
+        {
+            return Include(file => predicate(file.GetRelativePath(_baseDirectory)));
         }
 
         public FileList Include(Predicate<IFile> predicate)
@@ -93,6 +99,18 @@
             foreach (var file in _source)
             {
                 file.CopyTo(directory);
+            }
+        }
+
+        public void CopyRelativelyTo(IDirectory directory)
+        {
+            foreach (var file in All)
+            {
+                var relativePath = file.GetRelativePath(_baseDirectory);
+                var relativeDestination = directory.GetFile(relativePath);
+                relativeDestination.EnsureExists();
+
+                file.CopyTo(relativeDestination);
             }
         }
     }
