@@ -1,9 +1,11 @@
 ﻿namespace Rosalia.Core.FileSystem
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
+    [DebuggerDisplay("{AbsolutePath}")]
     public class DefaultDirectory : IDirectory
     {
         public DefaultDirectory(string absolutePath)

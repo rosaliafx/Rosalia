@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Reflection;
     using Rosalia.Core;
 
@@ -18,10 +19,28 @@
                     var workflowType = GetWorkflowTypeIfPossible(exportedType);
                     if (workflowType != null)
                     {
+                        LoadDllsFromAssemblyDirectory(assembly, options);
                         yield return CreateWorkflowInfo(exportedType, workflowType);
                     }
                 }
             }
+        }
+
+        private void LoadDllsFromAssemblyDirectory(Assembly assembly, LookupOptions options)
+        {
+            var directory = Path.GetDirectoryName(assembly.Location);
+            // todo Check it!!!
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                var assemblyFileName = string.Format("{0}.dll", args.Name.Substring(0,  args.Name.IndexOf(",", StringComparison.InvariantCultureIgnoreCase)));
+                var assemblyFullPath = Path.Combine(directory, assemblyFileName);
+                if (File.Exists(assemblyFullPath))
+                {
+                    return Assembly.LoadFrom(assemblyFullPath);
+                }
+
+                return null;
+            };
         }
 
         protected virtual WorkflowInfo CreateWorkflowInfo(Type type, Type workflowBaseType)

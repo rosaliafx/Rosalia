@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using Rosalia.Build.Helpers;
+    using Rosalia.Build.Tasks;
     using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
@@ -31,6 +32,8 @@
                         .WithAttribute(c => new AssemblyVersionAttribute(c.Version))
                         .WithAttribute(c => new AssemblyFileVersionAttribute(c.Version))
                         .ToFile(c => c.Data.Src.GetFile("CommonAssemblyInfo.cs")),
+                    //// Genarate docs
+                    new BuildDocsTask(),
                     //// Build solution
                     new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()

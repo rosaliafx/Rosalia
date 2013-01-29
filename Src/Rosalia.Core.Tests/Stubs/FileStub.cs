@@ -36,6 +36,8 @@
 
         public bool Exists { get; set; }
 
+        public string NameWithoutExtension { get; set; }
+
         public Stream ReadStream
         {
             get { return _contentStream; }

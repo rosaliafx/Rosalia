@@ -1,8 +1,10 @@
 ﻿namespace Rosalia.Core.FileSystem
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
 
+    [DebuggerDisplay("{AbsolutePath}")]
     public class DefaultFile : IFile
     {
         public DefaultFile(string absolutePath)
@@ -18,6 +20,11 @@
             {
                 return File.Exists(AbsolutePath);
             }
+        }
+
+        public string NameWithoutExtension
+        {
+            get { return Path.GetFileNameWithoutExtension(AbsolutePath); }
         }
 
         public Stream ReadStream

@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystem\FileSystemExtensions.cs" />
     <Compile Include="Fluent\RepeaterBuilder.cs" />
     <Compile Include="Logging\Message.cs" />
     <Compile Include="Tasks\AbstractLeafTask.cs" />
@@ -79,6 +80,11 @@
     <Compile Include="Watching\IWorkflowWatcher.cs" />
     <Compile Include="Workflow.cs" />
     <Compile Include="Tasks\Flow\SequenceTask.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="doc.yaml" />
+    <None Include="Docs\intro.md" />
+    <None Include="Docs\tasklib.md" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

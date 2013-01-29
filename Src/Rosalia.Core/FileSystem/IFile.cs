@@ -4,13 +4,13 @@
 
     public interface IFile : IFileSystemItem
     {
+        string NameWithoutExtension { get; }
+
         Stream ReadStream { get; }
 
         Stream WriteStream { get; }
 
         long Length { get; }
-
-        
 
         IDirectory Directory { get; }
 
