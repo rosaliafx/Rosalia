@@ -5,7 +5,7 @@
     using System.Text;
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
-    using Rosalia.TaskLib.Standard;
+    using Rosalia.TaskLib.Standard.Tasks;
 
     public class SvnVersionTask<T> : ExternalToolTask<T, SvnVersionInput, SvnVersionResult>
     {
@@ -14,9 +14,14 @@
         private SvnVersion _min;
         private SvnVersion _max;
 
-        public SvnVersionTask(Func<TaskContext<T>, SvnVersionInput> contextToInput)
-            : base(contextToInput)
+        public SvnVersionTask(Func<TaskContext<T>, SvnVersionInput> inputProvider)
+            : base(inputProvider)
         {
+        }
+
+        protected override string DefaultToolPath
+        {
+            get { return "svn"; }
         }
 
         protected override SvnVersionResult CreateResult(int exitCode, ResultBuilder resultBuilder)
@@ -56,11 +61,6 @@
                     throw new Exception(string.Format("Unexpected tool output: {0}", versionString), ex);
                 }
             }
-        }
-
-        protected override string GetToolPath(SvnVersionInput input, TaskContext<T> context)
-        {
-            return input.SvnExePath;
         }
 
         protected override string GetToolArguments(SvnVersionInput input, TaskContext<T> context)

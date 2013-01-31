@@ -3,6 +3,8 @@
     using NUnit.Framework;
     using Rosalia.Core;
     using Rosalia.Core.Tests;
+    using Rosalia.TaskLib.Standard.Input;
+    using Rosalia.TaskLib.Standard.Tasks;
 
     public class SimpleExternalToolTaskTests : TaskTestsBase<SimpleExternalToolTaskTests.MessageContext>
     {
@@ -10,7 +12,11 @@
         public void Execute_EchoTask_ShouldSucceed()
         {
             var echoTask = new SimpleExternalToolTask<MessageContext>(
-                c => new SimpleExternalToolTask<MessageContext>.Input("cmd.exe", string.Format("/c echo {0}", c.Data.Message)));
+                c => new ExternalToolInput
+                {
+                    ToolPath = "cmd.exe",
+                    Arguments = string.Format("/c echo {0}", c.Data.Message)
+                });
 
             Data.Message = "Hello, Rosalia!";
 
@@ -23,7 +29,11 @@
         public void Execute_EchoTask_ShouldLogMessage()
         {
             var echoTask = new SimpleExternalToolTask<MessageContext>(
-                c => new SimpleExternalToolTask<MessageContext>.Input("cmd.exe", string.Format("/c echo {0}", c.Data.Message)));
+                c => new ExternalToolInput
+                {
+                    ToolPath = "cmd.exe",
+                    Arguments = string.Format("/c echo {0}", c.Data.Message)
+                });
 
             Data.Message = "Hello, Rosalia!";
 
@@ -37,7 +47,11 @@
         public void Execute_EchoTask_ShouldLogSingleMessage()
         {
             var echoTask = new SimpleExternalToolTask<MessageContext>(
-                c => new SimpleExternalToolTask<MessageContext>.Input("cmd.exe", string.Format("/c echo {0}", c.Data.Message)));
+                c => new ExternalToolInput
+                {
+                    ToolPath = "cmd.exe",
+                    Arguments = string.Format("/c echo {0}", c.Data.Message)
+                });
 
             Data.Message = "Hello, Rosalia!";
 

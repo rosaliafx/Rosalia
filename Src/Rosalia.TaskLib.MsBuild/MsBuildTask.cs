@@ -9,6 +9,7 @@
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
     using Rosalia.TaskLib.Standard;
+    using Rosalia.TaskLib.Standard.Tasks;
 
     /// <summary>
     /// This task uses MSBuild.exe command line tool to run a build process.

@@ -1,19 +1,34 @@
 ﻿namespace Rosalia.TaskLib.Git.Input
 {
+    using Rosalia.TaskLib.Standard.Input;
+
     /// <summary>
     /// A base class for git tasks.
     /// </summary>
-    public class GitInput
+    public class GitInput : ExternalToolInput
     {
         public GitInput()
         {
         }
 
-        public GitInput(string gitToolPath)
+        public GitInput(string rawCommand)
         {
-            GitToolPath = gitToolPath;
+            RawCommand = rawCommand;
         }
 
-        public string GitToolPath { get; set; }
+        public string RawCommand { get; set; }
+
+        public override string Arguments
+        {
+            get
+            {
+                return RawCommand;
+            }
+
+            set
+            {
+                RawCommand = value;
+            }
+        }
     }
 }

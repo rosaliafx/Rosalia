@@ -11,6 +11,7 @@
     using Rosalia.Core.FileSystem;
     using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Git;
+    using Rosalia.TaskLib.Git.Input;
     using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.MsBuild;
     using Rosalia.TaskLib.NuGet.Tasks;
@@ -39,22 +40,40 @@
                     //// Push documentation to GhPages
                     If(c => c.WorkDirectory.GetFile("private_data.yaml").Exists)
                         .Then(Sequence(
-                        //// Read private data
-                        Task((builder, c) =>
-                        {
-                            var serializer = new YamlSerializer();
-                            c.Data.PrivateData = (PrivateData)(serializer.DeserializeFromFile(c.WorkDirectory.GetFile("private_data.yaml").AbsolutePath, typeof(PrivateData))[0]);
-                        }),
-                        //// Copy docs artifats to GhPages repo
-                        Task((builder, context) =>
-                        {
-                            var docsHost = context.Data.Src.GetDirectory("Rosalia.Docs");
-                            var files = docsHost
-                                .SearchFilesIn()
-                                .IncludeByRelativePath(relative => relative.Equals("index.html") || relative.StartsWith("content"));
+                            //// Read private data
+                            Task((builder, c) =>
+                            {
+                                var serializer = new YamlSerializer();
+                                c.Data.PrivateData = (PrivateData)(serializer.DeserializeFromFile(c.WorkDirectory.GetFile("private_data.yaml").AbsolutePath, typeof(PrivateData))[0]);
+                            }),
+                            //// Copy docs artifats to GhPages repo
+                            Task((builder, context) =>
+                            {
+                                var docsHost = context.Data.Src.GetDirectory("Rosalia.Docs");
+                                var files = docsHost
+                                    .SearchFilesIn()
+                                    .IncludeByRelativePath(relative => relative.Equals("index.html") || relative.StartsWith("content"));
 
-                            files.CopyRelativelyTo(new DefaultDirectory(context.Data.PrivateData.GhPagesRoot));
-                        }))),
+                                files.CopyRelativelyTo(new DefaultDirectory(context.Data.PrivateData.GhPagesRoot));
+                            }),
+                            new GitCommandTask<BuildRosaliaContext>
+                                {
+                                    InputProvider = context => new GitInput
+                                    {
+                                       RawCommand = "add .",
+                                       WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
+                                    }
+                                },
+                            new GitCommandTask<BuildRosaliaContext>
+                                {
+                                    InputProvider = context => new GitInput
+                                    {
+                                       RawCommand = string.Format("commit -a -m \"Docs auto commit v{0}\"", context.Data.Version),
+                                       WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
+                                    }
+                                },
+                            Task((builder, context) => { throw new Exception("Stop here!"); })
+                            )),
                     //// Build solution
                     new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()

@@ -5,7 +5,7 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.TaskLib.NuGet.Input;
-    using Rosalia.TaskLib.Standard;
+    using Rosalia.TaskLib.Standard.Tasks;
 
     public class PushPackageTask<T> : ExternalToolTask<T, PushInput, object>
     {
@@ -17,7 +17,7 @@
         {
         }
 
-        public PushPackageTask(Func<TaskContext<T>, PushInput> contextToInput) : base(contextToInput)
+        public PushPackageTask(Func<TaskContext<T>, PushInput> inputProvider) : base(inputProvider)
         {
         }
 

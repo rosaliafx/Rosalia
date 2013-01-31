@@ -58,6 +58,10 @@
       <Project>{E19519EA-80F2-4B1E-ABAA-D56E14901C4A}</Project>
       <Name>Rosalia.TaskLib.MsBuild</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.Standard\Rosalia.TaskLib.Standard.csproj">
+      <Project>{7FD16A10-C1D2-4AD2-84A2-2589F15DCA38}</Project>
+      <Name>Rosalia.TaskLib.Standard</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

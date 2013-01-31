@@ -43,6 +43,8 @@
     <Compile Include="Output\GetVersionOutput.cs" />
     <Compile Include="Tasks\GetVersionTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\AbstractGitTask.cs" />
+    <Compile Include="Tasks\GitCommandTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">

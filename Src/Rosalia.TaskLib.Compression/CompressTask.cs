@@ -5,6 +5,7 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.TaskLib.Standard;
+    using Rosalia.TaskLib.Standard.Tasks;
 
     public class CompressTask<T> : ExtendedTask<T, CompressTaskInput, object>
     {

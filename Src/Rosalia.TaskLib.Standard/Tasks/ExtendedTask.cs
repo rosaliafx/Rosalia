@@ -1,4 +1,4 @@
-﻿namespace Rosalia.TaskLib.Standard
+﻿namespace Rosalia.TaskLib.Standard.Tasks
 {
     using System;
     using System.Linq.Expressions;
@@ -8,10 +8,9 @@
 
     public abstract class ExtendedTask<TContext, TInput, TResult> : AbstractLeafTask<TContext> where TInput : class
     {
-        private Func<TaskContext<TContext>, TInput> _contextToInput;
         private Action<TResult, TContext> _applyResultToContext;
 
-        protected ExtendedTask() : this((Func<TaskContext<TContext>, TInput>) null, null)
+        protected ExtendedTask() : this((Func<TaskContext<TContext>, TInput>)null, null)
         {
         }
 
@@ -19,33 +18,35 @@
         {
         }
 
-        protected ExtendedTask(Func<TaskContext<TContext>, TInput> contextToInput) : this(contextToInput, null)
+        protected ExtendedTask(Func<TaskContext<TContext>, TInput> inputProvider) : this(inputProvider, null)
         {
         }
 
-        protected ExtendedTask(Action<TResult, TContext> applyResultToContext) : this((Func<TaskContext<TContext>, TInput>) null, applyResultToContext)
+        protected ExtendedTask(Action<TResult, TContext> applyResultToContext) : this((Func<TaskContext<TContext>, TInput>)null, applyResultToContext)
         {
         }
 
-        protected ExtendedTask(TInput input, Action<TResult, TContext> applyResultToContext) : this(context => input)
+        protected ExtendedTask(TInput input, Action<TResult, TContext> applyResultToContext) : this(context => input, applyResultToContext)
         {
         }
 
-        protected ExtendedTask(Func<TaskContext<TContext>, TInput> contextToInput, Action<TResult, TContext> applyResultToContext)
+        protected ExtendedTask(Func<TaskContext<TContext>, TInput> inputProvider, Action<TResult, TContext> applyResultToContext)
         {
-            _contextToInput = contextToInput;
+            InputProvider = inputProvider;
             _applyResultToContext = applyResultToContext;
         }
 
+        public Func<TaskContext<TContext>, TInput> InputProvider { get; set; }
+
         public ExtendedTask<TContext, TInput, TResult> FillInput(Func<TaskContext<TContext>, TInput> fillInputFunc)
         {
-            _contextToInput = fillInputFunc;
+            InputProvider = fillInputFunc;
             return this;
         }
 
         public ExtendedTask<TContext, TInput, TResult> FillInput(TInput input)
         {
-            _contextToInput = context => input;
+            InputProvider = context => input;
             return this;
         }
 
@@ -77,12 +78,12 @@
 
         protected virtual TInput GetInput(TaskContext<TContext> context, ResultBuilder resultBuilder)
         {
-            if (_contextToInput == null)
+            if (InputProvider == null)
             {
                 return null;
             }
 
-            return _contextToInput(context);
+            return InputProvider(context);
         }
 
         protected TDependency GetRequired<TDependency>(TInput input, Expression<Func<TInput, TDependency>> dependency)

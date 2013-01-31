@@ -4,9 +4,10 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
-    using Rosalia.TaskLib.Standard;
+    using Rosalia.TaskLib.Standard.Input;
+    using Rosalia.TaskLib.Standard.Tasks;
 
-    public class GeneratePackageTask<T> : ExternalToolTask<T, object, object>
+    public class GeneratePackageTask<T> : ExternalToolTask<T, ExternalToolInput, object>
     {
         private readonly Func<TaskContext<T>, IFile> _specFile;
 
@@ -20,22 +21,22 @@
             _specFile = specFile;
         }
 
+        protected override string DefaultToolPath
+        {
+            get { return "nuget"; }
+        }
+
         protected override object CreateResult(int exitCode, ResultBuilder resultBuilder)
         {
             return null;
         }
 
-        protected override string GetToolPath(object input, TaskContext<T> context)
-        {
-            return "nuget";
-        }
-
-        protected override string GetToolArguments(object input, TaskContext<T> context)
+        protected override string GetToolArguments(ExternalToolInput input, TaskContext<T> context)
         {
             return string.Format("pack {0}", _specFile(context).Name);
         }
 
-        protected override IDirectory GetToolWorkDirectory(TaskContext<T> context)
+        protected override IDirectory GetToolWorkDirectory(ExternalToolInput input, TaskContext<T> context)
         {
             return _specFile(context).Directory;
         }

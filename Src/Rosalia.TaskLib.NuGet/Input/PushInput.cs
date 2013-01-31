@@ -4,12 +4,13 @@
     using System.Globalization;
     using System.Linq;
     using Rosalia.Core.FileSystem;
+    using Rosalia.TaskLib.Standard.Input;
 
     /// <summary>
     /// NuGet push task input. See <see cref="http://docs.nuget.org/docs/reference/command-line-reference#Push_Command"/>
     /// for options details.
     /// </summary>
-    public class PushInput
+    public class PushInput : ExternalToolInput
     {
         public PushInput()
         {

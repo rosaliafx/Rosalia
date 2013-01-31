@@ -3,8 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using Rosalia.Core.FileSystem;
+    using Rosalia.TaskLib.Standard.Input;
 
-    public class MsBuildInput
+    public class MsBuildInput : ExternalToolInput
     {
         private readonly IList<MsBuildSwitch> _switches = new List<MsBuildSwitch>();
 

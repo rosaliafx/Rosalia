@@ -2,15 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
     using Nustache.Core;
-    using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
-    using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
 
     public class GenerateAssemblyInfo<T> : AbstractLeafTask<T>

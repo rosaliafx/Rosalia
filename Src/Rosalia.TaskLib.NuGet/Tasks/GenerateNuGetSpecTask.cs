@@ -7,6 +7,7 @@
     using Rosalia.Core.Fluent;
     using Rosalia.TaskLib.NuGet.Input;
     using Rosalia.TaskLib.Standard;
+    using Rosalia.TaskLib.Standard.Tasks;
 
     public class GenerateNuGetSpecTask<T> : ExtendedTask<T, SpecInput, object>
     {

@@ -23,6 +23,8 @@
             get { return _resultType; }
         }
 
+        public bool HasErrors { get; private set; }
+
         public static implicit operator ExecutionResult(ResultBuilder builder)
         {
             return new ExecutionResult(builder.ResultType);
@@ -30,6 +32,11 @@
 
         public ResultBuilder AddMessage(MessageLevel level, string text, params object[] args)
         {
+            if (level == MessageLevel.Error)
+            {
+                HasErrors = true;
+            }
+
             var formattedText = string.Format(text, args);
             _messageProcessor.Invoke(new Message(formattedText, level));
             return this;

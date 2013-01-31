@@ -4,10 +4,11 @@
     using Moq;
     using Rosalia.Core;
     using Rosalia.Core.Tests;
+    using Rosalia.TaskLib.Standard.Input;
+    using Rosalia.TaskLib.Standard.Tasks;
 
     public abstract class ExternalToolTaskTestsBase<TContext, TInput, TResult> : TaskTestsBase<TContext>
-        where TInput : class
-        where TResult : class
+        where TInput : ExternalToolInput, new() where TResult : class
         where TContext : new()
     {
         public void AssertCommand(ExternalToolTask<TContext, TInput, TResult> task, Action<string, string> assertAction)
@@ -56,6 +57,15 @@
                });
 
             TResult result = null;
+            
+            if (task.InputProvider == null)
+            {
+                task.InputProvider = taskContext => new TInput
+                {
+                    ToolPath = "fakeToolPath"  // tool path is required for most of external tasks
+                };
+            }
+
             task.ProcessStarter = processStarter.Object;
             task.ApplyResult((actualResult, actualContext) => { result = actualResult; });
 

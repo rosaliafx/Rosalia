@@ -19,7 +19,12 @@
 
         public string GetVariable(string variable)
         {
-            return FakeVariables[variable];
+            if (FakeVariables.ContainsKey(variable))
+            {
+                return FakeVariables[variable];    
+            }
+
+            return null;
         }
 
         public void SetVariable(string variable, string value)

@@ -40,12 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultProcessStarter.cs" />
-    <Compile Include="ExternalToolTask.cs" />
-    <Compile Include="IExternalToolAware.cs" />
+    <Compile Include="Input\ExternalToolInput.cs" />
+    <Compile Include="Tasks\ExternalToolTask.cs" />
     <Compile Include="IProcessStarter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ExtendedTask.cs" />
-    <Compile Include="SimpleExternalToolTask.cs" />
+    <Compile Include="Tasks\ExtendedTask.cs" />
+    <Compile Include="Tasks\SimpleExternalToolTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">

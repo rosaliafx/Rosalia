@@ -1,24 +1,22 @@
 ﻿namespace Rosalia.TaskLib.Svn
 {
-    public class SvnVersionInput
+    using Rosalia.TaskLib.Standard.Input;
+
+    public class SvnVersionInput : ExternalToolInput
     {
-        public SvnVersionInput(string svnExePath, string workingCopyPath) : this(svnExePath, workingCopyPath, null)
+        public SvnVersionInput()
         {
         }
 
-        public SvnVersionInput(string svnExePath, string workingCopyPath, string trailUrl)
+        public SvnVersionInput(string workingCopyPath) : this(workingCopyPath, null)
         {
-            SvnExePath = svnExePath;
+        }
+
+        public SvnVersionInput(string workingCopyPath, string trailUrl)
+        {
             WorkingCopyPath = workingCopyPath;
             TrailUrl = trailUrl;
         }
-
-        public SvnVersionInput(string svnExePath)
-        {
-            SvnExePath = svnExePath;
-        }
-
-        public string SvnExePath { get; private set; }
 
         public string WorkingCopyPath { get; private set; }
 

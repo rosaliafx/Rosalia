@@ -1,16 +1,16 @@
-﻿namespace Rosalia.TaskLib.Standard
+﻿namespace Rosalia.TaskLib.Standard.Tasks
 {
     using System;
     using System.Collections.Generic;
-    using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
+    using Rosalia.TaskLib.Standard.Input;
 
     public abstract class ExternalToolTask<TContext, TInput, TResult> :
         ExtendedTask<TContext, TInput, TResult>
-        where TInput : class
+        where TInput : ExternalToolInput
         where TResult : class
     {
         private readonly IList<Func<string, MessageLevel?>> _messageLevelDetectors = new List<Func<string, MessageLevel?>>();
@@ -25,7 +25,7 @@
         {
         }
 
-        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> contextToInput) : base(contextToInput)
+        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> inputProvider) : base(inputProvider)
         {
         }
 
@@ -37,7 +37,7 @@
         {
         }
 
-        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> contextToInput, Action<TResult, TContext> applyResultToContext) : base(contextToInput, applyResultToContext)
+        protected ExternalToolTask(Func<TaskContext<TContext>, TInput> inputProvider, Action<TResult, TContext> applyResultToContext) : base(inputProvider, applyResultToContext)
         {
         }
 
@@ -45,6 +45,14 @@
         {
             get { return _processStarter; }
             set { _processStarter = value; }
+        }
+
+        /// <summary>
+        /// Gets default tool path or null if default path is not supported.
+        /// </summary>
+        protected virtual string DefaultToolPath
+        {
+            get { return null; }
         }
 
         protected override TResult Execute(TInput input, TaskContext<TContext> context, ResultBuilder result)
@@ -63,7 +71,7 @@
             var exitCode = ProcessStarter.StartProcess(
                 toolPath,
                 toolArguments,
-                GetToolWorkDirectory(context).AbsolutePath,
+                GetToolWorkDirectory(input, context).AbsolutePath,
                 outpuMessage =>
                 {
                     try
@@ -90,16 +98,20 @@
             return ProcessExitCode(exitCode, result);
         }
 
+        protected virtual IEnumerable<IFile> GetToolPathLookup(TaskContext<TContext> context)
+        {
+            yield break;
+        }
+
         protected virtual void FillMessageLevelDetectors(IList<Func<string, MessageLevel?>> detectors)
         {
         }
 
         protected virtual string GetToolArguments(TInput input, TaskContext<TContext> context)
         {
-            var externalToolAware = input as IExternalToolAware;
-            if (externalToolAware != null)
+            if (input != null && !string.IsNullOrEmpty(input.Arguments))
             {
-                return externalToolAware.Arguments;
+                return input.Arguments;
             }
 
             return string.Empty;
@@ -107,10 +119,22 @@
 
         protected virtual string GetToolPath(TInput input, TaskContext<TContext> context)
         {
-            var externalToolAware = input as IExternalToolAware;
-            if (externalToolAware != null)
+            if (input != null && !string.IsNullOrEmpty(input.ToolPath))
             {
-                return externalToolAware.Path;
+                return input.ToolPath;
+            }
+
+            foreach (var toolFile in GetToolPathLookup(context))
+            {
+                if (toolFile.Exists)
+                {
+                    return toolFile.AbsolutePath;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(DefaultToolPath))
+            {
+                return DefaultToolPath;
             }
 
             throw new Exception("Tool path is not set!");
@@ -150,8 +174,13 @@
             resultBuilder.AddError(message);
         }
 
-        protected virtual IDirectory GetToolWorkDirectory(TaskContext<TContext> context)
+        protected virtual IDirectory GetToolWorkDirectory(TInput input, TaskContext<TContext> context)
         {
+            if (input != null && input.WorkDirectory != null)
+            {
+                return input.WorkDirectory;
+            }
+
             return context.WorkDirectory;
         }
     }

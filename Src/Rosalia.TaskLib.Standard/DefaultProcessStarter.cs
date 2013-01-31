@@ -5,6 +5,8 @@
 
     public class DefaultProcessStarter : IProcessStarter
     {
+        private static object _lockObject = new object();
+
         public int StartProcess(
             string path, 
             string arguments, 
@@ -23,18 +25,24 @@
 
                 process.OutputDataReceived += (sender, args) =>
                 {
-                    if (!string.IsNullOrEmpty(args.Data))
+                    lock (_lockObject)
                     {
-                        onStantardOutput(args.Data);
+                        if (!string.IsNullOrEmpty(args.Data))
+                        {
+                            onStantardOutput(args.Data);
+                        }
                     }
                 };
 
                 process.ErrorDataReceived += (sender, args) =>
                 {
-                    if (!string.IsNullOrEmpty(args.Data))
+                    lock (_lockObject)
                     {
-                        onErrorOutput(args.Data);
-                    }                                     
+                        if (!string.IsNullOrEmpty(args.Data))
+                        {
+                            onErrorOutput(args.Data);
+                        }
+                    }
                 };
 
                 process.Start();
