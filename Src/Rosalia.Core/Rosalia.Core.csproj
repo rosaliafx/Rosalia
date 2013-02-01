@@ -83,7 +83,6 @@
     <Compile Include="Tasks\Flow\SequenceTask.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="doc.yaml" />
     <None Include="Docs\intro.md" />
     <None Include="Docs\tasklib.md" />
   </ItemGroup>

@@ -1,6 +1,5 @@
 ﻿namespace Rosalia.Build
 {
-    using System;
     using System.Collections.Generic;
     using System.Reflection;
     using System.Yaml.Serialization;
@@ -9,8 +8,8 @@
     using Rosalia.Core;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
+    using Rosalia.Core.Tasks.Flow;
     using Rosalia.TaskLib.AssemblyInfo;
-    using Rosalia.TaskLib.Git;
     using Rosalia.TaskLib.Git.Input;
     using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.MsBuild;
@@ -23,6 +22,17 @@
             get
             {
                 return Sequence(
+                    //// Initialize context
+                    Task((builder, context) =>
+                    {
+                        var data = context.Data;
+
+                        data.Configuration = "Debug";
+                        data.ProjectRootDirectory = context.WorkDirectory.Parent.Parent;
+                        data.Src = data.ProjectRootDirectory.GetDirectory("Src");
+                        data.SolutionFile = data.Src.GetFile("Rosalia.sln");
+                        data.Artifacts = data.ProjectRootDirectory.GetDirectory("Artifacts");          
+                    }),
                     //// Get current version from git
                     new GetVersionTask<BuildRosaliaContext>(
                         (output, c) =>
@@ -35,45 +45,6 @@
                         .WithAttribute(c => new AssemblyVersionAttribute(c.Version))
                         .WithAttribute(c => new AssemblyFileVersionAttribute(c.Version))
                         .ToFile(c => c.Data.Src.GetFile("CommonAssemblyInfo.cs")),
-                    //// Genarate docs
-                    new BuildDocsTask(),
-                    //// Push documentation to GhPages
-                    If(c => c.WorkDirectory.GetFile("private_data.yaml").Exists)
-                        .Then(Sequence(
-                            //// Read private data
-                            Task((builder, c) =>
-                            {
-                                var serializer = new YamlSerializer();
-                                c.Data.PrivateData = (PrivateData)(serializer.DeserializeFromFile(c.WorkDirectory.GetFile("private_data.yaml").AbsolutePath, typeof(PrivateData))[0]);
-                            }),
-                            //// Copy docs artifats to GhPages repo
-                            Task((builder, context) =>
-                            {
-                                var docsHost = context.Data.Src.GetDirectory("Rosalia.Docs");
-                                var files = docsHost
-                                    .SearchFilesIn()
-                                    .IncludeByRelativePath(relative => relative.Equals("index.html") || relative.StartsWith("content"));
-
-                                files.CopyRelativelyTo(new DefaultDirectory(context.Data.PrivateData.GhPagesRoot));
-                            }),
-                            new GitCommandTask<BuildRosaliaContext>
-                                {
-                                    InputProvider = context => new GitInput
-                                    {
-                                       RawCommand = "add .",
-                                       WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
-                                    }
-                                },
-                            new GitCommandTask<BuildRosaliaContext>
-                                {
-                                    InputProvider = context => new GitInput
-                                    {
-                                       RawCommand = string.Format("commit -a -m \"Docs auto commit v{0}\"", context.Data.Version),
-                                       WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
-                                    }
-                                },
-                            Task((builder, context) => { throw new Exception("Stop here!"); })
-                            )),
                     //// Build solution
                     new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()
@@ -108,7 +79,55 @@
                                 .FillTaskLibProperties(taskContext, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))),
                     //// Generate NuGet packages
                     ForEach(c => c.Data.Artifacts.Files.Include(fileName => fileName.EndsWith(".nuspec")))
-                        .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>(file)));
+                        .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>(file)),
+                    //// 
+                    //// Genarate docs
+                    //// 
+                    new BuildDocsTask(),
+                    //// Push documentation to GhPages
+                    If(c => c.WorkDirectory.GetFile("private_data.yaml").Exists).Then(PrepareDocsForDeployment));
+            }
+        }
+
+        private SequenceTask<BuildRosaliaContext> PrepareDocsForDeployment
+        {
+            get
+            {
+                return Sequence(
+                    //// Read private data
+                    Task((builder, c) =>
+                    {
+                        var serializer = new YamlSerializer();
+                        c.Data.PrivateData = (PrivateData)serializer.DeserializeFromFile(c.WorkDirectory.GetFile("private_data.yaml").AbsolutePath, typeof(PrivateData))[0];
+                    }),
+                    //// Copy docs artifats to GhPages repo
+                    Task((builder, context) =>
+                    {
+                        var docsHost = context.Data.Src.GetDirectory("Rosalia.Docs");
+                        var files = docsHost
+                            .SearchFilesIn()
+                            .IncludeByRelativePath(relative => relative.Equals("index.html") || relative.StartsWith("content"));
+
+                        files.CopyRelativelyTo(new DefaultDirectory(context.Data.PrivateData.GhPagesRoot));
+                    }),
+                    //// Add all doc files to gh-pages repo
+                    new GitCommandTask<BuildRosaliaContext>
+                    {
+                        InputProvider = context => new GitInput
+                        {
+                            RawCommand = "add .",
+                            WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
+                        }
+                    },
+                    //// Do auto commit to gh-pages repo
+                    new GitCommandTask<BuildRosaliaContext>
+                    {
+                        InputProvider = context => new GitInput
+                        {
+                            RawCommand = string.Format("commit -a -m \"Docs auto commit v{0}\"", context.Data.Version),
+                            WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
+                        }
+                    });
             }
         }
 
@@ -121,24 +140,13 @@
         private static IEnumerable<IFile> GetRunnerDllFiles(TaskContext<BuildRosaliaContext> c)
         {
             return c.FileSystem.SearchFilesIn(c.Data.RosaliaRunnerConsoleBin)
-                    .Include(fileName => fileName.EndsWith(".dll"))
-                    .Exclude(
-                        file => file.Name.Contains(".TaskLib.") && 
-                            !(file.Name == "Rosalia.TaskLib.Standard" || 
-                              file.Name == "Rosalia.TaskLib.MsBuild"));
-        }
-
-        protected override void OnWorkflowExecuting(TaskContext<BuildRosaliaContext> context)
-        {
-            base.OnWorkflowExecuting(context);
-
-            var data = context.Data;
-
-            data.Configuration = "Debug";
-            data.ProjectRootDirectory = context.WorkDirectory.Parent.Parent;
-            data.Src = data.ProjectRootDirectory.GetDirectory("Src");
-            data.SolutionFile = data.Src.GetFile("Rosalia.sln");
-            data.Artifacts = data.ProjectRootDirectory.GetDirectory("Artifacts");
+                .IncludeByFileName(
+                    "Rosalia.exe",
+                    "Rosalia.Core.dll",
+                    "Rosalia.Core.Watchers.dll",
+                    "Rosalia.Runner.dll",
+                    "Rosalia.TaskLib.Standard.dll",
+                    "Rosalia.TaskLib.MsBuild.dll");
         }
     }
 }

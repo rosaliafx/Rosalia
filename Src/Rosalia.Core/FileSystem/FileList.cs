@@ -62,6 +62,11 @@
             return Exclude(file => predicate(file.AbsolutePath));
         }
 
+        public FileList IncludeByFileName(params string[] fileNames)
+        {
+            return Include(file => fileNames.Any(fileName => fileName.Equals(file.Name, StringComparison.InvariantCultureIgnoreCase)));
+        }
+
         public FileList Include(Regex regex)
         {
             return Include(file => regex.IsMatch(file.AbsolutePath));

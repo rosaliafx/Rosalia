@@ -46,6 +46,33 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nustache.1.12.4.29\lib\net20\Nustache.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Rosalia.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Tools\Rosalia\Rosalia.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Rosalia.TaskLib.AssemblyInfo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Tools\Rosalia\Rosalia.TaskLib.AssemblyInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Rosalia.TaskLib.Compression">
+      <HintPath>..\..\Tools\Rosalia\Rosalia.TaskLib.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="Rosalia.TaskLib.Git, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Tools\Rosalia\Rosalia.TaskLib.Git.dll</HintPath>
+    </Reference>
+    <Reference Include="Rosalia.TaskLib.MsBuild, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Tools\Rosalia\Rosalia.TaskLib.MsBuild.dll</HintPath>
+    </Reference>
+    <Reference Include="Rosalia.TaskLib.NuGet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Tools\Rosalia\Rosalia.TaskLib.NuGet.dll</HintPath>
+    </Reference>
+    <Reference Include="Rosalia.TaskLib.Standard, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Tools\Rosalia\Rosalia.TaskLib.Standard.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -73,32 +100,6 @@
     <Compile Include="Tasks\BuildDocsTask.cs" />
     <Compile Include="Tasks\PrivateData.cs" />
     <Compile Include="Tasks\TopicItem.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">
-      <Project>{49D81CA6-AB0A-4CA0-B588-A2A00C8D9E8F}</Project>
-      <Name>Rosalia.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rosalia.TaskLib.AssemblyInfo\Rosalia.TaskLib.AssemblyInfo.csproj">
-      <Project>{60467FA0-48B8-40E7-A9FC-A99233CE1742}</Project>
-      <Name>Rosalia.TaskLib.AssemblyInfo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rosalia.TaskLib.Git\Rosalia.TaskLib.Git.csproj">
-      <Project>{B063CD14-0D42-4E9A-8A9F-E652E461C8FA}</Project>
-      <Name>Rosalia.TaskLib.Git</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rosalia.TaskLib.MsBuild\Rosalia.TaskLib.MsBuild.csproj">
-      <Project>{E19519EA-80F2-4B1E-ABAA-D56E14901C4A}</Project>
-      <Name>Rosalia.TaskLib.MsBuild</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rosalia.TaskLib.NuGet\Rosalia.TaskLib.NuGet.csproj">
-      <Project>{AC5F896F-2C24-4208-9CB3-23AF94C3B3AA}</Project>
-      <Name>Rosalia.TaskLib.NuGet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rosalia.TaskLib.Standard\Rosalia.TaskLib.Standard.csproj">
-      <Project>{7FD16A10-C1D2-4AD2-84A2-2589F15DCA38}</Project>
-      <Name>Rosalia.TaskLib.Standard</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Context.cs.pp" />
