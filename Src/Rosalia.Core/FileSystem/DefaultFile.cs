@@ -7,7 +7,8 @@
     [DebuggerDisplay("{AbsolutePath}")]
     public class DefaultFile : FileSystemItem, IFile
     {
-        public DefaultFile(string absolutePath) : base(absolutePath)
+        public DefaultFile(string absolutePath)
+            : base(absolutePath)
         {
         }
 
@@ -32,6 +33,11 @@
         public Stream WriteStream
         {
             get { return File.Open(AbsolutePath, FileMode.Create); }
+        }
+
+        public ExtensionInfo Extension
+        {
+            get { return new ExtensionInfo(Path.GetExtension(AbsolutePath)); }
         }
 
         public long Length

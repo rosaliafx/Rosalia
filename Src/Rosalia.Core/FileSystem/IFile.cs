@@ -10,6 +10,8 @@
 
         Stream WriteStream { get; }
 
+        ExtensionInfo Extension { get; }
+
         long Length { get; }
 
         IDirectory Directory { get; }

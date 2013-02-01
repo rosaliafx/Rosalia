@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystem\ExtensionInfo.cs" />
     <Compile Include="FileSystem\FileSystemExtensions.cs" />
     <Compile Include="FileSystem\FileSystemItem.cs" />
     <Compile Include="Fluent\RepeaterBuilder.cs" />

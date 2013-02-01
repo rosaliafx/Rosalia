@@ -52,12 +52,15 @@
             }
         }
 
+        public ExtensionInfo Extension { get; set; }
+
         public long Length
         {
             get { return _contentStream.Length; }
         }
 
         public IDirectory Directory { get; set; }
+
         public string Name { get; private set; }
 
         public void CopyTo(IFile destination)

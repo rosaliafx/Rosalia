@@ -1,12 +1,10 @@
 ﻿namespace Rosalia.Build
 {
-    using System.Collections.Generic;
     using System.Reflection;
     using System.Yaml.Serialization;
     using Rosalia.Build.Helpers;
     using Rosalia.Build.Tasks;
     using Rosalia.Core;
-    using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Tasks.Flow;
     using Rosalia.TaskLib.AssemblyInfo;
@@ -56,7 +54,7 @@
                             .Id("Rosalia.Core")
                             .FillCommonProperties(c)
                             .Description("Core libs for Rosalia framework.")
-                            .WithFiles(GetCoreLibFiles(c), "lib")
+                            .WithFiles(c.GetCoreLibFiles(), "lib")
                             .ToFile(c.Data.NuSpecRosaliaCore)),
                     //// Generate specs for NuGet packages
                     new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
@@ -66,8 +64,8 @@
                             .Description("Automation tool that allows writing build, install or other workflows in C#. This package automatically integrates Rosalia to your Class Library project.")
                             .WithFile(c.Data.RosaliaPackageInstallScript, "tools")
                             .WithFile(c.Data.RosaliaRunnerConsoleExe, "tools")
-                            .WithFiles(GetRunnerDllFiles(c), "tools")
-                            .WithFiles(c.Data.BuildAssets.Files.Include(fileName => fileName.EndsWith(".pp")), "content")
+                            .WithFiles(c.GetRunnerDllFiles(), "tools")
+                            .WithFiles(c.Data.BuildAssets.Files.IncludeByExtension(".pp"), "content")
                             .WithDependency("Rosalia.Core", c.Data.Version)
                             .WithDependency("NuGetPowerTools", version: "0.29")
                             .ToFile(c.Data.NuSpecRosalia)),
@@ -78,11 +76,9 @@
                                 .FillCommonProperties(taskContext)
                                 .FillTaskLibProperties(taskContext, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))),
                     //// Generate NuGet packages
-                    ForEach(c => c.Data.Artifacts.Files.Include(fileName => fileName.EndsWith(".nuspec")))
+                    ForEach(c => c.Data.Artifacts.Files.IncludeByExtension(".nuspec"))
                         .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>(file)),
-                    //// 
                     //// Genarate docs
-                    //// 
                     new BuildDocsTask(),
                     //// Push documentation to GhPages
                     If(c => c.WorkDirectory.GetFile("private_data.yaml").Exists).Then(PrepareDocsForDeployment));
@@ -129,24 +125,6 @@
                         }
                     });
             }
-        }
-
-        private static IEnumerable<IFile> GetCoreLibFiles(TaskContext<BuildRosaliaContext> c)
-        {
-            return c.FileSystem.SearchFilesIn(c.Data.RosaliaRunnerConsoleBin)
-                    .Include(file => file.Name == "Rosalia.Core.dll" || file.Name == "Rosalia.TaskLib.Standard.dll");
-        }
-
-        private static IEnumerable<IFile> GetRunnerDllFiles(TaskContext<BuildRosaliaContext> c)
-        {
-            return c.FileSystem.SearchFilesIn(c.Data.RosaliaRunnerConsoleBin)
-                .IncludeByFileName(
-                    "Rosalia.exe",
-                    "Rosalia.Core.dll",
-                    "Rosalia.Core.Watchers.dll",
-                    "Rosalia.Runner.dll",
-                    "Rosalia.TaskLib.Standard.dll",
-                    "Rosalia.TaskLib.MsBuild.dll");
         }
     }
 }
