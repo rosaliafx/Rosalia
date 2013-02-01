@@ -88,12 +88,9 @@
     <Compile Include="BuildRosaliaContext.cs" />
     <Compile Include="BuildRosaliaWorkflow.cs" />
     <Compile Include="DocSupport\DefaultTopicRenderer.cs" />
-    <Compile Include="DocSupport\DocDescriptor.cs" />
-    <Compile Include="DocSupport\IDocDescriptorParser.cs" />
     <Compile Include="DocSupport\ITopicRenderer.cs" />
     <Compile Include="DocSupport\TableOfContentsItem.cs" />
     <Compile Include="DocSupport\TopicInfo.cs" />
-    <Compile Include="DocSupport\YamlDocDescriptorParser.cs" />
     <Compile Include="Helpers\ContextExtensions.cs" />
     <Compile Include="Helpers\SpecInputExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -16,12 +16,9 @@
     {
         public BuildDocsTask()
         {
-            Parser = new YamlDocDescriptorParser();
             Markdown = new Markdown();
             TopicRenderer = new DefaultTopicRenderer();
         }
-
-        public IDocDescriptorParser Parser { get; set; }
 
         public Markdown Markdown { get; set; }
 
