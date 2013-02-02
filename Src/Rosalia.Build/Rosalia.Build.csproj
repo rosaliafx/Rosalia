@@ -90,7 +90,6 @@
     <Compile Include="DocSupport\DefaultTopicRenderer.cs" />
     <Compile Include="DocSupport\ITopicRenderer.cs" />
     <Compile Include="DocSupport\TableOfContentsItem.cs" />
-    <Compile Include="DocSupport\TopicInfo.cs" />
     <Compile Include="Helpers\ContextExtensions.cs" />
     <Compile Include="Helpers\SpecInputExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

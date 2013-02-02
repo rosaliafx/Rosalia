@@ -10,8 +10,6 @@
 
         IDirectory Parent { get; }
 
-        IDirectory GetRelative(string relativePath);
-
         IDirectory GetDirectory(string name);
 
         IFile GetFile(string name);

@@ -82,5 +82,13 @@
             {
             }
         }
+
+        public override void Delete()
+        {
+            if (Exists)
+            {
+                File.Delete(AbsolutePath);    
+            }
+        }
     }
 }

@@ -5,12 +5,15 @@
 
     public class TopicItem
     {
-        public TopicItem(IDirectory docs, IFile contentFile)
+        public TopicItem(IDirectory docs, IFile contentSource)
         {
             Docs = docs;
-            ContentFile = contentFile;
+            ContentFile = contentSource;
 
-            var pathString = contentFile.Directory.AbsolutePath.ToLower().Replace(docs.AbsolutePath.ToLower(), string.Empty);
+            var pathString = contentSource.Directory.AbsolutePath.Equals(docs.AbsolutePath, StringComparison.InvariantCultureIgnoreCase) ?
+                string.Empty :
+                contentSource.Directory.GetRelativePath(docs).ToLower();
+
             Path = pathString.Split(new[] { System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
         }
 

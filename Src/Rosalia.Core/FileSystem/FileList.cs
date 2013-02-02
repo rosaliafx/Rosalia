@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -102,6 +101,14 @@
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void DeleteAll()
+        {
+            foreach (var file in _source)
+            {
+                file.Delete();
+            }
         }
 
         public void CopyAllTo(IDirectory directory)

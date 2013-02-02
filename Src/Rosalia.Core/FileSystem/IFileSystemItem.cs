@@ -10,6 +10,8 @@
 
         void EnsureExists();
 
+        void Delete();
+
         string GetRelativePath(IDirectory directory);
     }
 }

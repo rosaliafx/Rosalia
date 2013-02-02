@@ -22,9 +22,13 @@
         {
         }
 
+        public void Delete()
+        {
+        }
+
         public string GetRelativePath(IDirectory directory)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public IDirectory GetRelative(string relativePath)

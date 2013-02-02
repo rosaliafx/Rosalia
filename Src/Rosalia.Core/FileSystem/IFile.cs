@@ -19,5 +19,7 @@
         void CopyTo(IFile destination);
 
         void CopyTo(IDirectory directory);
+
+        
     }
 }

@@ -51,11 +51,6 @@
             }
         }
 
-        public IDirectory GetRelative(string relativePath)
-        {
-            return new DefaultDirectory(Path.Combine(AbsolutePath, relativePath));
-        }
-
         public IDirectory GetDirectory(string name)
         {
             var path = Path.Combine(AbsolutePath, name);
@@ -76,6 +71,11 @@
             }
 
             Directory.CreateDirectory(AbsolutePath);
+        }
+
+        public override void Delete()
+        {
+            Directory.Delete(AbsolutePath);
         }
     }
 }

@@ -18,6 +18,8 @@
 
         public abstract void EnsureExists();
 
+        public abstract void Delete();
+
         public string GetRelativePath(IDirectory directory)
         {
             var basePath = directory.AbsolutePath;
