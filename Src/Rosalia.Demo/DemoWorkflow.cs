@@ -36,7 +36,7 @@
                             {
                                 var allCsFiles = context.FileSystem
                                     .SearchFilesIn(context.WorkDirectory)
-                                    .Include(fileName => Path.GetExtension(fileName) == ".cs");
+                                    .IncludeByExtension(".cs");
 
                                 var compressTaskInput = new CompressTaskInput();
 
@@ -65,7 +65,7 @@
                     .GetDirectory("Rosalia.Runner.Console")
                     .GetDirectory(@"bin\Debug")
                     .Files
-                    .Include(file => file.Name.EndsWith(".dll") || file.Name.EndsWith(".exe"))
+                    .IncludeByExtension(".dll", ".exe")
                     .CopyAllTo(toolsDirectory);
             });
         }
