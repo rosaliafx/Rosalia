@@ -8,6 +8,10 @@ H1 {
     margin-bottom: 30px;
 }
 
+FOOTER {
+    padding-top: 30px;
+}
+
 .container, 
 .navbar .container {
     width: 1200px;
