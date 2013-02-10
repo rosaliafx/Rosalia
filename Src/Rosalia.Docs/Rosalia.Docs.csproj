@@ -59,7 +59,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="content\images\task_output.png" />
+    <Content Include="content\images\task_input.png" />
     <Content Include="content\images\pw_maze_white.png" />
+    <Content Include="content\images\task.png" />
     <Content Include="content\scripts\highlight.pack.js" />
     <Content Include="content\styles\vs.css" />
     <Content Include="content\styles\bootstrap.min.css" />

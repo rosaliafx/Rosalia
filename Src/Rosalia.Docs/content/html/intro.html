@@ -23,16 +23,16 @@
 <span>Introduction</span>
 </li>
 <li>
-<a href='/content/html/tasklib.html'>Task Lib</a>
+<a href='tasklib.html'>Task Lib</a>
 <ul>
 <li>
-<a href='/content/html/tasklib__assemblyinfo.html'>Assembly Info</a>
+<a href='tasklib__assemblyinfo.html'>Assembly Info</a>
 </li>
 <li>
-<a href='/content/html/tasklib__git.html'>Git Tasks</a>
+<a href='tasklib__git.html'>Git Tasks</a>
 </li>
 <li>
-<a href='/content/html/tasklib__nuget.html'>NuGet Tasks</a>
+<a href='tasklib__nuget.html'>NuGet Tasks</a>
 </li>
 </ul>
 </li>
@@ -43,13 +43,7 @@
                 <section id='mainContent'>
                     <h1>Introduction</h1>
 
-<p>Rosalia is an open source automation framework. Its main goal is to allow writing tasks definition in C#. So, with Rosalia you </p>
-
-<ul>
-<li>do not use any foreign DSL (no XML like in MSBuild or NAnt);</li>
-<li>do not use any foreign language/platform (like Ruby for rake);</li>
-<li>define tasks and workflows in C#;</li>
-</ul>
+<p>Rosalia is an open source automation framework that allows defining tasks and workflows in pure C#.</p>
 
 <h2>Quick start</h2>
 
@@ -64,7 +58,7 @@
     <code class='bash'>Package-Install "Rosalia"</code>
 </pre>
 
-<p>You will get 2 sample classes in your project:</p>
+<p>You get two sample classes in your project:</p>
 
 <pre><code>public class Context
 {
@@ -92,13 +86,17 @@ public class MainWorkflow : Workflow&lt;Context&gt;
 }
 </code></pre>
 
-<h2>How it works</h2>
+<p>Now you can run this sample workflow:</p>
 
-<p>[TBD]</p>
+<ol>
+<li>Right-click on your project in Solution Explorer;</li>
+<li>Select <code>Debug -&gt; Start New Instance</code></li>
+</ol>
 
                 </section>
             </div>
         </div>
+        <footer></footer>
     </body>
 
             <script type='text/javascript' src='../scripts/bootstrap.min.js'></script>

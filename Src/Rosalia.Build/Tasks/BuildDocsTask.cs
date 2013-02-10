@@ -98,7 +98,7 @@
                 var file = partialsDir.GetFile(fileName);
 
                 var html = Markdown.Transform(item.TopicItem.ContentFile.ReadAllText());
-                file.WriteStringToFile(html);
+                
 
                 if (item.Children.Count > 0)
                 {
@@ -116,6 +116,8 @@ string.Format(@"Could not find H1 element in markup for topic.
 
 Topic source file: {0}", item.TopicItem.ContentFile.AbsolutePath));
                 }
+
+                file.WriteStringToFile(topicDocument.DocumentNode.OuterHtml);
 
                 item.Title = headerNode.InnerText;
                 item.ContentFile = file;

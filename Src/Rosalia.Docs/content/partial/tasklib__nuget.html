@@ -1,14 +1,71 @@
 <h1>NuGet Tasks</h1>
 
-<h2>GenerateNuGetSpecTask</h2>
+<h2 class='task'>GenerateNuGetSpecTask</h2>
 
 <p>Generates NuGet package specification by user-provided data (package id, dependencies etc) and saves it to a file.</p>
 
-<pre><code>new GenerateNuGetSpecTask&lt;MyContext&gt;(c =&gt; new SpecInput()
-    .Id("MyPackageId")
-    /* more options here */);
-</code></pre>
+<h3 class="input">Input</h3>
+
+<ul>
+<li>NuGet package metadata (see <a href="http://docs.nuget.org/docs/reference/nuspec-reference#Metadata_Section">reference</a>);</li>
+<li>NuGet dependencies (see <a href="http://docs.nuget.org/docs/reference/nuspec-reference#Specifying_Dependencies">reference</a>);</li>
+<li>NuGet references (see <a href="http://docs.nuget.org/docs/reference/nuspec-reference#Specifying_Explicit_Assembly_References">reference</a>);</li>
+<li>NuGet framework assembly references (see <a href="http://docs.nuget.org/docs/reference/nuspec-reference#Specifying_Framework_Assembly_References_(GAC)">reference</a>);</li>
+<li>files to include in the package.</li>
+</ul>
 
 <h3>Examples</h3>
 
-<p>[TBD]</p>
+<p>A task that generates a NuGet spec for Rosalia.Core package:</p>
+
+<pre><code>new GenerateNuGetSpecTask&lt;BuildRosaliaContext&gt;((c, input) =&gt;
+    input
+        .Id("Rosalia.Core")                                      // package metadata 
+        .Version(context.Data.Version)                           // ...
+        .ProjectUrl("https://github.com/guryanovev/Rosalia")     // ...
+        .Tags("automation", "build", "msbuild", "nant", "psake") // ...
+        .Description("Core libs for Rosalia framework.")         // ...
+        .WithFiles(c.GetCoreLibFiles(), "lib")                   // files to include in the package
+        .ToFile(c.Data.NuSpecRosaliaCore))                       // destination file
+</code></pre>
+
+<p>Different ways to specify dependencies:</p>
+
+<pre><code>new GenerateNuGetSpecTask&lt;BuildRosaliaContext&gt;((c, input) =&gt; input
+    .Id("Rosalia")
+        // more options go here
+    .WithDependency("Rosalia.Core", c.Data.Version)       // simple dependency
+    .WithDependency("NuGetPowerTools", version: "0.29")   // simple dependency
+    .WithDependenciesFromPackagesConfig(projectDirectory) // this method reads ALL dependencies from packages.config file
+    .ToFile(c.Data.NuSpecRosalia))
+</code></pre>
+
+<h2 class='task'>GeneratePackageTask</h2>
+
+<p>Generates NuGet package by specification.</p>
+
+<h3 class="input">Input</h3>
+
+<ul>
+<li>path to nuspec file (required).</li>
+</ul>
+
+<h3>Examples</h3>
+
+<pre><code class="cs">new GeneratePackageTask<buildrosaliacontext>(file)</buildrosaliacontext></code></pre>
+
+<h2 class='task'>PushPackageTask</h2>
+
+<p>Pushes a package to NuGet Gallery.</p>
+
+<h3 class="input">Input</h3>
+
+<ul>
+<li>path to nupkg file (required);</li>
+<li>API-Key (optional, for private workflows only);</li>
+<li>push command options (Source, Timeout and Verbosity);</li>
+</ul>
+
+<h3>Examples</h3>
+
+<pre><code class="cs">new PushPackageTask<context>(new PushInput().Package(file))</context></code></pre>

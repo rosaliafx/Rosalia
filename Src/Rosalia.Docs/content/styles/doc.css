@@ -8,6 +8,32 @@ H1 {
     margin-bottom: 30px;
 }
 
+H2, H3 {
+    margin-top: 1em;    
+}
+
+.task, .input, .output {
+    padding-left: 23px;
+}
+
+.task {
+    background: url(../images/task.png) no-repeat left center;
+    border-bottom: 1px solid #DDDDDD;
+    margin-bottom: 0.5em;
+}
+
+.input {
+    background: url(../images/task_input.png) no-repeat left center;
+}
+
+.output {
+    background: url(../images/task_output.png) no-repeat left center;
+}
+
+FOOTER {
+    padding-top: 30px;
+}
+
 .container, 
 .navbar .container {
     width: 1200px;
@@ -111,4 +137,14 @@ HEADER {
 
 #homePage #links a {
     padding-right: 20px;
+}
+
+.table .property,
+.table .type {
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 12px;
+}
+
+.table .type {
+    color: rgb(0, 0, 255);
 }

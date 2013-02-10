@@ -1,10 +1,6 @@
 ﻿# Introduction #
 
-Rosalia is an open source automation framework. Its main goal is to allow writing tasks definition in C#. So, with Rosalia you 
-
-* do not use any foreign DSL (no XML like in MSBuild or NAnt);
-* do not use any foreign language/platform (like Ruby for rake);
-* define tasks and workflows in C#;
+Rosalia is an open source automation framework that allows defining tasks and workflows in pure C#.
 
 ## Quick start ##
 
@@ -17,7 +13,7 @@ For quick start just do 2 steps:
 	<code class='bash'>Package-Install "Rosalia"</code>
 </pre>
 
-You will get 2 sample classes in your project:
+You get two sample classes in your project:
 
     public class Context
     {
@@ -44,6 +40,7 @@ You will get 2 sample classes in your project:
         }
     }
 
-## How it works ##
+Now you can run this sample workflow:
 
-[TBD]
+1. Right-click on your project in Solution Explorer;
+2. Select `Debug -> Start New Instance`

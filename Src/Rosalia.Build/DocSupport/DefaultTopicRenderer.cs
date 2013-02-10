@@ -36,6 +36,7 @@
                 </section>
             </div>
         </div>
+        <footer></footer>
     </body>
 
     {{#Scripts}}
@@ -90,7 +91,7 @@
                     builder.AppendFormat("<span>{0}</span>", topic.Title);
                 } else
                 {
-                    builder.AppendFormat("<a href='/content/html/{0}'>{1}</a>", topic.ContentFile.Name, topic.Title);
+                    builder.AppendFormat("<a href='{0}'>{1}</a>", topic.ContentFile.Name, topic.Title);
                 }
 
                 builder.AppendLine();

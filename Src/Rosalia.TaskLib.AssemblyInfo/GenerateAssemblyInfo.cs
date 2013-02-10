@@ -54,7 +54,7 @@ using {{Name}};
 
         public GenerateAssemblyInfo<T> ToFile(IFile destination)
         {
-            _destination = c =>  destination;
+            _destination = c => destination;
             return this;
         }
 

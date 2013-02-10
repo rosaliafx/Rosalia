@@ -1,28 +1,21 @@
 <h1>Git Tasks</h1>
 
-<p>All git tasks allow to configure a path to git executable.
-It could be done by setting <code>GitToolPath</code> property or by calling <code>WithGitToolPath</code> method of input object:</p>
+<p>Git tasks call <code>git.exe</code> tool with specified arguments.</p>
 
-<pre><code>new SomeGitTask(new GitInput()
-    .WithGitToolPath("C:\\MyGitInstallationDirectory\\bin"));
-</code></pre>
-
-<p>This approach is not always sufficient because in general a workflow should not be wired to environment things like absolute path.
-You have a few options to avoid it:</p>
+<p>Threre are a few ways to configure a path to git executable:</p>
 
 <ol>
-<li>Include git bin directory to <code>PATH</code> environment variable.</li>
-<li>Specify GIT_HOME environment variable with path to your git installation directory.</li>
-<li>If your git is installed in <code>Programm Files\Git</code> or <code>Program Files (x86)</code> it will be found automatically.</li>
+<li>explicitly specify a path: <code>ToolPath = "C:\Git\bin"</code>;</li>
+<li>include git bin directory to <code>PATH</code> environment variable;</li>
+<li>specify GIT_HOME environment variable with a path to your git installation directory;</li>
+<li>if your git is installed in <code>Program Files\Git</code> or <code>Program Files (x86)</code> it will be found automatically.</li>
 </ol>
-
-<p>In all three cases you should omit setting <code>GitToolPath</code> variable.</p>
 
 <div class='alert'>
     <code>GIT_HOME</code> could point to <code>GIT_INSTALL_DIRECTORY</code> or to <code>GIT_INSTALL_DIRECTORY\bin</code> and it should not include <code>git.exe</code> part.
 </div>
 
-<h2>GetVersion</h2>
+<h2 class='task'>GetVersion</h2>
 
 <p>Extracts version info from a git repository using a command:</p>
 
@@ -39,6 +32,55 @@ You have a few options to avoid it:</p>
 <pre><code>git push --tags to share tags
 </code></pre>
 
-<h3>Input</h3>
+<h3 class="input">Input</h3>
 
-<h3>Output</h3>
+<ul>
+<li>path to git executable (optional);</li>
+<li>working directory (optional). Current directory is used if no working directory provided.</li>
+</ul>
+
+<h3 class="output">Output</h3>
+
+<p>An instance of <code>GetVersionOutput</code> class.</p>
+
+<table class="table table-bordered">
+    <tr>
+        <td class="property">Tag</td>
+        <td class="type">string</td>
+        <td>Tag text.</td>
+    </tr>
+    <tr>
+        <td class="property">CommitsCount</td>
+        <td class="type">int</td>
+        <td>Count of commits since the tag was added.</td>
+    </tr>
+    <tr>
+        <td class="property">LastCommitKey</td>
+        <td class="type">string</td>
+        <td>Abbreviated object name of the most recent commit.</td>
+    </tr>
+</table>
+
+<h2 class='task'>GitCommandTask</h2>
+
+<p>Calls <code>git.exe</code> with specified arguments.</p>
+
+<h3 class="input">Input</h3>
+
+<ul>
+<li>path to git executable (optional);</li>
+<li>working directory (optional). Current directory is used if no working directory provided.</li>
+</ul>
+
+<h3>Example</h3>
+
+<pre><code>//// Do auto commit to gh-pages repo
+new GitCommandTask&lt;BuildRosaliaContext&gt;
+{
+    InputProvider = context =&gt; new GitInput
+    {
+        RawCommand = string.Format("commit -a -m \"Docs auto commit v{0}\"", context.Data.Version),
+        WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
+    }
+}
+</code></pre>
