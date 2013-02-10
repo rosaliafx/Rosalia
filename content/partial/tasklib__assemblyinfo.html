@@ -11,10 +11,11 @@
 
 <h2>Examples</h2>
 
-<p>new GenerateAssemblyInfo<Context>()
-        .WithAttribute(c => new AssemblyVersionAttribute("1.1.0.0"))
-        .WithAttribute(c => new AssemblyCompanyAttribute("MyCompany"))
-        .ToFile(c => c.SrcDirectory.GetFile("CommonAssemblyInfo.cs"));</p>
+<pre><code>new GenerateAssemblyInfo&lt;Context&gt;()
+    .WithAttribute(c =&gt; new AssemblyVersionAttribute("1.1.0.0"))
+    .WithAttribute(c =&gt; new AssemblyCompanyAttribute("MyCompany"))
+    .ToFile(c =&gt; c.SrcDirectory.GetFile("CommonAssemblyInfo.cs"));
+</code></pre>
 
 <p>This task generates output:</p>
 
@@ -30,6 +31,6 @@
 
 using System.Reflection;
 
-[assembly: AssemblyVersionAttribute("1.0.42")]
-[assembly: AssemblyCompanyAttribute("Starfuckers, Inc.")]"));</code>
+[assembly: AssemblyVersionAttribute("1.1.0.0")]
+[assembly: AssemblyCompanyAttribute("MyCompany")]"));</code>
 </pre>
