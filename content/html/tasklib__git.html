@@ -104,6 +104,30 @@
     </tr>
 </table>
 
+<h2>GitCommandTask</h2>
+
+<p>Calls <code>git.exe</code> with specified arguments.</p>
+
+<h3>Input</h3>
+
+<ul>
+<li>path to git executable (optional);</li>
+<li>working directory (optional). Current directory is used if no working directory provided.</li>
+</ul>
+
+<h3>Example</h3>
+
+<pre><code>//// Do auto commit to gh-pages repo
+new GitCommandTask&lt;BuildRosaliaContext&gt;
+{
+    InputProvider = context =&gt; new GitInput
+    {
+        RawCommand = string.Format("commit -a -m \"Docs auto commit v{0}\"", context.Data.Version),
+        WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
+    }
+}
+</code></pre>
+
                 </section>
             </div>
         </div>
