@@ -8,7 +8,7 @@
 <li>explicitly specify a path: <code>ToolPath = "C:\Git\bin"</code>;</li>
 <li>include git bin directory to <code>PATH</code> environment variable;</li>
 <li>specify GIT_HOME environment variable with a path to your git installation directory.</li>
-<li>if your git is installed in <code>Programm Files\Git</code> or <code>Program Files (x86)</code> it will be found automatically.</li>
+<li>if your git is installed in <code>Program Files\Git</code> or <code>Program Files (x86)</code> it will be found automatically.</li>
 </ol>
 
 <div class='alert'>
@@ -34,4 +34,29 @@
 
 <h3>Input</h3>
 
+<ul>
+<li>path to git executable (optional);</li>
+<li>working directory (optional). Current directory is used if no working directory provided.</li>
+</ul>
+
 <h3>Output</h3>
+
+<p>An instance of <code>GetVersionOutput</code> class.</p>
+
+<table>
+    <tr>
+        <td>Tag</td>
+        <td>string</td>
+        <td>Tag text.</td>
+    </tr>
+    <tr>
+        <td>CommitsCount</td>
+        <td>int</td>
+        <td>Count of commits since the tag was added.</td>
+    </tr>
+    <tr>
+        <td>LastCommitKey</td>
+        <td>string</td>
+        <td>Abbreviated object name of the most recent commit.</td>
+    </tr>
+</table>
