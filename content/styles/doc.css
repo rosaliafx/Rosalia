@@ -9,7 +9,7 @@ H1 {
 }
 
 H2, H3 {
-    margin-top: 1.5em;    
+    margin-top: 1em;    
 }
 
 .task, .input, .output {
@@ -19,6 +19,7 @@ H2, H3 {
 .task {
     background: url(../images/task.png) no-repeat left center;
     border-bottom: 1px solid #DDDDDD;
+    margin-bottom: 0.5em;
 }
 
 .input {
