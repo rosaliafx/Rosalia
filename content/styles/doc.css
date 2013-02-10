@@ -8,6 +8,16 @@ H1 {
     margin-bottom: 30px;
 }
 
+.input {
+    background: url(images/task_input.png) no-repeat left center;
+    padding-left: 23px;
+}
+
+.output {
+    background: url(images/task_output.png) no-repeat left center;
+    padding-left: 23px;
+}
+
 FOOTER {
     padding-top: 30px;
 }
