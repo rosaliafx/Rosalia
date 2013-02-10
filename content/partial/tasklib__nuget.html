@@ -53,3 +53,19 @@
 <h3>Examples</h3>
 
 <pre><code class="cs">new GeneratePackageTask<BuildRosaliaContext>(file)</code></pre>
+
+<h2 class='task'>PushPackageTask</h2>
+
+<p>Pushes a package to NuGet Gallery.</p>
+
+<h3 class="input">Input</h3>
+
+<ul>
+<li>path to nupkg file (required);</li>
+<li>API-Key (optional, for private workflows only);</li>
+<li>push command options (Source, Timeout and Verbosity);</li>
+</ul>
+
+<h3>Examples</h3>
+
+<pre><code class="cs">new PushPackageTask<Context>(new PushInput().Package(file))</code></pre>
