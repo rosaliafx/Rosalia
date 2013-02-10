@@ -8,14 +8,25 @@ H1 {
     margin-bottom: 30px;
 }
 
-.input {
-    background: url(images/task_input.png) no-repeat left center;
+H2, H3 {
+    margin-top: 1.5em;    
+}
+
+.task, .input, .output {
     padding-left: 23px;
 }
 
+.task {
+    background: url(../images/task.png) no-repeat left center;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.input {
+    background: url(../images/task_input.png) no-repeat left center;
+}
+
 .output {
-    background: url(images/task_output.png) no-repeat left center;
-    padding-left: 23px;
+    background: url(../images/task_output.png) no-repeat left center;
 }
 
 FOOTER {
