@@ -1,6 +1,6 @@
 ﻿param($installPath, $toolsPath, $package, $project)
 
-$buildProject = Get-MSBuildProject
+$buildProject = Get-MSBuildProject $project.ProjectName
 
 $projectRootDirectory = Split-Path $project.FileName -parent
 
