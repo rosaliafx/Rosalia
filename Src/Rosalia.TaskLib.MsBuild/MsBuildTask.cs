@@ -6,9 +6,9 @@
     using System.Linq;
     using Microsoft.Win32;
     using Rosalia.Core.Context;
+    using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
-    using Rosalia.TaskLib.Standard;
     using Rosalia.TaskLib.Standard.Tasks;
 
     /// <summary>
@@ -34,15 +34,19 @@
             detectors.Add(message => message.IndexOf(" warning ") >= 0 ? MessageLevel.Warning : (MessageLevel?)null);
         }
 
-        protected override string GetToolPath(MsBuildInput input, TaskContext<T> context)
+        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context, MsBuildInput input, ResultBuilder result)
         {
-            if (!string.IsNullOrEmpty(input.ExactMsBuildExeLocation))
+            try
             {
-                return input.ExactMsBuildExeLocation;
+                var toolDirectory = (string)Registry.GetValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSBuild\ToolsVersions\{0}", input.ToolVersion.Value), "MSBuildToolsPath", null);
+                return new[] { new DefaultFile(Path.Combine(toolDirectory, "MsBuild.exe")) };
+            }
+            catch (Exception ex)
+            {
+                result.AddWarning("Error occured while reading registry: {0}", ex.Message);
             }
 
-            var toolDirectory = (string)Registry.GetValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSBuild\ToolsVersions\{0}", input.ToolVersion.Value), "MSBuildToolsPath", null);
-            return Path.Combine(toolDirectory, "MsBuild.exe");
+            return new IFile[0];
         }
 
         protected override string GetToolArguments(MsBuildInput input, TaskContext<T> context)

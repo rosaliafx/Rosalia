@@ -4,6 +4,7 @@
     {
         public const string Target = "target";
         public const string Property = "property";
+        public const string Verbosity = "verbosity";
 
         public MsBuildSwitch(string text, string parameter)
         {

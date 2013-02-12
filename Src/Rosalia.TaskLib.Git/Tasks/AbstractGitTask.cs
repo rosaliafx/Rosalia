@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Rosalia.Core.Context;
     using Rosalia.Core.FileSystem;
+    using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
     using Rosalia.TaskLib.Git.Input;
     using Rosalia.TaskLib.Standard.Tasks;
@@ -41,7 +42,7 @@
             get { return "git"; }
         }
 
-        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context)
+        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context, TInput input, ResultBuilder result)
         {
             // user can set GIT_HOME variable to point exact installed version.
             var gitHome = context.Environment.GetVariable("GIT_HOME");

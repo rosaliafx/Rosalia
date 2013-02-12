@@ -23,12 +23,6 @@
             get { return _switches; }
         }
 
-        /// <summary>
-        /// Gets or sets MSBuild.exe file location. Use this property to prevent auto-lookup 
-        /// of MSBuild tool or to use some custom MSBuild installation path.
-        /// </summary>
-        public string ExactMsBuildExeLocation { get; set; }
-
         public MsBuildInput WithProjectFile(IFile projectFile)
         {
             ProjectFile = projectFile;
@@ -72,6 +66,36 @@
             }
 
             return WithSwitch(MsBuildSwitch.Target, string.Join(",", targets));
+        }
+
+        public MsBuildInput WithVerbosity(string level)
+        {
+            return WithSwitch(MsBuildSwitch.Verbosity, level);
+        }
+
+        public MsBuildInput WithVerbosityQuiet()
+        {
+            return WithVerbosity("q");
+        }
+
+        public MsBuildInput WithVerbosityMinimal()
+        {
+            return WithVerbosity("m");
+        }
+
+        public MsBuildInput WithVerbosityNormal()
+        {
+            return WithVerbosity("n");
+        }
+
+        public MsBuildInput WithVerbosityDetailed()
+        {
+            return WithVerbosity("d");
+        }
+
+        public MsBuildInput WithVerbosityDiagnostic()
+        {
+            return WithVerbosity("diag");
         }
     }
 }

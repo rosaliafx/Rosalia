@@ -59,11 +59,11 @@
         {
             FillMessageLevelDetectors(_messageLevelDetectors);
 
-            var toolPath = GetToolPath(input, context);
+            var toolPath = GetToolPath(input, context, result);
             var toolArguments = GetToolArguments(input, context);
 
             result.AddInfo(
-                "Start external tool with command line: {0}{1}{2}",
+                "Start external tool with command line: {0}{1} {2}",
                 Environment.NewLine,
                 toolPath,
                 toolArguments);
@@ -98,7 +98,7 @@
             return ProcessExitCode(exitCode, result);
         }
 
-        protected virtual IEnumerable<IFile> GetToolPathLookup(TaskContext<TContext> context)
+        protected virtual IEnumerable<IFile> GetToolPathLookup(TaskContext<TContext> context, TInput input, ResultBuilder result)
         {
             yield break;
         }
@@ -117,14 +117,14 @@
             return string.Empty;
         }
 
-        protected virtual string GetToolPath(TInput input, TaskContext<TContext> context)
+        protected virtual string GetToolPath(TInput input, TaskContext<TContext> context, ResultBuilder result)
         {
             if (input != null && !string.IsNullOrEmpty(input.ToolPath))
             {
                 return input.ToolPath;
             }
 
-            foreach (var toolFile in GetToolPathLookup(context))
+            foreach (var toolFile in GetToolPathLookup(context, input, result))
             {
                 if (toolFile.Exists)
                 {

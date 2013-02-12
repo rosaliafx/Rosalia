@@ -39,7 +39,7 @@
                 _messageLevelDetectors = messageLevelDetectors;
             }
 
-            protected override string GetToolPath(ExternalToolInput input, TaskContext<object> context)
+            protected override string GetToolPath(ExternalToolInput input, TaskContext<object> context, ResultBuilder result)
             {
                 return "fake";
             }

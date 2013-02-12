@@ -26,7 +26,7 @@
             return null;
         }
 
-        protected override string GetToolPath(PushInput input, TaskContext<T> context)
+        protected override string GetToolPath(PushInput input, TaskContext<T> context, ResultBuilder result)
         {
             return "nuget";
         }

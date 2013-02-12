@@ -21,7 +21,7 @@
 
         protected override string DefaultToolPath
         {
-            get { return "svn"; }
+            get { return "svnversion"; }
         }
 
         protected override SvnVersionResult CreateResult(int exitCode, ResultBuilder resultBuilder)

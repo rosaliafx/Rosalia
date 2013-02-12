@@ -47,7 +47,8 @@
                     new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()
                             .WithProjectFile(c.Data.SolutionFile)
-                            .WithConfiguration(c.Data.Configuration)),
+                            .WithConfiguration(c.Data.Configuration)
+                            .WithVerbosityMinimal()),
                     //// Clear artifacts
                     Task((builder, context) => context.Data.Artifacts.Files.IncludeByExtension("nupkg", "nuspec").DeleteAll()),
                     //// Generate spec for Core NuGet package

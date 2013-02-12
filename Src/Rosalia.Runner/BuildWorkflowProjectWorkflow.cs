@@ -12,8 +12,8 @@
             {
                 return new MsBuildTask<RunningOptions>()
                     .FillInput(c => new MsBuildInput()
-                                        .WithProjectFile(c.Data.InputFile)
-                                        .WithConfiguration(Configuration(c)));
+                        .WithProjectFile(c.Data.InputFile)
+                        .WithConfiguration(Configuration(c)));
             }
         }
 

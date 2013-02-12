@@ -1,0 +1,23 @@
+<h1>MSBuild Tasks</h1>
+
+<h2 class='task'>MsBuildTask</h2>
+
+<p>Runs MSBuild.exe with specified arguments. 
+See <a href="http://msdn.microsoft.com/en-us/library/vstudio/ms164311.aspx">MSBuild Command-Line reference</a> for configuration details.</p>
+
+<h3 class="input">Input</h3>
+
+<ul>
+<li>Project file;</li>
+<li>MSBuild switches;</li>
+</ul>
+
+<h3>Examples</h3>
+
+<p>A task that generates a NuGet spec for Rosalia.Core package:</p>
+
+<pre><code class="cs">new MsBuildTask<context>()
+    .FillInput(c => new MsBuildInput()
+        .WithProjectFile(c.Data.SolutionFile)
+        .WithConfiguration(c.Data.Configuration))
+</context></code></pre>
