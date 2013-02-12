@@ -16,8 +16,8 @@ See <a href="http://msdn.microsoft.com/en-us/library/vstudio/ms164311.aspx">MSBu
 
 <p>A task that generates a NuGet spec for Rosalia.Core package:</p>
 
-<pre><code>new MsBuildTask&lt;Context&gt;()
-    .FillInput(c =&gt; new MsBuildInput()
-        .WithProjectFile(c.Data.SolutionFile)
-        .WithConfiguration(c.Data.Configuration))
-</code></pre>
+<pre><code class="cs">new MsBuildTask<context>()
+        .FillInput(c => new MsBuildInput()
+            .WithProjectFile(c.Data.SolutionFile)
+            .WithConfiguration(c.Data.Configuration))
+</context></code></pre>
