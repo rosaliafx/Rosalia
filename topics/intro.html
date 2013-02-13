@@ -1,0 +1,109 @@
+<!DOCTYPE html><html>
+    <head>
+        <title>Rosalia Docs - Introduction</title>
+                    <link href='../content/styles/bootstrap.min.css' rel='stylesheet' />
+                    <link href='../content/styles/doc.css' rel='stylesheet' />
+                    <link href='../content/styles/vs.css' rel='stylesheet' />
+            </head>
+    <body>
+        <div id='page'>
+            <header class='navbar navbar-inverse navbar-fixed-top'>
+                <div class='container'>
+                    <a id='mainLogo' href='../index.html'>
+                        <span>Rosalia</span><span class='docs'>Docs</span>
+                    </a>
+                </div>
+            </header>
+
+            <div class='container'>
+                <section>
+                    <nav id='tableOfContents' class='affix'>
+                        <ul>
+<li>
+<span>Introduction</span>
+</li>
+<li>
+<a href='tasklib.html'>Task Lib</a>
+<ul>
+<li>
+<a href='tasklib/assemblyinfo.html'>Assembly Info</a>
+</li>
+<li>
+<a href='tasklib/git.html'>Git Tasks</a>
+</li>
+<li>
+<a href='tasklib/msbuild.html'>MSBuild Tasks</a>
+</li>
+<li>
+<a href='tasklib/nuget.html'>NuGet Tasks</a>
+</li>
+</ul>
+</li>
+</ul>
+
+                    </nav>
+                </section>
+                <section id='mainContent'>
+                    <h1>Introduction</h1>
+
+<p>Rosalia is an open source automation framework that allows defining tasks and workflows in pure C#.</p>
+
+<h2>Quick start</h2>
+
+<p>For quick start just do 2 steps:</p>
+
+<ul>
+<li>create a class library project in your solution;</li>
+<li>install Rosalia NuGet package:</li>
+</ul>
+
+<pre>
+    <code class='bash'>Package-Install "Rosalia"</code>
+</pre>
+
+<p>You get two sample classes in your project:</p>
+
+<pre><code>public class Context
+{
+    public string Message { get; set; }
+}
+
+public class MainWorkflow : Workflow&lt;Context&gt;
+{
+    public override ITask&lt;Context&gt; RootTask
+    {
+        get
+        {
+            return Sequence(
+                //// Task 1
+                Task((result, c) =&gt; result.AddInfo("Hello...")),
+
+                //// Task 2
+                Task((result, c) =&gt; c.Data.Message = "...world"),
+
+                //// Task 3
+                Task((result, c) =&gt; result.AddInfo(c.Data.Message))
+            );
+        }
+    }
+}
+</code></pre>
+
+<p>Now you can run this sample workflow:</p>
+
+<ol>
+<li>Right-click on your project in Solution Explorer;</li>
+<li>Select <code>Debug -&gt; Start New Instance</code></li>
+</ol>
+
+                </section>
+            </div>
+        </div>
+        <footer></footer>
+    </body>
+
+            <script type='text/javascript' src='../content/scripts/bootstrap.min.js'></script>
+            <script type='text/javascript' src='../content/scripts/ga.js'></script>
+            <script type='text/javascript' src='../content/scripts/highlight.pack.js'></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+</html>

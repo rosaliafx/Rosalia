@@ -1,0 +1,129 @@
+<!DOCTYPE html><html>
+    <head>
+        <title>Rosalia Docs - NuGet Tasks</title>
+                    <link href='../../content/styles/bootstrap.min.css' rel='stylesheet' />
+                    <link href='../../content/styles/doc.css' rel='stylesheet' />
+                    <link href='../../content/styles/vs.css' rel='stylesheet' />
+            </head>
+    <body>
+        <div id='page'>
+            <header class='navbar navbar-inverse navbar-fixed-top'>
+                <div class='container'>
+                    <a id='mainLogo' href='../../index.html'>
+                        <span>Rosalia</span><span class='docs'>Docs</span>
+                    </a>
+                </div>
+            </header>
+
+            <div class='container'>
+                <section>
+                    <nav id='tableOfContents' class='affix'>
+                        <ul>
+<li>
+<a href='../intro.html'>Introduction</a>
+</li>
+<li>
+<a href='../tasklib.html'>Task Lib</a>
+<ul>
+<li>
+<a href='assemblyinfo.html'>Assembly Info</a>
+</li>
+<li>
+<a href='git.html'>Git Tasks</a>
+</li>
+<li>
+<a href='msbuild.html'>MSBuild Tasks</a>
+</li>
+<li>
+<span>NuGet Tasks</span>
+</li>
+</ul>
+</li>
+</ul>
+
+                    </nav>
+                </section>
+                <section id='mainContent'>
+                    <h1>NuGet Tasks</h1>
+
+<h2 class='task'>GenerateNuGetSpecTask</h2>
+
+<p>Generates NuGet package specification by user-provided data (package id, dependencies etc) and saves it to a file.</p>
+
+<h3 class="input">Input</h3>
+
+<ul>
+<li>NuGet package metadata (see <a href="http://docs.nuget.org/docs/reference/nuspec-reference#Metadata_Section">reference</a>);</li>
+<li>NuGet dependencies (see <a href="http://docs.nuget.org/docs/reference/nuspec-reference#Specifying_Dependencies">reference</a>);</li>
+<li>NuGet references (see <a href="http://docs.nuget.org/docs/reference/nuspec-reference#Specifying_Explicit_Assembly_References">reference</a>);</li>
+<li>NuGet framework assembly references (see <a href="http://docs.nuget.org/docs/reference/nuspec-reference#Specifying_Framework_Assembly_References_(GAC)">reference</a>);</li>
+<li>files to include in the package.</li>
+</ul>
+
+<h3>Examples</h3>
+
+<p>A task that generates a NuGet spec for Rosalia.Core package:</p>
+
+<pre><code>new GenerateNuGetSpecTask&lt;BuildRosaliaContext&gt;((c, input) =&gt;
+    input
+        .Id("Rosalia.Core")                                      // package metadata 
+        .Version(context.Data.Version)                           // ...
+        .ProjectUrl("https://github.com/guryanovev/Rosalia")     // ...
+        .Tags("automation", "build", "msbuild", "nant", "psake") // ...
+        .Description("Core libs for Rosalia framework.")         // ...
+        .WithFiles(c.GetCoreLibFiles(), "lib")                   // files to include in the package
+        .ToFile(c.Data.NuSpecRosaliaCore))                       // destination file
+</code></pre>
+
+<p>Different ways to specify dependencies:</p>
+
+<pre><code>new GenerateNuGetSpecTask&lt;BuildRosaliaContext&gt;((c, input) =&gt; input
+    .Id("Rosalia")
+        // more options go here
+    .WithDependency("Rosalia.Core", c.Data.Version)       // simple dependency
+    .WithDependency("NuGetPowerTools", version: "0.29")   // simple dependency
+    .WithDependenciesFromPackagesConfig(projectDirectory) // this method reads ALL dependencies from packages.config file
+    .ToFile(c.Data.NuSpecRosalia))
+</code></pre>
+
+<h2 class='task'>GeneratePackageTask</h2>
+
+<p>Generates NuGet package by specification.</p>
+
+<h3 class="input">Input</h3>
+
+<ul>
+<li>path to nuspec file (required).</li>
+</ul>
+
+<h3>Examples</h3>
+
+<pre><code class="cs">new GeneratePackageTask<buildrosaliacontext>(file)</buildrosaliacontext></code></pre>
+
+<h2 class='task'>PushPackageTask</h2>
+
+<p>Pushes a package to NuGet Gallery.</p>
+
+<h3 class="input">Input</h3>
+
+<ul>
+<li>path to nupkg file (required);</li>
+<li>API-Key (optional, for private workflows only);</li>
+<li>push command options (Source, Timeout and Verbosity);</li>
+</ul>
+
+<h3>Examples</h3>
+
+<pre><code class="cs">new PushPackageTask<context>(new PushInput().Package(file))</context></code></pre>
+
+                </section>
+            </div>
+        </div>
+        <footer></footer>
+    </body>
+
+            <script type='text/javascript' src='../../content/scripts/bootstrap.min.js'></script>
+            <script type='text/javascript' src='../../content/scripts/ga.js'></script>
+            <script type='text/javascript' src='../../content/scripts/highlight.pack.js'></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+</html>
