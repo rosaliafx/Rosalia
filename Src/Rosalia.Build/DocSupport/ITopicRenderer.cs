@@ -6,9 +6,11 @@
     public interface ITopicRenderer
     {
         void Render(
-            TableOfContentsItem topic, 
-            IEnumerable<TableOfContentsItem> allTopics,
-            IFile output, 
-            IDirectory hostDirectory);
+            ComposedTopic topic, 
+            IEnumerable<ComposedTopic> allTopics,
+            IFile output,
+            IDirectory hostDirectory,
+            IDirectory stylesDirectory,
+            IDirectory scriptsDirectory);
     }
 }

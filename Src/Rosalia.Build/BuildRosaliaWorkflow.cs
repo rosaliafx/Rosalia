@@ -105,7 +105,7 @@
                         var docsHost = context.Data.Src.GetDirectory("Rosalia.Docs");
                         var files = docsHost
                             .SearchFilesIn()
-                            .IncludeByRelativePath(relative => relative.Equals("index.html") || relative.StartsWith("content"));
+                            .IncludeByRelativePath(relative => relative.Equals("index.html") || relative.StartsWith("content") || relative.StartsWith("topics"));
 
                         files.CopyRelativelyTo(new DefaultDirectory(context.Data.PrivateData.GhPagesRoot));
                     }),

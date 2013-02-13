@@ -19,7 +19,7 @@
         <div id='page'>
             <header class='navbar navbar-inverse navbar-fixed-top'>
                 <div class='container'>
-                    <a id='mainLogo' href='/index.html'>
+                    <a id='mainLogo' href='{{PathToRoot}}index.html'>
                         <span>Rosalia</span><span class='docs'>Docs</span>
                     </a>
                 </div>
@@ -46,25 +46,34 @@
 </html>";
 
         public void Render(
-            TableOfContentsItem topic, 
-            IEnumerable<TableOfContentsItem> allTopics, 
+            ComposedTopic topic, 
+            IEnumerable<ComposedTopic> allTopics, 
             IFile output,
-            IDirectory hostDirectory)
+            IDirectory hostDirectory,
+            IDirectory stylesDirectory,
+            IDirectory scriptsDirectory)
         {
+            var topicDirectory = hostDirectory.GetFile(topic.RelativeResultFilePath).Directory;
+
+            var pathToRoot = string.Empty;
+            for (var i = 0; i < topic.Descriptor.Level + 1; i++)
+            {
+                pathToRoot += "../";
+            }
+
             var model = new Model
             {
-                TableOfContents = GetTableOfContentsMarkup(allTopics, topic),
+                PathToRoot = pathToRoot,
+                TableOfContents = GetTableOfContentsMarkup(allTopics, topic, topicDirectory),
                 Title = topic.Title,
-                MainContent = topic.ContentFile.ReadAllText(),
-                Scripts = hostDirectory
-                    .GetDirectory("scripts")
+                MainContent = topic.FormattedContentFile.ReadAllText(),
+                Scripts = scriptsDirectory
                     .Files
-                    .Select(file => new Resource("../scripts/" + file.Name))
+                    .Select(file => new Resource(file.GetRelativePath(topicDirectory).Replace("\\", "/")))
                     .ToList(),
-                Styles = hostDirectory
-                    .GetDirectory("styles")
+                Styles = stylesDirectory
                     .Files
-                    .Select(file => new Resource("../styles/" + file.Name))
+                    .Select(file => new Resource(file.GetRelativePath(topicDirectory).Replace("\\", "/")))
                     .ToList()
             };
 
@@ -73,32 +82,36 @@
             output.WriteStringToFile(result);
         }
 
-        private string GetTableOfContentsMarkup(IEnumerable<TableOfContentsItem> allTopics, TableOfContentsItem topic)
+        private string GetTableOfContentsMarkup(IEnumerable<ComposedTopic> allTopics, ComposedTopic topic, IDirectory topicDirectory)
         {
             var builder = new StringBuilder();
-            RenderTableOfContentsLevel(builder, allTopics, topic);
+            RenderTableOfContentsLevel(builder, allTopics, topic, topicDirectory);
             return builder.ToString();
         }
 
-        private void RenderTableOfContentsLevel(StringBuilder builder, IEnumerable<TableOfContentsItem> allTopics, TableOfContentsItem current)
+        private void RenderTableOfContentsLevel(StringBuilder builder, IEnumerable<ComposedTopic> allTopics, ComposedTopic current, IDirectory pathToRoot)
         {
             builder.AppendLine("<ul>");
+            var currentTopicDirectory = pathToRoot.GetFile(current.RelativeResultFilePath).Directory;
+
             foreach (var topic in allTopics)
             {
+                var topicFile = pathToRoot.GetFile(topic.RelativeResultFilePath).GetRelativePath(currentTopicDirectory);
+
                 builder.AppendLine("<li>");
                 if (topic == current)
                 {
                     builder.AppendFormat("<span>{0}</span>", topic.Title);
                 } else
                 {
-                    builder.AppendFormat("<a href='{0}'>{1}</a>", topic.ContentFile.Name, topic.Title);
+                    builder.AppendFormat("<a href='{0}'>{1}</a>", topicFile.Replace("\\", "/"), topic.Title);
                 }
 
                 builder.AppendLine();
 
                 if (topic.Children.Count > 0)
                 {
-                    RenderTableOfContentsLevel(builder, topic.Children, current);
+                    RenderTableOfContentsLevel(builder, topic.Children, current, pathToRoot);
                 }
 
                 builder.AppendLine("</li>");
@@ -109,6 +122,8 @@
 
         internal class Model
         {
+            public string PathToRoot { get; set; }
+
             public string Title { get; set; }
 
             public string TableOfContents { get; set; }

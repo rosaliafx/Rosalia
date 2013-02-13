@@ -12,8 +12,6 @@ See [MSBuild Command-Line reference](http://msdn.microsoft.com/en-us/library/vst
 
 ### Examples ###
 
-A task that generates a NuGet spec for Rosalia.Core package:
-
 <pre><code class="cs">new MsBuildTask<Context>()
     .FillInput(c => new MsBuildInput()
         .WithProjectFile(c.Data.SolutionFile)

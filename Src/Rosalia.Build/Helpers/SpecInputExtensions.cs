@@ -1,7 +1,6 @@
 ﻿namespace Rosalia.Build.Helpers
 {
     using Rosalia.Core.Context;
-    using Rosalia.TaskLib.NuGet;
     using Rosalia.TaskLib.NuGet.Input;
 
     public static class SpecInputExtensions
@@ -11,7 +10,7 @@
             return input
                 .Version(context.Data.Version)
                 .Authors("Eugene Guryanov")
-                .ProjectUrl("https://github.com/guryanovev/Rosalia")
+                .ProjectUrl("http://rosalia-tool.net")
                 .Tags("automation", "build", "msbuild", "nant", "psake");
         }
 
