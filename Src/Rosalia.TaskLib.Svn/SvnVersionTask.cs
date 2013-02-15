@@ -63,7 +63,7 @@
             }
         }
 
-        protected override string GetToolArguments(SvnVersionInput input, TaskContext<T> context)
+        protected override string GetToolArguments(SvnVersionInput input, TaskContext<T> context, ResultBuilder result)
         {
             var builder = new StringBuilder();
             builder.Append(input.Commited ? "-c" : string.Empty);

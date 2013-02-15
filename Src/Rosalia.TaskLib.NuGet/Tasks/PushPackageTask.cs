@@ -31,7 +31,7 @@
             return "nuget";
         }
 
-        protected override string GetToolArguments(PushInput input, TaskContext<T> context)
+        protected override string GetToolArguments(PushInput input, TaskContext<T> context, ResultBuilder result)
         {
             return string.Format(
                 "push \"{1}\" {0} {2} -NonInteractive", 

@@ -57,7 +57,7 @@
             }
         }
 
-        protected override string GetToolArguments(GitInput input, TaskContext<T> context)
+        protected override string GetToolArguments(GitInput input, TaskContext<T> context, ResultBuilder result)
         {
             return "describe --tags --long";
         }

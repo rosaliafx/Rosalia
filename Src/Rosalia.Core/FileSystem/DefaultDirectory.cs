@@ -47,7 +47,13 @@
         {
             get
             {
-                return new DefaultDirectory(Directory.GetParent(AbsolutePath).FullName);
+                var parentDirectory = Directory.GetParent(AbsolutePath);
+                if (parentDirectory == null)
+                {
+                    return null;
+                }
+
+                return new DefaultDirectory(parentDirectory.FullName);
             }
         }
 

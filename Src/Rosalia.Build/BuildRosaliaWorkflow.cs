@@ -46,7 +46,7 @@
                     //// Build solution
                     new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()
-                            .WithProjectFile(c.Data.SolutionFile)
+                            //.WithProjectFile(c.Data.SolutionFile)
                             .WithConfiguration(c.Data.Configuration)
                             .WithVerbosityMinimal()),
                     //// Clear artifacts

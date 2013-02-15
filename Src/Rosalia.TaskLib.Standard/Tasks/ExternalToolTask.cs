@@ -60,7 +60,7 @@
             FillMessageLevelDetectors(_messageLevelDetectors);
 
             var toolPath = GetToolPath(input, context, result);
-            var toolArguments = GetToolArguments(input, context);
+            var toolArguments = GetToolArguments(input, context, result);
 
             result.AddInfo(
                 "Start external tool with command line: {0}{1} {2}",
@@ -107,7 +107,7 @@
         {
         }
 
-        protected virtual string GetToolArguments(TInput input, TaskContext<TContext> context)
+        protected virtual string GetToolArguments(TInput input, TaskContext<TContext> context, ResultBuilder result)
         {
             if (input != null && !string.IsNullOrEmpty(input.Arguments))
             {

@@ -49,9 +49,55 @@
             return new IFile[0];
         }
 
-        protected override string GetToolArguments(MsBuildInput input, TaskContext<T> context)
+        protected override string GetToolArguments(MsBuildInput input, TaskContext<T> context, ResultBuilder result)
         {
-            return string.Join(" ", input.Switches.Select(s => s.CommandLinePart)) + " " + input.ProjectFile.AbsolutePath;
+            var projectFile = GetProjectFile(input, context, result);
+            var switches = string.Join(" ", input.Switches.Select(s => s.CommandLinePart));
+            
+            return string.Format("{0} {1}", switches, projectFile);
+        }
+
+        protected virtual string GetProjectFile(MsBuildInput input, TaskContext<T> context, ResultBuilder result)
+        {
+            if (input.ProjectFile != null)
+            {
+                return input.ProjectFile.AbsolutePath;
+            }
+
+            result.AddInfo(
+@"No project file defined. Start solution file lookup from directory 
+{0}", 
+                context.WorkDirectory.AbsolutePath);
+
+            var currentDirectory = context.WorkDirectory;
+            while (currentDirectory != null)
+            {
+                var solutionFiles = currentDirectory.Files.IncludeByExtension("sln").ToArray();
+                if (solutionFiles.Length > 0)
+                {
+                    if (solutionFiles.Length > 1)
+                    {
+                        result.AddInfo(
+@"Multiple solution files found in directory 
+{0}
+The first file will be used.", 
+                             currentDirectory.AbsolutePath);
+                    }
+
+                    return solutionFiles.First().AbsolutePath;
+                }
+
+                result.AddInfo(
+@"No solution files found in 
+{0}
+Go to parent directory.", 
+                        currentDirectory.AbsolutePath);
+                currentDirectory = currentDirectory.Parent;
+            }
+
+            result.AddWarning("No solution file found. Default MSBuild lookup mechanism will be used.");
+
+            return null;
         }
     }
 }

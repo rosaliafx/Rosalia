@@ -31,7 +31,7 @@
             return null;
         }
 
-        protected override string GetToolArguments(ExternalToolInput input, TaskContext<T> context)
+        protected override string GetToolArguments(ExternalToolInput input, TaskContext<T> context, ResultBuilder result)
         {
             return string.Format("pack {0}", _specFile(context).Name);
         }
