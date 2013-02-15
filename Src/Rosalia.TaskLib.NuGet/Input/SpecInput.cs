@@ -165,16 +165,19 @@
         /// </summary>
         public SpecInput WithDependenciesFromPackagesConfig(IFile packagesConfigFile)
         {
-            var document = XDocument.Load(packagesConfigFile.ReadStream);
-            foreach (var package in document.Descendants("package"))
+            using (var stream = packagesConfigFile.ReadStream)
             {
-                var versionAttribute = package.Attribute("version");
-                var frameworkVersionAttribute = package.Attribute("targetFramework");
+                var document = XDocument.Load(stream);
+                foreach (var package in document.Descendants("package"))
+                {
+                    var versionAttribute = package.Attribute("version");
+                    var frameworkVersionAttribute = package.Attribute("targetFramework");
 
-                WithDependency(
-                    package.Attribute("id").Value,
-                    versionAttribute == null ? null : versionAttribute.Value,
-                    frameworkVersionAttribute == null ? null : frameworkVersionAttribute.Value);
+                    WithDependency(
+                        package.Attribute("id").Value,
+                        versionAttribute == null ? null : versionAttribute.Value,
+                        frameworkVersionAttribute == null ? null : frameworkVersionAttribute.Value);
+                }
             }
 
             return this;

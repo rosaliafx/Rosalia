@@ -16,9 +16,22 @@
     /// </summary>
     public class MsBuildTask<T> : ExternalToolTask<T, MsBuildInput, object>
     {
+        public MsBuildTask() : this(new MsBuildInput())
+        {
+        }
+
+        public MsBuildTask(MsBuildInput input) : base(input)
+        {
+        }
+
         public override ExtendedTask<T, MsBuildInput, object> ApplyResult(Action<object, T> applyResultFunc)
         {
             throw new InvalidOperationException();
+        }
+
+        protected override string DefaultToolPath
+        {
+            get { return "msbuild"; }
         }
 
         protected override object CreateResult(int exitCode, ResultBuilder resultBuilder)
@@ -84,7 +97,11 @@ The first file will be used.",
                              currentDirectory.AbsolutePath);
                     }
 
-                    return solutionFiles.First().AbsolutePath;
+                    var solutionFile = solutionFiles.First().AbsolutePath;
+
+                    result.AddInfo("Solution file found: {0}", solutionFile);
+
+                    return solutionFile;
                 }
 
                 result.AddInfo(
