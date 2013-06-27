@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Xml.Linq;
     using Rosalia.Core.FileSystem;
 
@@ -206,11 +207,16 @@
             return WithFile(file.AbsolutePath, target, exclude);
         }
 
-        public SpecInput WithContentFiles(FileList files)
+        public SpecInput WithContentFiles(FileList files, string target = null)
         {
+            if (target == null)
+            {
+                target = "content";
+            }
+
             foreach (var file in files)
             {
-                Files.Add(new File(file.AbsolutePath, file.GetRelativePath(files.BaseDirectory), null));    
+                Files.Add(new File(file.AbsolutePath, Path.Combine(target, file.GetRelativePath(files.BaseDirectory)), null));    
             }
             
             return this;
