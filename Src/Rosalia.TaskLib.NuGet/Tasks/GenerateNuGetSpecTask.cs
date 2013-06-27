@@ -27,6 +27,11 @@
 
         protected override object Execute(SpecInput input, TaskContext<T> context, ResultBuilder resultBuilder)
         {
+            if (input.Destination == null)
+            {
+                throw new Exception("NuSpec destination file is not set!");
+            }
+
             using (var writer = new StreamWriter(input.Destination.WriteStream))
             {
                 writer.WriteLine("<?xml version='1.0' encoding='utf-8'?>");

@@ -206,6 +206,16 @@
             return WithFile(file.AbsolutePath, target, exclude);
         }
 
+        public SpecInput WithContentFiles(FileList files)
+        {
+            foreach (var file in files)
+            {
+                Files.Add(new File(file.AbsolutePath, file.GetRelativePath(files.BaseDirectory), null));    
+            }
+            
+            return this;
+        }
+
         public SpecInput WithFiles(IEnumerable<IFile> files, string target, string exclude = null)
         {
             foreach (var file in files)
