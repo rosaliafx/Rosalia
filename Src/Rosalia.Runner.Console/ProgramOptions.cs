@@ -8,6 +8,7 @@
         {
             VisualisationFilesPath = new List<string>();
             LogFilesPath = new List<string>();
+            Properties = new Dictionary<string, string>();
         }
 
         public bool ShowHelp { get; set; }
@@ -29,5 +30,7 @@
         public IList<string> VisualisationFilesPath { get; private set; }
 
         public IList<string> LogFilesPath { get; private set; }
+
+        public IDictionary<string, string> Properties { get; private set; }
     }
 }

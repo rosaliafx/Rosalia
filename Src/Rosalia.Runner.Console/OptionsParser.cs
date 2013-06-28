@@ -25,6 +25,7 @@
             var separatorIndex = arg.IndexOf("=", StringComparison.InvariantCultureIgnoreCase);
 
             var optionName = arg;
+            var optionSuffix = (string) null;
             var optionValue = (string) null;
 
             if (separatorIndex >= 0)
@@ -33,11 +34,18 @@
                 optionValue = arg.Substring(separatorIndex + 1);
             }
 
+            var nameParts = optionName.Split(':');
+            if (nameParts.Length > 1)
+            {
+                optionName = nameParts[0];
+                optionSuffix = nameParts[1];
+            }
+
             foreach (var option in options.Keys)
             {
                 if (option.Aliases.Any(alias => alias.Equals(optionName)))
                 {
-                    options[option].Invoke(optionValue);
+                    options[option].Invoke(optionValue, optionSuffix);
                 }
             }
         }

@@ -8,6 +8,8 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Context.Environment;
     using Rosalia.Core.FileSystem;
+    using Rosalia.Core.Logging;
+    using Rosalia.Core.Watchers.Logging;
 
     public class WorkflowProjectLookup : AbstractAssemblyWorkflowLookup
     {
@@ -25,6 +27,10 @@
                 new DefaultEnvironment(),
                 new DefaultDirectory(options.RunningOptions.WorkDirectory)));
 
+            // not a good thing -- storing messages in memory
+            var messages = new List<Message>();
+            buildWorkflow.MessagePosted += (sender, args) => messages.Add(args.Message);
+
             var buildResult = buildWorkflow.Execute(options.RunningOptions);
 
             if (buildResult.ResultType == ResultType.Success)
@@ -34,6 +40,13 @@
                     Path.GetDirectoryName(options.RunningOptions.InputFile), "bin/Debug", projectName + ".dll");
 
                 yield return Assembly.LoadFile(assemblyFile);
+            }
+            else
+            {
+                foreach (var message in messages)
+                {
+                    options.RunningOptions.LogRenderer.AppendMessage(0, message.Text, message.Level, MessageType.TaskMessage);
+                }
             }
         }
     }

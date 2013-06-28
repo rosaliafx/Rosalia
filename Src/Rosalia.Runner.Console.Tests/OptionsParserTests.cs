@@ -57,7 +57,7 @@
                     { 
                         { 
                             new Option(option), 
-                            value =>
+                            (value, suffix) =>
                             {
                                 optionAction(value);
                                 actionCalled = true;
@@ -81,7 +81,7 @@
                     { 
                         { 
                             new Option(option), 
-                            value =>
+                            (value, suffix) =>
                             {
                                 actionCalled = true;
                             } 

@@ -67,6 +67,16 @@
                     new DefaultDirectory(options.WorkDirectory)));
 
                 _context = contextCreator.CreateContext(workflowInfo);
+                var contextType = _context.GetType();
+                foreach (var property in options.Properties)
+                {
+                    var contextProperty = contextType.GetProperty(property.Key);
+                    if (contextProperty != null)
+                    {
+                        var convertedPropertyValue = Convert.ChangeType(property.Value, contextProperty.PropertyType);
+                        contextProperty.SetValue(_context, convertedPropertyValue, new object[0]);
+                    }
+                }
 
                 foreach (var watcher in watchers)
                 {

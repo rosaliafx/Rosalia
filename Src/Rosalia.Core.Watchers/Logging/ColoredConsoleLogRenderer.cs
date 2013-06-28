@@ -7,8 +7,20 @@
 
     public class ColoredConsoleLogRenderer : ILogRenderer
     {
+        private int _consoleWidth;
+
         public void Init()
         {
+            try
+            {
+                _consoleWidth = Console.WindowWidth;
+            }
+            catch (Exception)
+            {
+                // we are in the redirected output mode
+                // let the console be as wide as possible
+                _consoleWidth = 1000;
+            }
         }
 
         public void AppendMessage(int depth, string message, MessageLevel level, MessageType type)
@@ -21,7 +33,7 @@
 
             var lines = message.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
             var fullIndentSize = indentSize + prefix.Length;
-            var maxWidth = Console.WindowWidth - fullIndentSize - 1;
+            var maxWidth = _consoleWidth - fullIndentSize - 1;
 
             var procesedLines = new List<string>();
             foreach (var line in lines)

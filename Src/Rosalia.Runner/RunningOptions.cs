@@ -18,5 +18,8 @@
         public ILogRenderer LogRenderer { get; set; }
 
         public IList<string> VisualisationFilesPath { get; set; }
+
+        public IDictionary<string, string> Properties { get; set; }
+
     }
 }
