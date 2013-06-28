@@ -44,39 +44,43 @@
                 {
                     {
                         new Option("nl|nologo", "Do not show Rosalia logo"), 
-                        v => options.NoLogo = true
+                        (v, s) => options.NoLogo = true
                     },
                     {
                         new Option("h|help|?", "Show this help message"), 
-                        v => options.ShowHelp = true
+                        (v, s) => options.ShowHelp = true
+                    },
+                    {
+                        new Option("p|prop|property", "Set property"), 
+                        (v, s) => options.Properties.Add(s, v)
                     },
                     {
                         new Option("hl|hold", "Do not close console"), 
-                        v => options.Hold = true
+                        (v, s) => options.Hold = true
                     },
                     {
                         new Option("w|workflow", "Default workflow type (used if multiple workflows found)"), 
-                        v => options.DefaultWorkflow = v
+                        (v, s) => options.DefaultWorkflow = v
                     },
                     {
                         new Option("wd|workDirectory", "Work directory"), 
-                        v => options.WorkDirectory = v
+                        (v, s) => options.WorkDirectory = v
                     },
                     {
                         new Option("workflowBuildOutput", "Workflow project build output path"), 
-                        v => options.WorkflowBuildOutputPath = v
+                        (v, s) => options.WorkflowBuildOutputPath = v
                     },
                     {
                         new Option("workflowBuildConfiguration", "Workflow build configuration"), 
-                        v => options.WorkflowProjectBuildConfiguration = v
+                        (v, s) => options.WorkflowProjectBuildConfiguration = v
                     },
                     {
                         new Option("vis|visualize", "Path to a graphical file to visualize a workflow"), 
-                        v => options.VisualisationFilesPath.Add(v)
+                        (v, s) => options.VisualisationFilesPath.Add(v)
                     },
                     {
                         new Option("l|log", "Path to a file to write log to"), 
-                        v => options.LogFilesPath.Add(v)
+                        (v, s) => options.LogFilesPath.Add(v)
                     }
                 };
 
@@ -89,6 +93,7 @@
             }
             catch (Exception)
             {
+                // todo log exception message
                 ShowLogo();
                 ShowHelp(optionsConfig);
 
@@ -135,8 +140,6 @@
 
             using (var runner = new Runner())
             {
-                
-
                 var initializationResult = runner.Init(new RunningOptions
                 {
                     InputFile = options.InputFile,
@@ -146,6 +149,7 @@
                     LogRenderer = logRenderer,
                     WorkDirectory = workDirectory,
                     VisualisationFilesPath = options.VisualisationFilesPath,
+                    Properties = options.Properties
                 });
 
                 if (!initializationResult.IsSuccess)
@@ -173,8 +177,8 @@
             Console.WriteLine();
             Console.WriteLine("where");
             Console.WriteLine();
-            Console.WriteLine("    WROKFLOW_DLL       Absolute or relative path to a workflow dll file");
-            Console.WriteLine("    WROKFLOW_PROJECT   Absolute or relative path to a workflow csprj file");
+            Console.WriteLine("    WORKFLOW_DLL       Absolute or relative path to a workflow dll file");
+            Console.WriteLine("    WORKFLOW_PROJECT   Absolute or relative path to a workflow csprj file");
             Console.WriteLine();
             Console.WriteLine("and options include");
             Console.WriteLine();
