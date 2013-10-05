@@ -34,7 +34,7 @@
                 return _name;
             }
 
-            protected set
+            set
             {
                 _name = value;
             }
@@ -57,13 +57,27 @@
         
         public abstract IEnumerable<ITask<T>> Children { get; }
 
+        public Action<TaskContext<T>> BeforeExecute { get; set; }
+
+        public Action<TaskContext<T>> AfterExecute { get; set; }
+
         public ExecutionResult Execute(TaskContext<T> context)
         {
             var resultBuilder = new ResultBuilder(PostMessage);
 
             try
             {
+                if (BeforeExecute != null)
+                {
+                    BeforeExecute(context);
+                }
+
                 Execute(resultBuilder, context);
+
+                if (AfterExecute != null)
+                {
+                    AfterExecute(context);
+                }
             }
             catch (Exception ex)
             {

@@ -6,14 +6,13 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Events;
     using Rosalia.Core.Fluent;
-    using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Flow;
 
     public abstract class Workflow<TData> : IGenericWorkflow<TData>, IExecuter<TData>
     {
         private TData _inputData;
 
-        private ITask<TData> _rootTask;
+        private AbstractSequenceTask<TData> _rootTask;
 
         private WorkflowContext _workflowContext;
 
@@ -32,7 +31,15 @@
             get { return SubtasksCount(_rootTask) + 1; }
         }
 
-        public abstract ITask<TData> RootTask { get; }
+        public void Register(Action<ResultBuilder, TaskContext<TData>> task, string name = null)
+        {
+            _rootTask.Register(task, name);
+        }
+
+        public void Register<TTask>(TTask task, Action<TaskContext<TData>, TTask> beforeExecute = null, Action<TaskContext<TData>, TTask> afterExecute = null, string name = null) where TTask : ITask<TData>
+        {
+            _rootTask.Register(task, beforeExecute, afterExecute, name);
+        }
 
         public ExecutionResult Execute(object inputData)
         {
@@ -47,7 +54,10 @@
         public virtual void Init(WorkflowContext context)
         {
             _workflowContext = context;
-            _rootTask = RootTask;
+
+            _rootTask = new SequenceTask<TData>();
+
+            RegisterTasks();
         }
 
         public ExecutionResult Execute(TData inputData)
@@ -78,6 +88,11 @@
 
             return result;
         }
+
+        /// <summary>
+        /// Registers workflow tasks. Use Name, Task and TaskAction properties.
+        /// </summary>
+        public abstract void RegisterTasks();
 
         protected virtual void OnTaskMessagePosted(object sender, TaskMessageEventArgs e)
         {
@@ -139,11 +154,6 @@
             {
                 WorkflowExecuting(this, new WorkflowStartEventArgs(_rootTask));
             }
-        }
-
-        protected ITask<TData> Task(Action<ResultBuilder, TaskContext<TData>> payload)
-        {
-            return new SimpleTask<TData>(payload);
         }
 
         private TaskContext<TData> CreateContext()

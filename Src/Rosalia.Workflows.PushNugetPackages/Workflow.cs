@@ -6,13 +6,10 @@
 
     public class MainWorkflow : Workflow<object>
     {
-        public override ITask<object> RootTask
+        public override void RegisterTasks()
         {
-            get
-            {
-                return ForEach(c => c.WorkDirectory.Files.Include(fileName => fileName.EndsWith(".nupkg")))
-                    .Do((c, file) => new PushPackageTask<object>(new PushInput().Package(file)));
-            }
+            Register(ForEach(c => c.WorkDirectory.Files.Include(fileName => fileName.EndsWith(".nupkg")))
+                .Do((c, file) => new PushPackageTask<object>(new PushInput().Package(file))));
         }
     }
 }

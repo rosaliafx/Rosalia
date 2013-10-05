@@ -11,9 +11,9 @@
         Guid Id { get; }
 
         /// <summary>
-        /// Gets friendly name.
+        /// Gets or sets friendly name.
         /// </summary>
-        string Name { get; }
+        string Name { get; set; }
 
         IEnumerable<IIdentifiable> IdentifiableChildren { get; }
     }

@@ -11,78 +11,96 @@
 
     public class DemoWorkflow : Workflow<DemoContext>
     {
-        public override ITask<DemoContext> RootTask
+        public override void RegisterTasks()
         {
-            get
-            {
-                return Sequence()
-                    .WithSubtask((result, c) => result.AddInfo("Start executing the demo workflow"))
-                    .WithSubtask(CopyActualArtifactsToTools())
-                    .WithSubtask(new GenerateAssemblyInfo<DemoContext>()
-                                     .WithAttribute(c => new AssemblyCompanyAttribute("DemoCompany"))
-                                     .WithAttribute(c => new AssemblyFileVersionAttribute("1.0.0.1"))
-                                     .ToFile(context => context.WorkDirectory.GetFile("CommonAssemblyInfo.cs")))
-                    .WithSubtask(BuildSolution)
-                    .WithSubtask((builder, context) =>
-                                     {
-                                         builder.AddInfo("This task lists current directory files");
-                                         foreach (var file in context.WorkDirectory.Files)
-                                         {
-                                             builder.AddInfo(file.AbsolutePath);
-                                         }
-                                     })
-                    .WithSubtask(new CompressTask<DemoContext>()
-                        .FillInput(context =>
-                            {
-                                var allCsFiles = context.FileSystem
-                                    .SearchFilesIn(context.WorkDirectory)
-                                    .IncludeByExtension(".cs");
+            /* ======================================================================================== */
+            Register(
+                name: "Print simple info message",
+                task: (result, context) => result.AddInfo("Start executing the demo workflow"));
+            
+            /* ======================================================================================== */
+            Register(
+                name: "Copy actual artifacts to tools",
+                task: (builder, context) =>
+                {
+                    var toolsDirectory = context.WorkDirectory
+                        .Parent
+                        .Parent
+                        .GetDirectory("Tools")
+                        .GetDirectory("Rosalia");
 
-                                var compressTaskInput = new CompressTaskInput();
+                    context.WorkDirectory
+                        .Parent
+                        .GetDirectory("Rosalia.Runner.Console")
+                        .GetDirectory(@"bin\Debug")
+                        .Files
+                        .IncludeByExtension(".dll", ".exe")
+                        .CopyAllTo(toolsDirectory);
+                });
 
-                                foreach (var file in allCsFiles.All)
-                                {
-                                    compressTaskInput.WithFile(Path.GetFileName(file.AbsolutePath), file);
-                                }
+            /* ======================================================================================== */
+            Register(
+                name: "Generate assempbly info",
+                task: new GenerateAssemblyInfo<DemoContext>()
+                    .WithAttribute(c => new AssemblyCompanyAttribute("DemoCompany"))
+                    .WithAttribute(c => new AssemblyFileVersionAttribute("1.0.0.1")),
+                beforeExecute: (context, task) => task
+                    .ToFile(c => context.WorkDirectory.GetFile("CommonAssemblyInfo.cs")));
 
-                                return compressTaskInput.ToFile(context.WorkDirectory.GetFile("cs_files.zip"));
-                            }));
-            }
-        }
-
-        private ITask<DemoContext> CopyActualArtifactsToTools()
-        {
-            return new SimpleTask<DemoContext>((builder, context) =>
-            {
-                var toolsDirectory = context.WorkDirectory
-                    .Parent
-                    .Parent
-                    .GetDirectory("Tools")
-                    .GetDirectory("Rosalia");
-
-                context.WorkDirectory
-                    .Parent
-                    .GetDirectory("Rosalia.Runner.Console")
-                    .GetDirectory(@"bin\Debug")
-                    .Files
-                    .IncludeByExtension(".dll", ".exe")
-                    .CopyAllTo(toolsDirectory);
-            });
-        }
-
-        protected ITask<DemoContext> BuildSolution
-        {
-            get
-            {
-                return new FailoverTask<DemoContext>(
+            /* ======================================================================================== */
+            Register(
+                name: "Build main solution",
+                task: new FailoverTask<DemoContext>(
                     new MsBuildTask<DemoContext>()
-                        .FillInput(context => new MsBuildInput()
-                            .WithProjectFile("NoFile.sln")), 
+                        .FillInput(context => new MsBuildInput().WithProjectFile("NoFile.sln")), 
                     new SimpleTask<DemoContext>((builder, context) =>
+                        {
+                            builder.AddWarning("Build task fails because the solition file does not exist");                                    
+                        })));
+
+            /* ======================================================================================== */
+            Register(
+                name: "List current directory files",
+                task: (builder, context) =>
+                {
+                    builder.AddInfo("This task lists current directory files");
+                    foreach (var file in context.WorkDirectory.Files)
                     {
-                        builder.AddWarning("Build task fails because the solition file does not exist");                                    
+                        builder.AddInfo(file.AbsolutePath);
+                    }
+                });
+
+            /* ======================================================================================== */
+            Register(
+                new CompressTask<DemoContext>()
+                    .FillInput(context =>
+                    {
+                        var allCsFiles = context.FileSystem
+                            .SearchFilesIn(context.WorkDirectory)
+                            .IncludeByExtension(".cs");
+
+                        var compressTaskInput = new CompressTaskInput();
+
+                        foreach (var file in allCsFiles.All)
+                        {
+                            compressTaskInput.WithFile(Path.GetFileName(file.AbsolutePath), file);
+                        }
+
+                        return compressTaskInput.ToFile(context.WorkDirectory.GetFile("cs_files.zip"));
                     }));
-            }
+
+            Register(
+                name: "Test sequence",
+                task: Sequence()
+                    .Register(
+                        name: "sub 1",
+                        task: (builder, context) => builder.AddInfo("sub 1 info"))
+                    .Register(
+                        name: "sub 2",
+                        task: (builder, context) => builder.AddWarning("sub 2 info"))
+                    .Register(
+                        name: "sub 3",
+                        task: (builder, context) => builder.AddInfo("sub 3 info")));
         }
     }
 }

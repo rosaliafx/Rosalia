@@ -21,6 +21,10 @@
 
         public IEnumerable<ITask<T>> Children { get; set; }
 
+        public Action<TaskContext<T>> BeforeExecute { get; set; }
+
+        public Action<TaskContext<T>> AfterExecute { get; set; }
+
         public ExecutionResult Execute(TaskContext<T> context)
         {
             WasExecuted = true;

@@ -100,6 +100,7 @@
     <Compile Include="Helpers\SpecInputExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\BuildDocsTask.cs" />
+    <Compile Include="Tasks\PrepareDocsForDeploymentTask.cs" />
     <Compile Include="Tasks\PrivateData.cs" />
     <Compile Include="DocSupport\TopicDescriptor.cs" />
   </ItemGroup>

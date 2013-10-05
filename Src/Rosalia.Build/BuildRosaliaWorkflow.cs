@@ -1,66 +1,80 @@
 ﻿namespace Rosalia.Build
 {
     using System.Reflection;
-    using System.Yaml.Serialization;
     using Rosalia.Build.Helpers;
     using Rosalia.Build.Tasks;
     using Rosalia.Core;
-    using Rosalia.Core.FileSystem;
-    using Rosalia.Core.Tasks.Flow;
     using Rosalia.TaskLib.AssemblyInfo;
-    using Rosalia.TaskLib.Git.Input;
     using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.MsBuild;
     using Rosalia.TaskLib.NuGet.Tasks;
 
     public class BuildRosaliaWorkflow : Workflow<BuildRosaliaContext>
     {
-        public override ITask<BuildRosaliaContext> RootTask
+        public override void RegisterTasks()
         {
-            get
-            {
-                return Sequence(
-                    //// Initialize context
-                    Task((builder, context) =>
-                    {
-                        var data = context.Data;
+            /* ======================================================================================== */
+            Register(
+                name: "Initialize context",
+                task: (builder, context) =>
+                {
+                    var data = context.Data;
 
-                        data.Configuration = "Debug";
-                        data.ProjectRootDirectory = context.WorkDirectory.Parent.Parent;
-                        data.Src = data.ProjectRootDirectory.GetDirectory("Src");
-                        data.SolutionFile = data.Src.GetFile("Rosalia.sln");
-                        data.Artifacts = data.ProjectRootDirectory.GetDirectory("Artifacts");          
-                    }),
-                    //// Get current version from git
-                    new GetVersionTask<BuildRosaliaContext>(
-                        (output, c) =>
-                        {
-                            c.Version = output.Tag.Replace("v", string.Empty) + "." + output.CommitsCount;
-                        }),
-                    //// Generate common assembly info file
-                    new GenerateAssemblyInfo<BuildRosaliaContext>()
-                        .WithAttribute(c => new AssemblyProductAttribute("Rosalia"))
-                        .WithAttribute(c => new AssemblyVersionAttribute(c.Version))
-                        .WithAttribute(c => new AssemblyFileVersionAttribute(c.Version))
-                        .ToFile(c => c.Data.Src.GetFile("CommonAssemblyInfo.cs")),
-                    //// Build solution
-                    new MsBuildTask<BuildRosaliaContext>()
+                    data.Configuration = "Debug";
+                    data.ProjectRootDirectory = context.WorkDirectory.Parent.Parent;
+                    data.Src = data.ProjectRootDirectory.GetDirectory("Src");
+                    data.SolutionFile = data.Src.GetFile("Rosalia.sln");
+                    data.Artifacts = data.ProjectRootDirectory.GetDirectory("Artifacts");
+                });
+
+            /* ======================================================================================== */
+            Register(
+                name: "Get current version from git",
+                task: new GetVersionTask<BuildRosaliaContext>(
+                (output, c) =>
+                {
+                    c.Version = output.Tag.Replace("v", string.Empty) + "." + output.CommitsCount;
+                }));
+
+            /* ======================================================================================== */
+            Register(
+                name: "Generate common assembly info file",
+                task: new GenerateAssemblyInfo<BuildRosaliaContext>()
+                    .WithAttribute(c => new AssemblyProductAttribute("Rosalia")),
+                beforeExecute: (context, task) => task
+                    .WithAttribute(c => new AssemblyVersionAttribute(c.Version))
+                    .WithAttribute(c => new AssemblyFileVersionAttribute(c.Version))
+                    .ToFile(c => c.Data.Src.GetFile("CommonAssemblyInfo.cs")));
+
+            /* ======================================================================================== */
+            Register(
+                name: "Build solution",
+                task: new MsBuildTask<BuildRosaliaContext>()
                         .FillInput(c => new MsBuildInput()
                             .WithProjectFile(c.Data.SolutionFile)
                             .WithConfiguration(c.Data.Configuration)
-                            .WithVerbosityMinimal()),
-                    //// Clear artifacts
-                    Task((builder, context) => context.Data.Artifacts.Files.IncludeByExtension("nupkg", "nuspec").DeleteAll()),
-                    //// Generate spec for Core NuGet package
-                    new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
+                            .WithVerbosityMinimal()));
+
+            /* ======================================================================================== */
+            Register(
+                name: "Clear artifacts",
+                task: (builder, context) => context.Data.Artifacts.Files.IncludeByExtension("nupkg", "nuspec").DeleteAll());
+
+            /* ======================================================================================== */
+            Register(
+                name: "Generate spec for Core NuGet package",
+                task: new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
                         input
                             .Id("Rosalia.Core")
                             .FillCommonProperties(c)
                             .Description("Core libs for Rosalia framework.")
                             .WithFiles(c.GetCoreLibFiles(), "lib")
-                            .ToFile(c.Data.NuSpecRosaliaCore)),
-                    //// Generate specs for NuGet packages
-                    new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
+                            .ToFile(c.Data.NuSpecRosaliaCore)));
+
+            /* ======================================================================================== */
+            Register(
+                name: "Generate specs for NuGet packages",
+                task: new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
                         input
                             .Id("Rosalia")
                             .FillCommonProperties(c)
@@ -71,63 +85,32 @@
                             .WithFiles(c.Data.BuildAssets.Files.IncludeByExtension(".pp"), "content")
                             .WithDependency("Rosalia.Core", c.Data.Version)
                             .WithDependency("NuGetPowerTools", version: "0.29")
-                            .ToFile(c.Data.NuSpecRosalia)),
-                    //// Generate spec for Task Libs
-                    ForEach(c => c.FindTaskLibDirectories())
+                            .ToFile(c.Data.NuSpecRosalia)));
+
+            /* ======================================================================================== */
+            Register(
+                name: "Generate spec for Task Libs",
+                task: ForEach(c => c.FindTaskLibDirectories())
                         .Do((context, directory) =>
                             new GenerateNuGetSpecTask<BuildRosaliaContext>((taskContext, input) => input
                                 .FillCommonProperties(taskContext)
-                                .FillTaskLibProperties(taskContext, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))),
-                    //// Generate NuGet packages
-                    ForEach(c => c.Data.Artifacts.Files.IncludeByExtension(".nuspec"))
-                        .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>(file)),
-                    //// Genarate docs
-                    new BuildDocsTask(),
-                    //// Push documentation to GhPages
-                    If(c => c.WorkDirectory.GetFile("private_data.yaml").Exists).Then(PrepareDocsForDeployment));
-            }
-        }
+                                .FillTaskLibProperties(taskContext, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))));
 
-        private SequenceTask<BuildRosaliaContext> PrepareDocsForDeployment
-        {
-            get
-            {
-                return Sequence(
-                    //// Read private data
-                    Task((builder, c) =>
-                    {
-                        var serializer = new YamlSerializer();
-                        c.Data.PrivateData = (PrivateData)serializer.DeserializeFromFile(c.WorkDirectory.GetFile("private_data.yaml").AbsolutePath, typeof(PrivateData))[0];
-                    }),
-                    //// Copy docs artifats to GhPages repo
-                    Task((builder, context) =>
-                    {
-                        var docsHost = context.Data.Src.GetDirectory("Rosalia.Docs");
-                        var files = docsHost
-                            .SearchFilesIn()
-                            .IncludeByRelativePath(relative => relative.Equals("index.html") || relative.StartsWith("content") || relative.StartsWith("topics"));
+            /* ======================================================================================== */
+            Register(
+                name: "Generate NuGet packages",
+                task: ForEach(c => c.Data.Artifacts.Files.IncludeByExtension(".nuspec"))
+                        .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>(file)));
 
-                        files.CopyRelativelyTo(new DefaultDirectory(context.Data.PrivateData.GhPagesRoot));
-                    }),
-                    //// Add all doc files to gh-pages repo
-                    new GitCommandTask<BuildRosaliaContext>
-                    {
-                        InputProvider = context => new GitInput
-                        {
-                            RawCommand = "add .",
-                            WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
-                        }
-                    },
-                    //// Do auto commit to gh-pages repo
-                    new GitCommandTask<BuildRosaliaContext>
-                    {
-                        InputProvider = context => new GitInput
-                        {
-                            RawCommand = string.Format("commit -a -m \"Docs auto commit v{0}\"", context.Data.Version),
-                            WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
-                        }
-                    });
-            }
+            /* ======================================================================================== */
+            Register(
+                name: "Genarate docs",
+                task: new BuildDocsTask());
+
+            /* ======================================================================================== */
+            Register(
+                name: "Push documentation to GhPages",
+                task: If(c => c.WorkDirectory.GetFile("private_data.yaml").Exists).Then(new PrepareDocsForDeploymentTask()));
         }
     }
 }

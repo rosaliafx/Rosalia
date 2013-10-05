@@ -44,6 +44,7 @@
     <Compile Include="FileSystem\FileSystemItem.cs" />
     <Compile Include="Fluent\RepeaterBuilder.cs" />
     <Compile Include="Logging\Message.cs" />
+    <Compile Include="TaskContainer.cs" />
     <Compile Include="Tasks\AbstractLeafTask.cs" />
     <Compile Include="Tasks\AbstractNodeTask.cs" />
     <Compile Include="Tasks\AbstractTask.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Events\TaskEventArgs.cs" />
     <Compile Include="Events\TaskWithResultEventArgs.cs" />
     <Compile Include="Events\WorkflowStartEventArgs.cs" />
+    <Compile Include="Tasks\Flow\AbstractSequenceTask.cs" />
     <Compile Include="Tasks\Flow\FailoverTask.cs" />
     <Compile Include="FileSystem\DefaultDirectory.cs" />
     <Compile Include="FileSystem\DefaultFile.cs" />
