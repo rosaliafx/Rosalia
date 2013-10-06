@@ -43,6 +43,7 @@
     <Compile Include="FileSystem\FileSystemExtensions.cs" />
     <Compile Include="FileSystem\FileSystemItem.cs" />
     <Compile Include="Fluent\RepeaterBuilder.cs" />
+    <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="Logging\Message.cs" />
     <Compile Include="TaskContainer.cs" />
     <Compile Include="Tasks\AbstractLeafTask.cs" />

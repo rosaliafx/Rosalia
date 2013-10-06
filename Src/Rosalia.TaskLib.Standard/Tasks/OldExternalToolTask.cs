@@ -6,18 +6,41 @@
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
+    using Rosalia.TaskLib.Standard.Input;
 
-    public abstract class ExternalToolTask<TContext, TResult> : TaskWithResult<TContext, TResult> where TResult : class
+    [Obsolete]
+    public abstract class OldExternalToolTask<TContext, TInput, TResult> :
+        ExtendedTask<TContext, TInput, TResult>
+        where TInput : ExternalToolInput
+        where TResult : class
     {
         private readonly IList<Func<string, MessageLevel?>> _messageLevelDetectors = new List<Func<string, MessageLevel?>>();
 
         private IProcessStarter _processStarter = new DefaultProcessStarter();
 
-        public virtual IDirectory WorkDirectory { get; set; }
+        protected OldExternalToolTask()
+        {
+        }
 
-        public virtual string ToolPath { get; set; }
+        protected OldExternalToolTask(TInput input) : base(input)
+        {
+        }
 
-        public virtual string Arguments { get; set; }
+        protected OldExternalToolTask(Func<TaskContext<TContext>, TInput> inputProvider) : base(inputProvider)
+        {
+        }
+
+        protected OldExternalToolTask(Action<TResult, TContext> applyResultToContext) : base(applyResultToContext)
+        {
+        }
+
+        protected OldExternalToolTask(TInput input, Action<TResult, TContext> applyResultToContext) : base(input, applyResultToContext)
+        {
+        }
+
+        protected OldExternalToolTask(Func<TaskContext<TContext>, TInput> inputProvider, Action<TResult, TContext> applyResultToContext) : base(inputProvider, applyResultToContext)
+        {
+        }
 
         public IProcessStarter ProcessStarter
         {
@@ -33,12 +56,12 @@
             get { return null; }
         }
 
-        protected override TResult Execute(TaskContext<TContext> context, ResultBuilder result)
+        protected override TResult Execute(TInput input, TaskContext<TContext> context, ResultBuilder result)
         {
             FillMessageLevelDetectors(_messageLevelDetectors);
 
-            var toolPath = GetToolPath(context, result);
-            var toolArguments = GetToolArguments(context, result);
+            var toolPath = GetToolPath(input, context, result);
+            var toolArguments = GetToolArguments(input, context, result);
 
             result.AddInfo(
                 "Start external tool with command line: {0}{1} {2}",
@@ -49,12 +72,12 @@
             var exitCode = ProcessStarter.StartProcess(
                 toolPath,
                 toolArguments,
-                GetToolWorkDirectory(context).AbsolutePath,
+                GetToolWorkDirectory(input, context).AbsolutePath,
                 outpuMessage =>
                 {
                     try
                     {
-                        ProcessOnOutputDataReceived(outpuMessage, result, context);
+                        ProcessOnOutputDataReceived(outpuMessage, input, result, context);
                     }
                     catch (Exception ex)
                     {
@@ -65,7 +88,7 @@
                 {
                     try
                     {
-                        ProcessOnErrorDataReceived(errorMessage, result, context);
+                        ProcessOnErrorDataReceived(errorMessage, input, result, context);
                     }
                     catch (Exception ex)
                     {
@@ -76,7 +99,7 @@
             return ProcessExitCode(exitCode, result);
         }
 
-        protected virtual IEnumerable<IFile> GetToolPathLookup(TaskContext<TContext> context, ResultBuilder result)
+        protected virtual IEnumerable<IFile> GetToolPathLookup(TaskContext<TContext> context, TInput input, ResultBuilder result)
         {
             yield break;
         }
@@ -85,19 +108,24 @@
         {
         }
 
-        protected virtual string GetToolArguments(TaskContext<TContext> context, ResultBuilder result)
+        protected virtual string GetToolArguments(TInput input, TaskContext<TContext> context, ResultBuilder result)
         {
-            return Arguments ?? string.Empty;
-        }
-
-        protected virtual string GetToolPath(TaskContext<TContext> context, ResultBuilder result)
-        {
-            if (!string.IsNullOrEmpty(ToolPath))
+            if (input != null && !string.IsNullOrEmpty(input.Arguments))
             {
-                return ToolPath;
+                return input.Arguments;
             }
 
-            foreach (var toolFile in GetToolPathLookup(context, result))
+            return string.Empty;
+        }
+
+        protected virtual string GetToolPath(TInput input, TaskContext<TContext> context, ResultBuilder result)
+        {
+            if (input != null && !string.IsNullOrEmpty(input.ToolPath))
+            {
+                return input.ToolPath;
+            }
+
+            foreach (var toolFile in GetToolPathLookup(context, input, result))
             {
                 if (toolFile.Exists)
                 {
@@ -126,7 +154,7 @@
 
         protected abstract TResult CreateResult(int exitCode, ResultBuilder resultBuilder);
 
-        protected virtual void ProcessOnOutputDataReceived(string message, ResultBuilder result, TaskContext<TContext> context)
+        protected virtual void ProcessOnOutputDataReceived(string message, TInput builder, ResultBuilder result, TaskContext<TContext> context)
         {
             foreach (var messageLevelDetector in _messageLevelDetectors)
             {
@@ -142,14 +170,19 @@
             result.AddInfo(message);
         }
 
-        protected virtual void ProcessOnErrorDataReceived(string message, ResultBuilder resultBuilder, TaskContext<TContext> context)
+        protected virtual void ProcessOnErrorDataReceived(string message, TInput builder, ResultBuilder resultBuilder, TaskContext<TContext> context)
         {
             resultBuilder.AddError(message);
         }
 
-        protected virtual IDirectory GetToolWorkDirectory(TaskContext<TContext> context)
+        protected virtual IDirectory GetToolWorkDirectory(TInput input, TaskContext<TContext> context)
         {
-            return WorkDirectory ?? context.WorkDirectory;
+            if (input != null && input.WorkDirectory != null)
+            {
+                return input.WorkDirectory;
+            }
+
+            return context.WorkDirectory;
         }
     }
 }

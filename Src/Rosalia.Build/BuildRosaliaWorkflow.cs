@@ -44,7 +44,7 @@
             Register(
                 name: "Generate common assembly info file",
                 task: new GenerateAssemblyInfo<BuildRosaliaContext>()
-                    .WithAttribute(c => new AssemblyProductAttribute("Rosalia")),
+                    .WithAttribute(_ => new AssemblyProductAttribute("Rosalia")),
                 beforeExecute: (context, task) => task
                     .WithAttribute(_ => new AssemblyVersionAttribute(context.Data.Version))
                     .WithAttribute(_ => new AssemblyFileVersionAttribute(context.Data.Version))

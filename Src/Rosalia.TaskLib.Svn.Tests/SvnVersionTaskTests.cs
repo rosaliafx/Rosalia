@@ -5,13 +5,17 @@
     using Rosalia.Core;
     using Rosalia.TaskLib.Standard.Tests;
 
-    public class SvnVersionTaskTests : ExternalToolTaskTestsBase<object, SvnVersionInput, SvnVersionResult>
+    public class SvnVersionTaskTests : ExternalToolTaskTestsBase<object, SvnVersionResult>
     {
         [Test]
         public void Execute_CommitedIsTrue_ShouldAddCommitedOption()
         {
             AssertCommand(
-                new SvnVersionInput("fake") { Commited = true }, 
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "fake",
+                    Commited = true
+                }, 
                 (path, args) => Assert.That(args, Is.StringStarting("-c ").Or.EqualTo("-c")));
         }
         
@@ -19,7 +23,11 @@
         public void Execute_CommitedIsFaluse_ShouldNotAddCommitedOption()
         {
             AssertCommand(
-                new SvnVersionInput("fake") { Commited = false }, 
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "fake",
+                    Commited = false
+                }, 
                 (path, args) => Assert.That(args, Is.Not.StringStarting("-c ").And.Not.EqualTo("-c")));
         }
 
@@ -27,7 +35,10 @@
         public void Execute_WcPath_ShouldAddWcPath()
         {
             AssertCommand(
-                new SvnVersionInput("WC_PATH"),
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "WC_PATH"
+                },
                 (path, args) => Assert.That(args, Is.StringContaining("WC_PATH")));
         }
 
@@ -35,7 +46,11 @@
         public void Execute_WcPathAndTrail_ShouldAddWcPathAndTrail()
         {
             AssertCommand(
-                new SvnVersionInput("WC_PATH", "TRAIL"), 
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "WC_PATH",
+                    TrailUrl = "TRAIL"
+                },
                 (path, args) => Assert.That(args, Is.StringContaining("WC_PATH TRAIL")));
         }
 
@@ -43,7 +58,10 @@
         public void Execute_WrongOutput_ShouldFail()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>(c => new SvnVersionInput((string) "WC_PATH")), 
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "WC_PATH"
+                }, 
                 "12:13:14",
                 (svnVersionResult, taskResult) =>
                 {
@@ -59,7 +77,10 @@
         public void Execute_UnversionedDirectory_ShouldFail()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>(c => new SvnVersionInput((string) "WC_PATH")), 
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "WC_PATH"
+                }, 
                 "Unversioned directory",
                 (svnVersionResult, taskResult) =>
                 {
@@ -74,7 +95,10 @@
         public void Execute_SingleRevisionNumber_ShouldSucceed()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>(c => new SvnVersionInput((string) "WC_PATH")), 
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "WC_PATH"
+                }, 
                 "42",
                 (svnVersionResult, taskResult) =>
                 {
@@ -92,7 +116,10 @@
         public void Execute_RevisionsWithTrailNumber_ShouldSucceed()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>(c => new SvnVersionInput((string) "WC_PATH")),
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "WC_PATH"
+                },
                 "41MSP:42S",
                 (svnVersionResult, taskResult) =>
                 {
@@ -114,7 +141,10 @@
         public void Execute_RevisionRangeNumber_ShouldSucceed()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>(c => new SvnVersionInput("WC_PATH")), 
+                new SvnVersionTask<object>
+                {
+                    WorkingCopyPath = "WC_PATH"
+                }, 
                 "41:42",
                 (svnVersionResult, taskResult) =>
                 {
@@ -127,12 +157,12 @@
                     Assert.That(svnVersionResult.Max.Number, Is.EqualTo(42));
                 });
         }
-
-        private void AssertCommand(SvnVersionInput input, Action<string, string> assertAction)
-        {
-            var task = new SvnVersionTask<object>(context => input);
-
-            AssertCommand(task, assertAction);
-        }
+//
+//        private void AssertCommand(SvnVersionInput input, Action<string, string> assertAction)
+//        {
+//            var task = new SvnVersionTask<object>(context => input);
+//
+//            AssertCommand(task, assertAction);
+//        }
     }
 }

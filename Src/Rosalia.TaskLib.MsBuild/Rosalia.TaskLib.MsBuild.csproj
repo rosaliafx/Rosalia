@@ -39,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MsBuildInput.cs" />
     <Compile Include="MsBuildSwitch.cs" />
     <Compile Include="MsBuildTask.cs" />
     <Compile Include="MsBuildToolVersion.cs" />

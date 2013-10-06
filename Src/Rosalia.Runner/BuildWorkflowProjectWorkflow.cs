@@ -9,10 +9,10 @@
         public override void RegisterTasks()
         {
             Register(
-                new MsBuildTask<RunningOptions>()
-                    .FillInput(c => new MsBuildInput()
-                        .WithProjectFile(c.Data.InputFile)
-                        .WithConfiguration(Configuration(c))));
+                task: new MsBuildTask<RunningOptions>(),
+                beforeExecute: (context, task) => task
+                    .WithProjectFile(context.Data.InputFile)
+                    .WithConfiguration(Configuration(context)));
         }
 
         private static string Configuration(TaskContext<RunningOptions> taskContext)

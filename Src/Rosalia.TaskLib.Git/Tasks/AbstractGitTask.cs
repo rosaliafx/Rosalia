@@ -6,43 +6,32 @@
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
-    using Rosalia.TaskLib.Git.Input;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public abstract class AbstractGitTask<T, TInput, TOutput> : ExternalToolTask<T, TInput, TOutput> 
-        where TInput : GitInput 
+    public abstract class AbstractGitTask<T, TOutput> : ExternalToolTask<T, TOutput> 
         where TOutput : class
     {
-        protected AbstractGitTask()
-        {
-        }
-
-        protected AbstractGitTask(TInput input) : base(input)
-        {
-        }
-
-        protected AbstractGitTask(Func<TaskContext<T>, TInput> inputProvider) : base(inputProvider)
-        {
-        }
-
-        protected AbstractGitTask(Action<TOutput, T> applyResultToContext) : base(applyResultToContext)
-        {
-        }
-
-        protected AbstractGitTask(TInput input, Action<TOutput, T> applyResultToContext) : base(input, applyResultToContext)
-        {
-        }
-
-        protected AbstractGitTask(Func<TaskContext<T>, TInput> inputProvider, Action<TOutput, T> applyResultToContext) : base(inputProvider, applyResultToContext)
-        {
-        }
-
         protected override string DefaultToolPath
         {
             get { return "git"; }
         }
 
-        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context, TInput input, ResultBuilder result)
+        public string RawCommand { get; set; }
+
+        public override string Arguments
+        {
+            get
+            {
+                return RawCommand;
+            }
+
+            set
+            {
+                RawCommand = value;
+            }
+        }
+
+        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context, ResultBuilder result)
         {
             // user can set GIT_HOME variable to point exact installed version.
             var gitHome = context.Environment.GetVariable("GIT_HOME");

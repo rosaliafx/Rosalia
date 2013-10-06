@@ -2,12 +2,11 @@
 {
     using NUnit.Framework;
     using Rosalia.Core;
-    using Rosalia.TaskLib.Git.Input;
     using Rosalia.TaskLib.Git.Output;
     using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.Standard.Tests;
 
-    public class GetVersionTaskTests : ExternalToolTaskTestsBase<object, GitInput, GetVersionOutput>
+    public class GetVersionTaskTests : ExternalToolTaskTestsBase<object, GetVersionOutput>
     {
         [Test]
         public void Execute_ValidOutput_SholdParse()

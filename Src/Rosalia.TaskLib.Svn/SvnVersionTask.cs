@@ -7,17 +7,23 @@
     using Rosalia.Core.Fluent;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public class SvnVersionTask<T> : ExternalToolTask<T, SvnVersionInput, SvnVersionResult>
+    public class SvnVersionTask<T> : ExternalToolTask<T, SvnVersionResult>
     {
         private static readonly char[] AllowedTrailChars = new[] { 'M', 'S', 'P' };
 
         private SvnVersion _min;
         private SvnVersion _max;
 
-        public SvnVersionTask(Func<TaskContext<T>, SvnVersionInput> inputProvider)
-            : base(inputProvider)
-        {
-        }
+        public string WorkingCopyPath { get; set; }
+
+        public string TrailUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a tool should return 
+        /// last-changed revisions rather than the current 
+        /// (see svnversion.exe help for details).
+        /// </summary>
+        public bool Commited { get; set; }
 
         protected override string DefaultToolPath
         {
@@ -26,19 +32,24 @@
 
         protected override SvnVersionResult CreateResult(int exitCode, ResultBuilder resultBuilder)
         {
-            return new SvnVersionResult(_min, _max);
+            if (resultBuilder.IsSuccess)
+            {
+                return new SvnVersionResult(_min, _max);    
+            }
+
+            return null;
         }
 
-        protected override void ProcessOnOutputDataReceived(string message, SvnVersionInput input, ResultBuilder result, TaskContext<T> context)
+        protected override void ProcessOnOutputDataReceived(string message, ResultBuilder result, TaskContext<T> context)
         {
-            base.ProcessOnOutputDataReceived(message, input, result, context);
+            base.ProcessOnOutputDataReceived(message, result, context);
 
             var versionString = message;
             if (!string.IsNullOrEmpty(versionString))
             {
                 if (versionString.Equals("Unversioned directory", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    result.AddError("Working copy {0} is not versioned!", input.WorkingCopyPath);
+                    result.AddError("Working copy {0} is not versioned!", WorkingCopyPath);
                     result.Fail();
                     return;
                 }
@@ -63,17 +74,17 @@
             }
         }
 
-        protected override string GetToolArguments(SvnVersionInput input, TaskContext<T> context, ResultBuilder result)
+        protected override string GetToolArguments(TaskContext<T> context, ResultBuilder result)
         {
             var builder = new StringBuilder();
-            builder.Append(input.Commited ? "-c" : string.Empty);
+            builder.Append(Commited ? "-c" : string.Empty);
 
-            if (!string.IsNullOrEmpty(input.WorkingCopyPath))
+            if (!string.IsNullOrEmpty(WorkingCopyPath))
             {
                 builder.Append(" ");
-                builder.Append(input.WorkingCopyPath);
+                builder.Append(WorkingCopyPath);
                 builder.Append(" ");
-                builder.Append(input.TrailUrl);
+                builder.Append(TrailUrl);
             }
 
             return builder.ToString();

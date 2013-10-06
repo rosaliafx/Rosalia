@@ -4,13 +4,15 @@
     using Moq;
     using Rosalia.Core;
     using Rosalia.Core.Tests;
+    using Rosalia.TaskLib.Standard.Input;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public abstract class ExternalToolTaskTestsBase<TContext, TResult> : TaskTestsBase<TContext>
-        where TResult : class
+    [Obsolete]
+    public abstract class OldExternalToolTaskTestsBase<TContext, TInput, TResult> : TaskTestsBase<TContext>
+        where TInput : ExternalToolInput, new() where TResult : class
         where TContext : new()
     {
-        public void AssertCommand(ExternalToolTask<TContext, TResult> task, Action<string, string> assertAction)
+        public void AssertCommand(OldExternalToolTask<TContext, TInput, TResult> task, Action<string, string> assertAction)
         {
             var processStarter = new Mock<IProcessStarter>();
             processStarter
@@ -32,7 +34,7 @@
         }
 
         public void AssertProcessOutputParsing(
-            ExternalToolTask<TContext, TResult> task,
+            OldExternalToolTask<TContext, TInput, TResult> task, 
             string processOutput,
             Action<TResult, ExecutionResult> assertResultAction)
         {
@@ -48,24 +50,30 @@
                {
                    if (!string.IsNullOrEmpty(processOutput))
                    {
-                       foreach (var line in processOutput.Split(new[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                       foreach (var line in processOutput.Split(new []{ System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                        {
                            onInfo(line);
                        }
                    }
                });
 
-            if (task.ToolPath == null)
+            TResult result = null;
+            
+            if (task.InputProvider == null)
             {
-                task.ToolPath = "fakeToolPath";  // tool path is required for most of external tasks
+                task.InputProvider = taskContext => new TInput
+                {
+                    ToolPath = "fakeToolPath"  // tool path is required for most of external tasks
+                };
             }
 
             task.ProcessStarter = processStarter.Object;
+            task.ApplyResult((actualResult, actualContext) => { result = actualResult; });
 
             var context = CreateContext();
             var taskResult = context.Executer.Execute(task);
 
-            assertResultAction(task.Result, taskResult);
+            assertResultAction(result, taskResult);
         }
     }
 }

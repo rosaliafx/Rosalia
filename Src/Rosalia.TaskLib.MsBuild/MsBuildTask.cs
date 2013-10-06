@@ -14,19 +14,97 @@
     /// <summary>
     /// This task uses MSBuild.exe command line tool to run a build process.
     /// </summary>
-    public class MsBuildTask<T> : ExternalToolTask<T, MsBuildInput, object>
+    public class MsBuildTask<T> : ExternalToolTask<T, object>
     {
-        public MsBuildTask() : this(new MsBuildInput())
+        private readonly IList<MsBuildSwitch> _switches = new List<MsBuildSwitch>();
+
+        public MsBuildTask()
         {
+            ToolVersion = MsBuildToolVersion.V40;
         }
 
-        public MsBuildTask(MsBuildInput input) : base(input)
+        public IFile ProjectFile { get; set; }
+
+        public MsBuildToolVersion ToolVersion { get; set; }
+
+        public IEnumerable<MsBuildSwitch> Switches
         {
+            get { return _switches; }
         }
 
-        public override ExtendedTask<T, MsBuildInput, object> ApplyResult(Action<object, T> applyResultFunc)
+        public MsBuildTask<T> WithProjectFile(IFile projectFile)
         {
-            throw new InvalidOperationException();
+            ProjectFile = projectFile;
+            return this;
+        }
+
+        public MsBuildTask<T> WithProjectFile(string projectFile)
+        {
+            ProjectFile = new DefaultFile(projectFile);
+            return this;
+        }
+
+        public MsBuildTask<T> WithSwitch(string @switch)
+        {
+            _switches.Add(new MsBuildSwitch(@switch, null));
+            return this;
+        }
+
+        public MsBuildTask<T> WithSwitch(string @switch, string parameter)
+        {
+            _switches.Add(new MsBuildSwitch(@switch, parameter));
+            return this;
+        }
+
+        public MsBuildTask<T> WithConfiguration(string configuration)
+        {
+            return WithProperty("Configuration", configuration);
+        }
+
+        public MsBuildTask<T> WithProperty(string name, string value)
+        {
+            return WithSwitch(MsBuildSwitch.Property, string.Format("{0}={1}", name, value));
+        }
+
+        public MsBuildTask<T> WithBuildTargets(params string[] targets)
+        {
+            var switchesToRemove = _switches.Where(x => x.Text == MsBuildSwitch.Target).ToArray();
+            foreach (var @switch in switchesToRemove)
+            {
+                _switches.Remove(@switch);
+            }
+
+            return WithSwitch(MsBuildSwitch.Target, string.Join(",", targets));
+        }
+
+        public MsBuildTask<T> WithVerbosity(string level)
+        {
+            return WithSwitch(MsBuildSwitch.Verbosity, level);
+        }
+
+        public MsBuildTask<T> WithVerbosityQuiet()
+        {
+            return WithVerbosity("q");
+        }
+
+        public MsBuildTask<T> WithVerbosityMinimal()
+        {
+            return WithVerbosity("m");
+        }
+
+        public MsBuildTask<T> WithVerbosityNormal()
+        {
+            return WithVerbosity("n");
+        }
+
+        public MsBuildTask<T> WithVerbosityDetailed()
+        {
+            return WithVerbosity("d");
+        }
+
+        public MsBuildTask<T> WithVerbosityDiagnostic()
+        {
+            return WithVerbosity("diag");
         }
 
         protected override string DefaultToolPath
@@ -47,11 +125,11 @@
             detectors.Add(message => message.IndexOf(" warning ") >= 0 ? MessageLevel.Warning : (MessageLevel?)null);
         }
 
-        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context, MsBuildInput input, ResultBuilder result)
+        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context, ResultBuilder result)
         {
             try
             {
-                var toolDirectory = (string)Registry.GetValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSBuild\ToolsVersions\{0}", input.ToolVersion.Value), "MSBuildToolsPath", null);
+                var toolDirectory = (string)Registry.GetValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSBuild\ToolsVersions\{0}", ToolVersion.Value), "MSBuildToolsPath", null);
                 return new[] { new DefaultFile(Path.Combine(toolDirectory, "MsBuild.exe")) };
             }
             catch (Exception ex)
@@ -62,19 +140,19 @@
             return new IFile[0];
         }
 
-        protected override string GetToolArguments(MsBuildInput input, TaskContext<T> context, ResultBuilder result)
+        protected override string GetToolArguments(TaskContext<T> context, ResultBuilder result)
         {
-            var projectFile = GetProjectFile(input, context, result);
-            var switches = string.Join(" ", input.Switches.Select(s => s.CommandLinePart));
+            var projectFile = GetProjectFile(context, result);
+            var switches = string.Join(" ", Switches.Select(s => s.CommandLinePart));
             
             return string.Format("{0} {1}", switches, projectFile);
         }
 
-        protected virtual string GetProjectFile(MsBuildInput input, TaskContext<T> context, ResultBuilder result)
+        protected virtual string GetProjectFile(TaskContext<T> context, ResultBuilder result)
         {
-            if (input.ProjectFile != null)
+            if (ProjectFile != null)
             {
-                return input.ProjectFile.AbsolutePath;
+                return ProjectFile.AbsolutePath;
             }
 
             result.AddInfo(

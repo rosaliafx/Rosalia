@@ -54,6 +54,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">
+      <Project>{49D81CA6-AB0A-4CA0-B588-A2A00C8D9E8F}</Project>
+      <Name>Rosalia.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rosalia.TaskLib.MsBuild\Rosalia.TaskLib.MsBuild.csproj">
       <Project>{E19519EA-80F2-4B1E-ABAA-D56E14901C4A}</Project>
       <Name>Rosalia.TaskLib.MsBuild</Name>

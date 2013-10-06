@@ -39,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Input\GitInput.cs" />
     <Compile Include="Output\GetVersionOutput.cs" />
     <Compile Include="Tasks\GetVersionTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

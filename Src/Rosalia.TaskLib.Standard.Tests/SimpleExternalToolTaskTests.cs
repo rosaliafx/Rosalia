@@ -11,14 +11,11 @@
         [Test]
         public void Execute_EchoTask_ShouldSucceed()
         {
-            var echoTask = new SimpleExternalToolTask<MessageContext>(
-                c => new ExternalToolInput
-                {
-                    ToolPath = "cmd.exe",
-                    Arguments = string.Format("/c echo {0}", c.Data.Message)
-                });
-
-            Data.Message = "Hello, Rosalia!";
+            var echoTask = new SimpleExternalToolTask<MessageContext>
+            {
+                ToolPath = "cmd.exe",
+                Arguments = string.Format("/c echo {0}", "Hello, Rosalia!")
+            };
 
             var result = Execute(echoTask);
 
@@ -28,14 +25,11 @@
         [Test]
         public void Execute_EchoTask_ShouldLogMessage()
         {
-            var echoTask = new SimpleExternalToolTask<MessageContext>(
-                c => new ExternalToolInput
-                {
-                    ToolPath = "cmd.exe",
-                    Arguments = string.Format("/c echo {0}", c.Data.Message)
-                });
-
-            Data.Message = "Hello, Rosalia!";
+            var echoTask = new SimpleExternalToolTask<MessageContext>
+            {
+                ToolPath = "cmd.exe",
+                Arguments = string.Format("/c echo {0}", "Hello, Rosalia!")
+            };
 
             Execute(echoTask);
 
@@ -46,15 +40,12 @@
         [Test]
         public void Execute_EchoTask_ShouldLogSingleMessage()
         {
-            var echoTask = new SimpleExternalToolTask<MessageContext>(
-                c => new ExternalToolInput
-                {
-                    ToolPath = "cmd.exe",
-                    Arguments = string.Format("/c echo {0}", c.Data.Message)
-                });
-
-            Data.Message = "Hello, Rosalia!";
-
+            var echoTask = new SimpleExternalToolTask<MessageContext>
+            {
+                ToolPath = "cmd.exe",
+                Arguments = string.Format("/c echo {0}", "Hello, Rosalia!")
+            };
+                               
             Execute(echoTask);
 
             Logger.AssertHasInfo();

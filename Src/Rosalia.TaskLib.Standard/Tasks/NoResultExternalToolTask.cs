@@ -1,8 +1,8 @@
-﻿namespace Rosalia.TaskLib.Git.Tasks
+﻿namespace Rosalia.TaskLib.Standard.Tasks
 {
     using Rosalia.Core.Fluent;
 
-    public class GitCommandTask<T> : AbstractGitTask<T, object>
+    public abstract class NoResultExternalToolTask<T> : ExternalToolTask<T, object>
     {
         protected override object CreateResult(int exitCode, ResultBuilder resultBuilder)
         {

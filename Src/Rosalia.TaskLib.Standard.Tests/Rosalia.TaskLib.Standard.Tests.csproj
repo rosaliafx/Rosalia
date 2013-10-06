@@ -47,9 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExternalToolTaskMessageLevelDetectionTests.cs" />
-    <Compile Include="SimpleExternalToolTaskTests.cs" />
     <Compile Include="ExternalToolTaskTestsBase.cs" />
+    <Compile Include="OldExternalToolTaskMessageLevelDetectionTests.cs" />
+    <Compile Include="SimpleExternalToolTaskTests.cs" />
+    <Compile Include="OldExternalToolTaskTestsBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

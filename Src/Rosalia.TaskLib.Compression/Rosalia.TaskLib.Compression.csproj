@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompressTask.cs" />
-    <Compile Include="CompressTaskInput.cs" />
     <Compile Include="FileToCompress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

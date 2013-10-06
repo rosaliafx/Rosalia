@@ -9,7 +9,7 @@
         [Test]
         public void WithSwitch_ShouldAddASwitchToCollection()
         {
-            var input = new MsBuildInput()
+            var input = new MsBuildTask<object>()
                 .WithSwitch("myswitch", "myparam");
 
             Assert.That(input.Switches.FirstOrDefault(x => x.Text == "myswitch" && x.Parameter == "myparam"), Is.Not.Null);
@@ -18,7 +18,7 @@
         [Test]
         public void WithTargets_ShouldNotAddMultippleTargetSwitchs()
         {
-            var input = new MsBuildInput()
+            var input = new MsBuildTask<object>()
                 .WithBuildTargets("Clean", "Build")
                 .WithBuildTargets("Clean", "Build");
 
@@ -28,7 +28,7 @@
         [Test]
         public void WithTargets_ShouldJoinTargets()
         {
-            var input = new MsBuildInput()
+            var input = new MsBuildTask<object>()
                 .WithBuildTargets("Clean", "Build");
 
             var targetSwitch = input.Switches.FirstOrDefault(x => x.Text == MsBuildSwitch.Target);

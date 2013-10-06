@@ -9,7 +9,8 @@
     using Rosalia.TaskLib.Standard.Input;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public class ExternalToolTaskMessageLevelDetectionTests : ExternalToolTaskTestsBase<object, ExternalToolInput, object>
+    [Obsolete]
+    public class OldExternalToolTaskMessageLevelDetectionTests : OldExternalToolTaskTestsBase<object, ExternalToolInput, object>
     {
         [Test]
         public void Execute_DetectorsDefined_ShouldUseDetectors()
@@ -30,7 +31,7 @@
                     });
         }
 
-        internal class Task : ExternalToolTask<object, ExternalToolInput, object>
+        internal class Task : OldExternalToolTask<object, ExternalToolInput, object>
         {
             private readonly IList<Func<string, MessageLevel?>> _messageLevelDetectors;
 
