@@ -2,6 +2,7 @@
 {
     using System.Reflection;
     using NUnit.Framework;
+    using Rosalia.Core;
     using Rosalia.Core.Tests;
     using Rosalia.Core.Tests.Stubs;
 
@@ -12,16 +13,16 @@
         {
             var destination = new FileStub();
             var task = new GenerateAssemblyInfo<Context>()
-                .WithAttribute(c => new AssemblyVersionAttribute(c.VersionNumber))
-                .WithAttribute(c => new AssemblyCompanyAttribute(c.CompanyName))
+                .WithAttribute(_ => new AssemblyVersionAttribute("1.0.42"))
+                .WithAttribute(_ => new AssemblyCompanyAttribute("Starfuckers, Inc."))
                 .ToFile(destination);
 
             var context = CreateContext();
 
-            context.Data.VersionNumber = "1.0.42";
-            context.Data.CompanyName = "Starfuckers, Inc.";
 
-            context.Executer.Execute(task);
+            var result = context.Executer.Execute(task);
+
+            Assert.That(result.ResultType, Is.EqualTo(ResultType.Success));
 
             Assert.That(destination.Content.Trim(), Is.EqualTo(
 @"//------------------------------------------------------------------------------

@@ -34,7 +34,11 @@
                 (output, c) =>
                 {
                     c.Version = output.Tag.Replace("v", string.Empty) + "." + output.CommitsCount;
-                }));
+                }),
+                afterExecute: (context, task) =>
+                {
+                    //context.Data.Version = task.Re                      
+                });
 
             /* ======================================================================================== */
             Register(
@@ -42,9 +46,9 @@
                 task: new GenerateAssemblyInfo<BuildRosaliaContext>()
                     .WithAttribute(c => new AssemblyProductAttribute("Rosalia")),
                 beforeExecute: (context, task) => task
-                    .WithAttribute(c => new AssemblyVersionAttribute(c.Version))
-                    .WithAttribute(c => new AssemblyFileVersionAttribute(c.Version))
-                    .ToFile(c => c.Data.Src.GetFile("CommonAssemblyInfo.cs")));
+                    .WithAttribute(_ => new AssemblyVersionAttribute(context.Data.Version))
+                    .WithAttribute(_ => new AssemblyFileVersionAttribute(context.Data.Version))
+                    .ToFile(context.Data.Src.GetFile("CommonAssemblyInfo.cs")));
 
             /* ======================================================================================== */
             Register(

@@ -42,10 +42,10 @@
             Register(
                 name: "Generate assempbly info",
                 task: new GenerateAssemblyInfo<DemoContext>()
-                    .WithAttribute(c => new AssemblyCompanyAttribute("DemoCompany"))
-                    .WithAttribute(c => new AssemblyFileVersionAttribute("1.0.0.1")),
+                    .WithAttribute(_ => new AssemblyCompanyAttribute("DemoCompany"))
+                    .WithAttribute(_ => new AssemblyFileVersionAttribute("1.0.0.1")),
                 beforeExecute: (context, task) => task
-                    .ToFile(c => context.WorkDirectory.GetFile("CommonAssemblyInfo.cs")));
+                    .ToFile(context.WorkDirectory.GetFile("CommonAssemblyInfo.cs")));
 
             /* ======================================================================================== */
             Register(
