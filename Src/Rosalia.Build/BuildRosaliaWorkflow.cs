@@ -30,14 +30,10 @@
             /* ======================================================================================== */
             Register(
                 name: "Get current version from git",
-                task: new GetVersionTask<BuildRosaliaContext>(
-                (output, c) =>
-                {
-                    c.Version = output.Tag.Replace("v", string.Empty) + "." + output.CommitsCount;
-                }),
+                task: new GetVersionTask<BuildRosaliaContext>(),
                 afterExecute: (context, task) =>
                 {
-                    //context.Data.Version = task.Re                      
+                    context.Data.Version = task.Result.Tag.Replace("v", string.Empty) + "." + task.Result.CommitsCount;
                 });
 
             /* ======================================================================================== */
@@ -53,11 +49,11 @@
             /* ======================================================================================== */
             Register(
                 name: "Build solution",
-                task: new MsBuildTask<BuildRosaliaContext>()
-                        .FillInput(c => new MsBuildInput()
-                            .WithProjectFile(c.Data.SolutionFile)
-                            .WithConfiguration(c.Data.Configuration)
-                            .WithVerbosityMinimal()));
+                task: new MsBuildTask<BuildRosaliaContext>(),
+                beforeExecute: (context, task) => task
+                    .WithProjectFile(context.Data.SolutionFile)
+                    .WithConfiguration(context.Data.Configuration)
+                    .WithVerbosityMinimal());
 
             /* ======================================================================================== */
             Register(
@@ -67,44 +63,47 @@
             /* ======================================================================================== */
             Register(
                 name: "Generate spec for Core NuGet package",
-                task: new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
-                        input
-                            .Id("Rosalia.Core")
-                            .FillCommonProperties(c)
-                            .Description("Core libs for Rosalia framework.")
-                            .WithFiles(c.GetCoreLibFiles(), "lib")
-                            .ToFile(c.Data.NuSpecRosaliaCore)));
+                task: new GenerateNuGetSpecTask<BuildRosaliaContext>(),
+                beforeExecute: (context, task) => task
+                    .Id("Rosalia.Core")
+                    .FillCommonProperties(context)
+                    .Description("Core libs for Rosalia framework.")
+                    .WithFiles(context.GetCoreLibFiles(), "lib")
+                    .ToFile(context.Data.NuSpecRosaliaCore));
 
             /* ======================================================================================== */
             Register(
                 name: "Generate specs for NuGet packages",
-                task: new GenerateNuGetSpecTask<BuildRosaliaContext>((c, input) =>
-                        input
-                            .Id("Rosalia")
-                            .FillCommonProperties(c)
-                            .Description("Automation tool that allows writing build, install or other workflows in C#. This package automatically integrates Rosalia to your Class Library project.")
-                            .WithFile(c.Data.RosaliaPackageInstallScript, "tools")
-                            .WithFile(c.Data.RosaliaRunnerConsoleExe, "tools")
-                            .WithFiles(c.GetRunnerDllFiles(), "tools")
-                            .WithFiles(c.Data.BuildAssets.Files.IncludeByExtension(".pp"), "content")
-                            .WithDependency("Rosalia.Core", c.Data.Version)
-                            .WithDependency("NuGetPowerTools", version: "0.29")
-                            .ToFile(c.Data.NuSpecRosalia)));
+                task: new GenerateNuGetSpecTask<BuildRosaliaContext>(),
+                beforeExecute: (context, task) => task
+                    .Id("Rosalia")
+                    .FillCommonProperties(context)
+                    .Description("Automation tool that allows writing build, install or other workflows in C#. This package automatically integrates Rosalia to your Class Library project.")
+                    .WithFile(context.Data.RosaliaPackageInstallScript, "tools")
+                    .WithFile(context.Data.RosaliaRunnerConsoleExe, "tools")
+                    .WithFiles(context.GetRunnerDllFiles(), "tools")
+                    .WithFiles(context.Data.BuildAssets.Files.IncludeByExtension(".pp"), "content")
+                    .WithDependency("Rosalia.Core", context.Data.Version)
+                    .WithDependency("NuGetPowerTools", version: "0.29")
+                    .ToFile(context.Data.NuSpecRosalia));
 
             /* ======================================================================================== */
             Register(
                 name: "Generate spec for Task Libs",
                 task: ForEach(c => c.FindTaskLibDirectories())
                         .Do((context, directory) =>
-                            new GenerateNuGetSpecTask<BuildRosaliaContext>((taskContext, input) => input
-                                .FillCommonProperties(taskContext)
-                                .FillTaskLibProperties(taskContext, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))));
+                            new GenerateNuGetSpecTask<BuildRosaliaContext>()
+                                .FillCommonProperties(context)
+                                .FillTaskLibProperties(context, directory.Name.Replace("Rosalia.TaskLib.", string.Empty))));
 
             /* ======================================================================================== */
             Register(
                 name: "Generate NuGet packages",
                 task: ForEach(c => c.Data.Artifacts.Files.IncludeByExtension(".nuspec"))
-                        .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>(file)));
+                        .Do((context, file) => new GeneratePackageTask<BuildRosaliaContext>
+                        {
+                            SpecFile = file
+                        }));
 
             /* ======================================================================================== */
             Register(

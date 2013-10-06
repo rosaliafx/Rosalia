@@ -3,7 +3,6 @@
     using System.Yaml.Serialization;
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Tasks.Flow;
-    using Rosalia.TaskLib.Git.Input;
     using Rosalia.TaskLib.Git.Tasks;
 
     public class PrepareDocsForDeploymentTask : AbstractSequenceTask<BuildRosaliaContext>
@@ -34,23 +33,21 @@
                 name: "Add all doc files to gh-pages repo",
                 task: new GitCommandTask<BuildRosaliaContext>
                 {
-                    InputProvider = context => new GitInput
-                    {
-                        RawCommand = "add .",
-                        WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
-                    }
+                    RawCommand = "add ."
+                },
+                beforeExecute: (context, task) =>
+                {
+                    task.WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot);
                 });
 
             Register(
                 name: "Do auto commit to gh-pages repo",
-                task: new GitCommandTask<BuildRosaliaContext>
-                    {
-                        InputProvider = context => new GitInput
-                        {
-                            RawCommand = string.Format("commit -a -m \"Docs auto commit v{0}\"", context.Data.Version),
-                            WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot)
-                        }
-                    });
+                task: new GitCommandTask<BuildRosaliaContext>(),
+                beforeExecute: (context, task) =>
+                {
+                    task.RawCommand = string.Format("commit -a -m \"Docs auto commit v{0}\"", context.Data.Version);
+                    task.WorkDirectory = new DefaultDirectory(context.Data.PrivateData.GhPagesRoot);
+                });
         }
     }
 }

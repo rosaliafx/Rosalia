@@ -2,10 +2,11 @@
 {
     using Rosalia.Core.Context;
     using Rosalia.TaskLib.NuGet.Input;
+    using Rosalia.TaskLib.NuGet.Tasks;
 
     public static class SpecInputExtensions
     {
-        public static SpecInput FillCommonProperties(this SpecInput input, TaskContext<BuildRosaliaContext> context)
+        public static GenerateNuGetSpecTask<T> FillCommonProperties<T>(this GenerateNuGetSpecTask<T> input, TaskContext<BuildRosaliaContext> context)
         {
             return input
                 .Version(context.Data.Version)
@@ -14,7 +15,7 @@
                 .Tags("automation", "build", "msbuild", "nant", "psake");
         }
 
-        public static SpecInput FillTaskLibProperties(this SpecInput input, TaskContext<BuildRosaliaContext> context, string taskLib)
+        public static GenerateNuGetSpecTask<T> FillTaskLibProperties<T>(this GenerateNuGetSpecTask<T> input, TaskContext<BuildRosaliaContext> context, string taskLib)
         {
             var projectDirectory = context.Data.Src.GetDirectory(string.Format("Rosalia.TaskLib.{0}", taskLib));
 

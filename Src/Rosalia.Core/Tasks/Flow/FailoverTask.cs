@@ -4,12 +4,14 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
-    public class FailoverTask<T> : AbstractNodeTask<T>
+    public class FailoverTask<T, TTarget, TFailover> : AbstractNodeTask<T>
+        where TTarget : ITask<T>
+        where TFailover : ITask<T>
     {
-        private readonly ITask<T> _targetTask;
-        private readonly ITask<T> _failoverTask;
+        private readonly TTarget _targetTask;
+        private readonly TFailover _failoverTask;
 
-        public FailoverTask(ITask<T> targetTask, ITask<T> failoverTask)
+        public FailoverTask(TTarget targetTask, TFailover failoverTask)
         {
             _targetTask = targetTask;
             _failoverTask = failoverTask;
@@ -24,17 +26,27 @@
         {
             get
             {
-                yield return _targetTask;
-                yield return _failoverTask;
+                yield return Target;
+                yield return Failover;
             }
+        }
+
+        public TTarget Target
+        {
+            get { return _targetTask; }
+        }
+
+        public TFailover Failover
+        {
+            get { return _failoverTask; }
         }
 
         protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
         {
-            var targetTaskResult = ExecuteChild(_targetTask, context);
+            var targetTaskResult = ExecuteChild(Target, context);
             if (targetTaskResult.ResultType != ResultType.Success)
             {
-                var failOverTaskResult = ExecuteChild(_failoverTask, context);
+                var failOverTaskResult = ExecuteChild(Failover, context);
                 ApplyChildResult(failOverTaskResult, resultBuilder);
             }
         }

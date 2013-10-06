@@ -50,13 +50,13 @@
             /* ======================================================================================== */
             Register(
                 name: "Build main solution",
-                task: new FailoverTask<DemoContext>(
-                    new MsBuildTask<DemoContext>()
-                        .FillInput(context => new MsBuildInput().WithProjectFile("NoFile.sln")), 
+                task: new FailoverTask<DemoContext, MsBuildTask<DemoContext>, SimpleTask<DemoContext>>(
+                    new MsBuildTask<DemoContext>(), 
                     new SimpleTask<DemoContext>((builder, context) =>
-                        {
-                            builder.AddWarning("Build task fails because the solition file does not exist");                                    
-                        })));
+                    {
+                        builder.AddWarning("Build task fails because the solition file does not exist");                                    
+                    })),
+                beforeExecute: (context, task) => task.Target.WithProjectFile("NoFile.sln"));
 
             /* ======================================================================================== */
             Register(
@@ -72,22 +72,22 @@
 
             /* ======================================================================================== */
             Register(
-                new CompressTask<DemoContext>()
-                    .FillInput(context =>
+                task: new CompressTask<DemoContext>(),
+                beforeExecute: (context, task) =>
+                {
+                    var allCsFiles = context.FileSystem
+                        .SearchFilesIn(context.WorkDirectory)
+                        .IncludeByExtension(".cs");
+
+                    foreach (var file in allCsFiles.All)
                     {
-                        var allCsFiles = context.FileSystem
-                            .SearchFilesIn(context.WorkDirectory)
-                            .IncludeByExtension(".cs");
+                        task.WithFile(Path.GetFileName(file.AbsolutePath), file);
+                    }
 
-                        var compressTaskInput = new CompressTaskInput();
+                    task.ToFile(context.WorkDirectory.GetFile("cs_files.zip"));
+                });
 
-                        foreach (var file in allCsFiles.All)
-                        {
-                            compressTaskInput.WithFile(Path.GetFileName(file.AbsolutePath), file);
-                        }
-
-                        return compressTaskInput.ToFile(context.WorkDirectory.GetFile("cs_files.zip"));
-                    }));
+            /* ======================================================================================== */
 
             Register(
                 name: "Test sequence",
