@@ -8,7 +8,7 @@
     using Rosalia.Core.Helpers;
     using Rosalia.Core.Tasks;
 
-    public class CompressTask<T> : AbstractLeafTask<T>
+    public class CompressTask : AbstractLeafTask
     {
         private readonly IList<FileToCompress> _sourceFiles = new List<FileToCompress>();
 
@@ -19,19 +19,19 @@
             get { return _sourceFiles; }
         }
 
-        public CompressTask<T> WithFile(string entityPath, IFile file)
+        public CompressTask WithFile(string entityPath, IFile file)
         {
             _sourceFiles.Add(new FileToCompress(file, entityPath));
             return this;
         }
 
-        public CompressTask<T> ToFile(IFile destination)
+        public CompressTask ToFile(IFile destination)
         {
             Destination = destination;
             return this;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
             var destination = Destination.EnsureNotNull("Destination file");
 

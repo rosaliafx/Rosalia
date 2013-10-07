@@ -2,7 +2,7 @@
 {
     using Rosalia.Core.Fluent;
 
-    public class GitCommandTask<T> : AbstractGitTask<T, object>
+    public class GitCommandTask : AbstractGitTask<object>
     {
         protected override object CreateResult(int exitCode, ResultBuilder resultBuilder)
         {

@@ -1,7 +1,7 @@
 ﻿namespace Rosalia.Core
 {
-    public interface IExecuter<T>
+    public interface IExecuter
     {
-        ExecutionResult Execute(IExecutable<T> task);
+        ExecutionResult Execute(IExecutable task);
     }
 }

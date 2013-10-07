@@ -7,16 +7,16 @@
     /// <summary>
     /// Simple task with lambda payload for inline instantiation.
     /// </summary>
-    public class SimpleTask<T> : AbstractLeafTask<T>
+    public class SimpleTask : AbstractLeafTask
     {
-        private readonly Action<ResultBuilder, TaskContext<T>> _payload;
+        private readonly Action<ResultBuilder, TaskContext> _payload;
 
-        public SimpleTask(Action<ResultBuilder, TaskContext<T>> payload)
+        public SimpleTask(Action<ResultBuilder, TaskContext> payload)
         {
             _payload = payload;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
             _payload(resultBuilder, context);
         }

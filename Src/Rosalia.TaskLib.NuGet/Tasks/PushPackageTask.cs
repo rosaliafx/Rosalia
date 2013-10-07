@@ -13,7 +13,7 @@
     /// NuGet push task input. See <see cref="http://docs.nuget.org/docs/reference/command-line-reference#Push_Command"/>
     /// for options details.
     /// </summary>
-    public class PushPackageTask<T> : NoResultExternalToolTask<T>
+    public class PushPackageTask : NoResultExternalToolTask
     {
         public PushPackageTask()
         {
@@ -35,35 +35,35 @@
 
         public IList<Option> Options { get; set; }
 
-        public PushPackageTask<T> Package(IFile file)
+        public PushPackageTask Package(IFile file)
         {
             PackageFile = file;
             return this;
         }
 
-        public PushPackageTask<T> WithSource(string source)
+        public PushPackageTask WithSource(string source)
         {
             Options.Add(new Option("Source", source));
             return this;
         }
 
-        public PushPackageTask<T> WithVerbosityLevel(string level)
+        public PushPackageTask WithVerbosityLevel(string level)
         {
             Options.Add(new Option("Verbosity", level));
             return this;
         }
 
-        public PushPackageTask<T> WithVerbosityNormal()
+        public PushPackageTask WithVerbosityNormal()
         {
             return WithVerbosityLevel("normal");
         }
 
-        public PushPackageTask<T> WithVerbosityQuiet()
+        public PushPackageTask WithVerbosityQuiet()
         {
             return WithVerbosityLevel("quiet");
         }
 
-        public PushPackageTask<T> WithVerbosityDetailed()
+        public PushPackageTask WithVerbosityDetailed()
         {
             return WithVerbosityLevel("detailed");
         }
@@ -71,13 +71,13 @@
         /// <summary>
         /// Specifies the timeout for pushing to a server in seconds. Defaults to 300 seconds (5 minutes).
         /// </summary>
-        public PushPackageTask<T> WithTimeout(int timeout)
+        public PushPackageTask WithTimeout(int timeout)
         {
             Options.Add(new Option("Timeout", timeout.ToString(CultureInfo.InvariantCulture)));
             return this;
         }
 
-        public PushPackageTask<T> WithApiKey(string apiKey)
+        public PushPackageTask WithApiKey(string apiKey)
         {
             ApiKey = apiKey;
             return this;
@@ -94,12 +94,12 @@
             Options.Add(optionWithSameName);
         }
 
-        protected override string GetToolPath(TaskContext<T> context, ResultBuilder result)
+        protected override string GetToolPath(TaskContext context, ResultBuilder result)
         {
             return "nuget";
         }
 
-        protected override string GetToolArguments(TaskContext<T> context, ResultBuilder result)
+        protected override string GetToolArguments(TaskContext context, ResultBuilder result)
         {
             return string.Format(
                 "push \"{1}\" {0} {2} -NonInteractive", 

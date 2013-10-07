@@ -4,10 +4,10 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Events;
 
-    public interface IExecutable<TContext>
+    public interface IExecutable
     {
         event EventHandler<TaskMessageEventArgs> MessagePosted;
 
-        ExecutionResult Execute(TaskContext<TContext> context);
+        ExecutionResult Execute(TaskContext context);
     }
 }

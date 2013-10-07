@@ -7,7 +7,7 @@
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
 
-    public abstract class ExternalToolTask<TContext, TResult> : TaskWithResult<TContext, TResult> where TResult : class
+    public abstract class ExternalToolTask<TResult> : TaskWithResult<TResult> where TResult : class
     {
         private readonly IList<Func<string, MessageLevel?>> _messageLevelDetectors = new List<Func<string, MessageLevel?>>();
 
@@ -33,7 +33,7 @@
             get { return null; }
         }
 
-        protected override TResult Execute(TaskContext<TContext> context, ResultBuilder result)
+        protected override TResult Execute(TaskContext context, ResultBuilder result)
         {
             FillMessageLevelDetectors(_messageLevelDetectors);
 
@@ -76,7 +76,7 @@
             return ProcessExitCode(exitCode, result);
         }
 
-        protected virtual IEnumerable<IFile> GetToolPathLookup(TaskContext<TContext> context, ResultBuilder result)
+        protected virtual IEnumerable<IFile> GetToolPathLookup(TaskContext context, ResultBuilder result)
         {
             yield break;
         }
@@ -85,12 +85,12 @@
         {
         }
 
-        protected virtual string GetToolArguments(TaskContext<TContext> context, ResultBuilder result)
+        protected virtual string GetToolArguments(TaskContext context, ResultBuilder result)
         {
             return Arguments ?? string.Empty;
         }
 
-        protected virtual string GetToolPath(TaskContext<TContext> context, ResultBuilder result)
+        protected virtual string GetToolPath(TaskContext context, ResultBuilder result)
         {
             if (!string.IsNullOrEmpty(ToolPath))
             {
@@ -126,7 +126,7 @@
 
         protected abstract TResult CreateResult(int exitCode, ResultBuilder resultBuilder);
 
-        protected virtual void ProcessOnOutputDataReceived(string message, ResultBuilder result, TaskContext<TContext> context)
+        protected virtual void ProcessOnOutputDataReceived(string message, ResultBuilder result, TaskContext context)
         {
             foreach (var messageLevelDetector in _messageLevelDetectors)
             {
@@ -142,12 +142,12 @@
             result.AddInfo(message);
         }
 
-        protected virtual void ProcessOnErrorDataReceived(string message, ResultBuilder resultBuilder, TaskContext<TContext> context)
+        protected virtual void ProcessOnErrorDataReceived(string message, ResultBuilder resultBuilder, TaskContext context)
         {
             resultBuilder.AddError(message);
         }
 
-        protected virtual IDirectory GetToolWorkDirectory(TaskContext<TContext> context)
+        protected virtual IDirectory GetToolWorkDirectory(TaskContext context)
         {
             return WorkDirectory ?? context.WorkDirectory;
         }

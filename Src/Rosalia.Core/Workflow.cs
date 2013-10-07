@@ -8,11 +8,11 @@
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Tasks.Flow;
 
-    public abstract class Workflow<TData> : IGenericWorkflow<TData>, IExecuter<TData>
+    public abstract class Workflow : IWorkflow, IExecuter
     {
-        private TData _inputData;
+        private object _data;
 
-        private AbstractSequenceTask<TData> _rootTask;
+        private AbstractSequenceTask _rootTask;
 
         private WorkflowContext _workflowContext;
 
@@ -31,38 +31,23 @@
             get { return SubtasksCount(_rootTask) + 1; }
         }
 
-        public void Register(Action<ResultBuilder, TaskContext<TData>> task, string name = null)
+        public void Register(Action<ResultBuilder, TaskContext> task, string name = null)
         {
             _rootTask.Register(task, name);
         }
 
-        public void Register<TTask>(TTask task, Action<TaskContext<TData>, TTask> beforeExecute = null, Action<TaskContext<TData>, TTask> afterExecute = null, string name = null) where TTask : ITask<TData>
+        public void Register<TTask>(
+            TTask task, 
+            Action<TaskContext, TTask> beforeExecute = null,
+            Action<TaskContext, TTask> afterExecute = null, 
+            string name = null) where TTask : ITask
         {
             _rootTask.Register(task, beforeExecute, afterExecute, name);
         }
 
-        public ExecutionResult Execute(object inputData)
+        public virtual ExecutionResult Execute(object inputData)
         {
-            if (inputData is TData)
-            {
-                return ((IGenericWorkflow<TData>)this).Execute((TData)inputData);
-            }
-
-            throw new Exception("Wrong workflow context");
-        }
-
-        public virtual void Init(WorkflowContext context)
-        {
-            _workflowContext = context;
-
-            _rootTask = new SequenceTask<TData>();
-
-            RegisterTasks();
-        }
-
-        public ExecutionResult Execute(TData inputData)
-        {
-            _inputData = inputData;
+            _data = inputData;
 
             OnWorkflowExecuting(CreateContext());
 
@@ -73,8 +58,23 @@
             return executionResult;
         }
 
-        public ExecutionResult Execute(IExecutable<TData> task)
+        public virtual void Init(WorkflowContext context)
         {
+            _workflowContext = context;
+
+            _rootTask = new SequenceTask();
+
+            RegisterTasks();
+        }
+
+        public ExecutionResult Execute(IExecutable task)
+        {
+            var dataAware = task as IDataAware;
+            if (dataAware != null)
+            {
+                dataAware.Data = _data;
+            }
+
             OnTaskExecuting(task);
 
             task.MessagePosted += OnTaskMessagePosted;
@@ -102,7 +102,7 @@
             }
         }
 
-        protected virtual void OnTaskExecuted(IExecutable<TData> task, ExecutionResult result)
+        protected virtual void OnTaskExecuted(IExecutable task, ExecutionResult result)
         {
             if (TaskExecuted != null)
             {
@@ -114,7 +114,7 @@
             }
         }
 
-        protected virtual void OnTaskExecuting(IExecutable<TData> task)
+        protected virtual void OnTaskExecuting(IExecutable task)
         {
             if (TaskExecuting != null)
             {
@@ -125,19 +125,19 @@
             }
         }
 
-        protected SequenceTask<TData> Sequence(params ITask<TData>[] children)
+        protected SequenceTask Sequence(params ITask[] children)
         {
-            return new SequenceTask<TData>(children);
+            return new SequenceTask(children);
         }
 
-        protected ConditionBuilder<TData> If(Predicate<TaskContext<TData>> condition)
+        protected ConditionBuilder If(Predicate<TaskContext> condition)
         {
-            return new ConditionBuilder<TData>(new ForkTask<TData>(), condition);
+            return new ConditionBuilder(new ForkTask(), condition);
         }
 
-        protected RepeaterBuilder<TData, TEnumerableItem> ForEach<TEnumerableItem>(Func<TaskContext<TData>, IEnumerable<TEnumerableItem>> enumerableProvider)
+        protected RepeaterBuilder<TEnumerableItem> ForEach<TEnumerableItem>(Func<TaskContext, IEnumerable<TEnumerableItem>> enumerableProvider)
         {
-            return new RepeaterBuilder<TData, TEnumerableItem>(enumerableProvider);
+            return new RepeaterBuilder<TEnumerableItem>(enumerableProvider);
         }
 
         protected virtual void OnWorkflowExecuted()
@@ -148,7 +148,7 @@
             }
         }
 
-        protected virtual void OnWorkflowExecuting(TaskContext<TData> context)
+        protected virtual void OnWorkflowExecuting(TaskContext context)
         {
             if (WorkflowExecuting != null)
             {
@@ -156,16 +156,16 @@
             }
         }
 
-        private TaskContext<TData> CreateContext()
+        private TaskContext CreateContext()
         {
-            return new TaskContext<TData>(
-                _inputData, 
+            return new TaskContext(
+                /*_inputData, */
                 this, 
                 _workflowContext.WorkDirectory,
                 _workflowContext.Environment);
         }
 
-        private int SubtasksCount(ITask<TData> task)
+        private int SubtasksCount(ITask task)
         {
             if (!task.HasChildren)
             {

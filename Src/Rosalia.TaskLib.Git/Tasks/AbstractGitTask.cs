@@ -8,7 +8,7 @@
     using Rosalia.Core.Logging;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public abstract class AbstractGitTask<T, TOutput> : ExternalToolTask<T, TOutput> 
+    public abstract class AbstractGitTask<TOutput> : ExternalToolTask<TOutput> 
         where TOutput : class
     {
         protected override string DefaultToolPath
@@ -31,7 +31,7 @@
             }
         }
 
-        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context, ResultBuilder result)
+        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext context, ResultBuilder result)
         {
             // user can set GIT_HOME variable to point exact installed version.
             var gitHome = context.Environment.GetVariable("GIT_HOME");

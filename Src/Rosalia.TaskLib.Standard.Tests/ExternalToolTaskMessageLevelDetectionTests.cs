@@ -6,11 +6,9 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
-    using Rosalia.TaskLib.Standard.Input;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    [Obsolete]
-    public class OldExternalToolTaskMessageLevelDetectionTests : OldExternalToolTaskTestsBase<object, ExternalToolInput, object>
+    public class ExternalToolTaskMessageLevelDetectionTests : ExternalToolTaskTestsBase<object>
     {
         [Test]
         public void Execute_DetectorsDefined_ShouldUseDetectors()
@@ -31,7 +29,7 @@
                     });
         }
 
-        internal class Task : OldExternalToolTask<object, ExternalToolInput, object>
+        internal class Task : ExternalToolTask<object>
         {
             private readonly IList<Func<string, MessageLevel?>> _messageLevelDetectors;
 
@@ -40,7 +38,7 @@
                 _messageLevelDetectors = messageLevelDetectors;
             }
 
-            protected override string GetToolPath(ExternalToolInput input, TaskContext<object> context, ResultBuilder result)
+            protected override string GetToolPath(TaskContext context, ResultBuilder result)
             {
                 return "fake";
             }

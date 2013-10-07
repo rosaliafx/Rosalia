@@ -5,45 +5,47 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
-    public abstract class AbstractSequenceTask<T> : AbstractTask<T>
+    public abstract class AbstractSequenceTask : AbstractTask, IDataAware
     {
-        private readonly IList<ITask<T>> _children;
+        private readonly IList<ITask> _children;
 
-        protected AbstractSequenceTask() : this(new List<ITask<T>>())
+        protected AbstractSequenceTask() : this(new List<ITask>())
         {
         }
 
-        protected AbstractSequenceTask(params ITask<T>[] children) : this(new List<ITask<T>>(children))
+        protected AbstractSequenceTask(params ITask[] children) : this(new List<ITask>(children))
         {
         }
 
-        protected AbstractSequenceTask(IList<ITask<T>> children)
+        protected AbstractSequenceTask(IList<ITask> children)
         {
             _children = children;
         }
+
+        public object Data { get; set; }
 
         public override bool HasChildren
         {
             get { return true; }
         }
 
-        public override IEnumerable<ITask<T>> Children
+        public override IEnumerable<ITask> Children
         {
             get { return _children; }
         }
 
-        public AbstractSequenceTask<T> Register(
-            Action<ResultBuilder, TaskContext<T>> task,
+        public AbstractSequenceTask Register(
+            Action<ResultBuilder, TaskContext> task,
             string name = null)
         {
-            return Register(new SimpleTask<T>(task), null, null, name);
+            return Register(new SimpleTask(task), null, null, name);
         }
 
-        public AbstractSequenceTask<T> Register<TTask>(
+        public AbstractSequenceTask Register<TTask>(
             TTask task,
-            Action<TaskContext<T>, TTask> beforeExecute = null,
-            Action<TaskContext<T>, TTask> afterExecute = null,
-            string name = null) where TTask : ITask<T>
+            Action<TaskContext, TTask> beforeExecute = null,
+            Action<TaskContext, TTask> afterExecute = null,
+            string name = null) where TTask : ITask
         {
             if (beforeExecute != null)
             {
@@ -55,12 +57,17 @@
                 task.AfterExecute = context => afterExecute.Invoke(context, task);
             }
 
+            if (name != null)
+            {
+                task.Name = name;
+            }
+
             _children.Add(task);
 
             return this;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
             foreach (var child in Children)
             {

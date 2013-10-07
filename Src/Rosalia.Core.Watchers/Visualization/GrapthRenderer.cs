@@ -31,7 +31,8 @@
         {
             var task = ((Composite) item.Data).Task;
 
-            if (IsInstanceOfGenericType(typeof(SequenceTask<>), task))
+            //if (IsInstanceOfGenericType(typeof(SequenceTask<>), task))
+            if (task is SequenceTask)
             {
                 return LayoutType.Vertical;
             }

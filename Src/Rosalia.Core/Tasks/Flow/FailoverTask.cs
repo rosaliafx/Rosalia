@@ -4,9 +4,9 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
-    public class FailoverTask<T, TTarget, TFailover> : AbstractNodeTask<T>
-        where TTarget : ITask<T>
-        where TFailover : ITask<T>
+    public class FailoverTask<TTarget, TFailover> : AbstractNodeTask
+        where TTarget : ITask
+        where TFailover : ITask
     {
         private readonly TTarget _targetTask;
         private readonly TFailover _failoverTask;
@@ -22,7 +22,7 @@
             get { return true; }
         }
 
-        public override IEnumerable<ITask<T>> Children
+        public override IEnumerable<ITask> Children
         {
             get
             {
@@ -41,7 +41,7 @@
             get { return _failoverTask; }
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
             var targetTaskResult = ExecuteChild(Target, context);
             if (targetTaskResult.ResultType != ResultType.Success)

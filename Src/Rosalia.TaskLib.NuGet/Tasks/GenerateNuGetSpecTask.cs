@@ -14,7 +14,7 @@
     using Rosalia.TaskLib.Standard.Tasks;
     using File = Rosalia.TaskLib.NuGet.Input.File;
 
-    public class GenerateNuGetSpecTask<T> : TaskWithResult<T, object>
+    public class GenerateNuGetSpecTask : TaskWithResult<object>
     {
         private readonly IDictionary<string, string> _metadata = new Dictionary<string, string>();
         private readonly IList<Dependency> _dependencies = new List<Dependency>();
@@ -53,103 +53,103 @@
             get { return _destination; }
         }
 
-        public GenerateNuGetSpecTask<T> Id(string id)
+        public GenerateNuGetSpecTask Id(string id)
         {
             _metadata[Input.Metadata.Id] = id;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Version(string version)
+        public GenerateNuGetSpecTask Version(string version)
         {
             _metadata[Input.Metadata.Version] = version;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Title(string title)
+        public GenerateNuGetSpecTask Title(string title)
         {
             _metadata[Input.Metadata.Title] = title;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Authors(params string[] authors)
+        public GenerateNuGetSpecTask Authors(params string[] authors)
         {
             _metadata[Input.Metadata.Authors] = string.Join(",", authors);
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Owners(params string[] owners)
+        public GenerateNuGetSpecTask Owners(params string[] owners)
         {
             _metadata[Input.Metadata.Owners] = string.Join(",", owners);
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Description(string description)
+        public GenerateNuGetSpecTask Description(string description)
         {
             _metadata[Input.Metadata.Description] = description;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> ReleaseNotes(string releaseNotes)
+        public GenerateNuGetSpecTask ReleaseNotes(string releaseNotes)
         {
             _metadata[Input.Metadata.ReleaseNotes] = releaseNotes;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Summary(string summary)
+        public GenerateNuGetSpecTask Summary(string summary)
         {
             _metadata.Add(Input.Metadata.Summary, summary);
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Language(string localeId)
+        public GenerateNuGetSpecTask Language(string localeId)
         {
             _metadata[Input.Metadata.Language] = localeId;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Language(CultureInfo locale)
+        public GenerateNuGetSpecTask Language(CultureInfo locale)
         {
             _metadata[Input.Metadata.Language] = locale.Name;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> ProjectUrl(string projectUrl)
+        public GenerateNuGetSpecTask ProjectUrl(string projectUrl)
         {
             _metadata[Input.Metadata.ProjectUrl] = projectUrl;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> IconUrl(string iconUrl)
+        public GenerateNuGetSpecTask IconUrl(string iconUrl)
         {
             _metadata[Input.Metadata.IconUrl] = iconUrl;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> LicenseUrl(string licenseUrl)
+        public GenerateNuGetSpecTask LicenseUrl(string licenseUrl)
         {
             _metadata[Input.Metadata.LicenseUrl] = licenseUrl;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Copyright(string copyright)
+        public GenerateNuGetSpecTask Copyright(string copyright)
         {
             _metadata[Input.Metadata.Copyright] = copyright;
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> RequireLicenseAcceptance(bool requireLicenseAcceptance)
+        public GenerateNuGetSpecTask RequireLicenseAcceptance(bool requireLicenseAcceptance)
         {
             _metadata[Input.Metadata.RequireLicenseAcceptance] = requireLicenseAcceptance.ToString().ToLower();
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> Tags(params string[] tags)
+        public GenerateNuGetSpecTask Tags(params string[] tags)
         {
             _metadata[Input.Metadata.Tags] = string.Join(" ", tags);
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> WithDependency(string id, string version = null, string frameworkVersion = null)
+        public GenerateNuGetSpecTask WithDependency(string id, string version = null, string frameworkVersion = null)
         {
             Dependencies.Add(new Dependency(id, version, frameworkVersion));
             return this;
@@ -158,7 +158,7 @@
         /// <summary>
         /// Reads dependencies from packages.config file.
         /// </summary>
-        public GenerateNuGetSpecTask<T> WithDependenciesFromPackagesConfig(IDirectory projectDirectory)
+        public GenerateNuGetSpecTask WithDependenciesFromPackagesConfig(IDirectory projectDirectory)
         {
             var packagesConfigFile = projectDirectory.GetFile("packages.config");
             if (packagesConfigFile.Exists)
@@ -172,7 +172,7 @@
         /// <summary>
         /// Reads dependencies from packages.config file.
         /// </summary>
-        public GenerateNuGetSpecTask<T> WithDependenciesFromPackagesConfig(IFile packagesConfigFile)
+        public GenerateNuGetSpecTask WithDependenciesFromPackagesConfig(IFile packagesConfigFile)
         {
             using (var stream = packagesConfigFile.ReadStream)
             {
@@ -192,30 +192,30 @@
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> WithReference(string referenceDll)
+        public GenerateNuGetSpecTask WithReference(string referenceDll)
         {
             References.Add(referenceDll);
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> WithFrameworkAssembly(string assemblyName, string frameworkVersion = null)
+        public GenerateNuGetSpecTask WithFrameworkAssembly(string assemblyName, string frameworkVersion = null)
         {
             FrameworkAssemblies.Add(new FrameworkAssembly(assemblyName, frameworkVersion));
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> WithFile(string src, string target, string exclude = null)
+        public GenerateNuGetSpecTask WithFile(string src, string target, string exclude = null)
         {
             Files.Add(new File(src, target, exclude));
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> WithFile(IFile file, string target, string exclude = null)
+        public GenerateNuGetSpecTask WithFile(IFile file, string target, string exclude = null)
         {
             return WithFile(file.AbsolutePath, target, exclude);
         }
 
-        public GenerateNuGetSpecTask<T> WithContentFiles(FileList files, string target = null)
+        public GenerateNuGetSpecTask WithContentFiles(FileList files, string target = null)
         {
             if (target == null)
             {
@@ -230,7 +230,7 @@
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> WithFiles(IEnumerable<IFile> files, string target, string exclude = null)
+        public GenerateNuGetSpecTask WithFiles(IEnumerable<IFile> files, string target, string exclude = null)
         {
             foreach (var file in files)
             {
@@ -240,13 +240,13 @@
             return this;
         }
 
-        public GenerateNuGetSpecTask<T> ToFile(IFile destination)
+        public GenerateNuGetSpecTask ToFile(IFile destination)
         {
             _destination = destination;
             return this;
         }
 
-        protected override object Execute(TaskContext<T> context, ResultBuilder resultBuilder)
+        protected override object Execute(TaskContext context, ResultBuilder resultBuilder)
         {
             using (var writer = new StreamWriter(Destination.WriteStream))
             {

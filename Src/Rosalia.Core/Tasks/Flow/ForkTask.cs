@@ -7,7 +7,7 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
-    public class ForkTask<T> : AbstractTask<T>, IEnumerable
+    public class ForkTask : AbstractTask, IEnumerable
     {
         private readonly IList<ChildWithCondition> _children = new List<ChildWithCondition>();
 
@@ -16,7 +16,7 @@
             get { return true; }
         }
 
-        public override IEnumerable<ITask<T>> Children
+        public override IEnumerable<ITask> Children
         {
             get { return _children.Select(x => x.Child); }
         }
@@ -26,12 +26,12 @@
             return Children.GetEnumerator();
         }
 
-        public ConditionBuilder<T> If(Predicate<TaskContext<T>> condition)
+        public ConditionBuilder If(Predicate<TaskContext> condition)
         {
-            return new ConditionBuilder<T>(this, condition);
+            return new ConditionBuilder(this, condition);
         }
 
-        public ForkTask<T> Else()
+        public ForkTask Else()
         {
             if (_children.Count == 0)
             {
@@ -44,29 +44,29 @@
             return this;
         }
 
-        public ForkTask<T> Else(ITask<T> child)
+        public ForkTask Else(ITask child)
         {
             return Else()
                 .If(c => true)
                 .Then(child);
         }
 
-        public ForkTask<T> Else(Action<ResultBuilder, TaskContext<T>> payload)
+        public ForkTask Else(Action<ResultBuilder, TaskContext> payload)
         {
-            return Else(new SimpleTask<T>(payload));
+            return Else(new SimpleTask(payload));
         }
 
-        public void Add(Predicate<TaskContext<T>> condition, ITask<T> task)
+        public void Add(Predicate<TaskContext> condition, ITask task)
         {
             _children.Add(new ChildWithCondition(task, condition));
         }
 
-        public void Add(Predicate<TaskContext<T>> condition, Action<ResultBuilder, TaskContext<T>> payload)
+        public void Add(Predicate<TaskContext> condition, Action<ResultBuilder, TaskContext> payload)
         {
-            _children.Add(new ChildWithCondition(new SimpleTask<T>(payload), condition));
+            _children.Add(new ChildWithCondition(new SimpleTask(payload), condition));
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
             foreach (var childWithCondition in _children)
             {
@@ -89,16 +89,16 @@
 
         internal class ChildWithCondition
         {
-            public ChildWithCondition(ITask<T> child, Predicate<TaskContext<T>> condition, bool breakOnComplete = false)
+            public ChildWithCondition(ITask child, Predicate<TaskContext> condition, bool breakOnComplete = false)
             {
                 BreakOnComplete = breakOnComplete;
                 Child = child;
                 Condition = condition;
             }
 
-            public ITask<T> Child { get; private set; }
+            public ITask Child { get; private set; }
 
-            public Predicate<TaskContext<T>> Condition { get; private set; }
+            public Predicate<TaskContext> Condition { get; private set; }
 
             public bool BreakOnComplete { get; set; }
         }

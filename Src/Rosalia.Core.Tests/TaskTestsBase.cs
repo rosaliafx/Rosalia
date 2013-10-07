@@ -10,15 +10,14 @@
     using Rosalia.Core.Tests.Stubs;
 
     [TestFixture]
-    public abstract class TaskTestsBase<T> where T : new()
+    public abstract class TaskTestsBase
     {
-        private Mock<IExecuter<T>> _executer;
+        private Mock<IExecuter> _executer;
         private MessageCollector _logger;
         private Mock<IDirectory> _workDirectory;
-        private T _data;
         private EnvironmentStub _environment;
 
-        public Mock<IExecuter<T>> Executer
+        public Mock<IExecuter> Executer
         {
             get { return _executer; }
         }
@@ -38,26 +37,20 @@
             get { return _environment; }
         }
 
-        protected T Data
+        protected static void AssertWasNotExecuted(Mock<ITask> child)
         {
-            get { return _data; }
+            child.Verify(t => t.Execute(It.IsAny<TaskContext>()), Times.Never());
         }
 
-        protected static void AssertWasNotExecuted(Mock<ITask<T>> child)
+        protected static void AssertWasExecuted(Mock<ITask> child)
         {
-            child.Verify(t => t.Execute(It.IsAny<TaskContext<T>>()), Times.Never());
-        }
-
-        protected static void AssertWasExecuted(Mock<ITask<T>> child)
-        {
-            child.Verify(t => t.Execute(It.IsAny<TaskContext<T>>()), Times.Once());
+            child.Verify(t => t.Execute(It.IsAny<TaskContext>()), Times.Once());
         }
 
         [SetUp]
         public void Init()
         {
-            _data = new T();
-            _executer = new Mock<IExecuter<T>>();
+            _executer = new Mock<IExecuter>();
             _logger = new MessageCollector();
             _workDirectory = new Mock<IDirectory>();
             _environment = new EnvironmentStub
@@ -67,16 +60,16 @@
             };
 
             Executer
-                .Setup(x => x.Execute(It.IsAny<ITask<T>>()))
-                .Returns((ITask<T> task) =>
+                .Setup(x => x.Execute(It.IsAny<ITask>()))
+                .Returns((ITask task) =>
                 {
                     EventHandler<TaskMessageEventArgs> taskOnMessagePosted = (sender, args) => Logger.RegisterMessage(args.Message);
 
                     task.MessagePosted += taskOnMessagePosted;
 
-                    if (task is AbstractTask<T>)
+                    if (task is AbstractTask)
                     {
-                        ((AbstractTask<T>)task).UnswallowedExceptionTypes = new[]
+                        ((AbstractTask)task).UnswallowedExceptionTypes = new[]
                         {
                             typeof(AssertionException),
                             typeof(MockException)
@@ -91,25 +84,24 @@
                 });
         }
 
-        protected Mock<ITask<T>> CreateTask(ResultType resultType = ResultType.Success)
+        protected Mock<ITask> CreateTask(ResultType resultType = ResultType.Success)
         {
-            var mock = new Mock<ITask<T>>();
-            mock.Setup(x => x.Execute(It.IsAny<TaskContext<T>>()))
+            var mock = new Mock<ITask>();
+            mock.Setup(x => x.Execute(It.IsAny<TaskContext>()))
                 .Returns(new ExecutionResult(resultType));
 
             return mock;
         }
 
-        protected TaskContext<T> CreateContext()
+        protected TaskContext CreateContext()
         {
-            return new TaskContext<T>(
-                Data, 
+            return new TaskContext(
                 Executer.Object, 
                 WorkDirectory.Object,
                 Environment);
         }
 
-        protected ExecutionResult Execute(ITask<T> task)
+        protected ExecutionResult Execute(ITask task)
         {
             return CreateContext().Executer.Execute(task);
         }

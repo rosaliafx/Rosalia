@@ -5,7 +5,7 @@
     using Rosalia.Core.Fluent;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public class GeneratePackageTask<T> : NoResultExternalToolTask<T>
+    public class GeneratePackageTask : NoResultExternalToolTask
     {
         public IFile SpecFile { get; set; }
 
@@ -14,12 +14,12 @@
             get { return "nuget"; }
         }
 
-        protected override string GetToolArguments(TaskContext<T> context, ResultBuilder result)
+        protected override string GetToolArguments(TaskContext context, ResultBuilder result)
         {
             return string.Format("pack {0}", SpecFile.Name);
         }
 
-        protected override IDirectory GetToolWorkDirectory(TaskContext<T> context)
+        protected override IDirectory GetToolWorkDirectory(TaskContext context)
         {
             return SpecFile.Directory;
         }

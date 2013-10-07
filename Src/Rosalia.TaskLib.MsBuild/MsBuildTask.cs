@@ -14,7 +14,7 @@
     /// <summary>
     /// This task uses MSBuild.exe command line tool to run a build process.
     /// </summary>
-    public class MsBuildTask<T> : ExternalToolTask<T, object>
+    public class MsBuildTask : ExternalToolTask<object>
     {
         private readonly IList<MsBuildSwitch> _switches = new List<MsBuildSwitch>();
 
@@ -32,41 +32,41 @@
             get { return _switches; }
         }
 
-        public MsBuildTask<T> WithProjectFile(IFile projectFile)
+        public MsBuildTask WithProjectFile(IFile projectFile)
         {
             ProjectFile = projectFile;
             return this;
         }
 
-        public MsBuildTask<T> WithProjectFile(string projectFile)
+        public MsBuildTask WithProjectFile(string projectFile)
         {
             ProjectFile = new DefaultFile(projectFile);
             return this;
         }
 
-        public MsBuildTask<T> WithSwitch(string @switch)
+        public MsBuildTask WithSwitch(string @switch)
         {
             _switches.Add(new MsBuildSwitch(@switch, null));
             return this;
         }
 
-        public MsBuildTask<T> WithSwitch(string @switch, string parameter)
+        public MsBuildTask WithSwitch(string @switch, string parameter)
         {
             _switches.Add(new MsBuildSwitch(@switch, parameter));
             return this;
         }
 
-        public MsBuildTask<T> WithConfiguration(string configuration)
+        public MsBuildTask WithConfiguration(string configuration)
         {
             return WithProperty("Configuration", configuration);
         }
 
-        public MsBuildTask<T> WithProperty(string name, string value)
+        public MsBuildTask WithProperty(string name, string value)
         {
             return WithSwitch(MsBuildSwitch.Property, string.Format("{0}={1}", name, value));
         }
 
-        public MsBuildTask<T> WithBuildTargets(params string[] targets)
+        public MsBuildTask WithBuildTargets(params string[] targets)
         {
             var switchesToRemove = _switches.Where(x => x.Text == MsBuildSwitch.Target).ToArray();
             foreach (var @switch in switchesToRemove)
@@ -77,32 +77,32 @@
             return WithSwitch(MsBuildSwitch.Target, string.Join(",", targets));
         }
 
-        public MsBuildTask<T> WithVerbosity(string level)
+        public MsBuildTask WithVerbosity(string level)
         {
             return WithSwitch(MsBuildSwitch.Verbosity, level);
         }
 
-        public MsBuildTask<T> WithVerbosityQuiet()
+        public MsBuildTask WithVerbosityQuiet()
         {
             return WithVerbosity("q");
         }
 
-        public MsBuildTask<T> WithVerbosityMinimal()
+        public MsBuildTask WithVerbosityMinimal()
         {
             return WithVerbosity("m");
         }
 
-        public MsBuildTask<T> WithVerbosityNormal()
+        public MsBuildTask WithVerbosityNormal()
         {
             return WithVerbosity("n");
         }
 
-        public MsBuildTask<T> WithVerbosityDetailed()
+        public MsBuildTask WithVerbosityDetailed()
         {
             return WithVerbosity("d");
         }
 
-        public MsBuildTask<T> WithVerbosityDiagnostic()
+        public MsBuildTask WithVerbosityDiagnostic()
         {
             return WithVerbosity("diag");
         }
@@ -125,7 +125,7 @@
             detectors.Add(message => message.IndexOf(" warning ") >= 0 ? MessageLevel.Warning : (MessageLevel?)null);
         }
 
-        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext<T> context, ResultBuilder result)
+        protected override IEnumerable<IFile> GetToolPathLookup(TaskContext context, ResultBuilder result)
         {
             try
             {
@@ -140,7 +140,7 @@
             return new IFile[0];
         }
 
-        protected override string GetToolArguments(TaskContext<T> context, ResultBuilder result)
+        protected override string GetToolArguments(TaskContext context, ResultBuilder result)
         {
             var projectFile = GetProjectFile(context, result);
             var switches = string.Join(" ", Switches.Select(s => s.CommandLinePart));
@@ -148,7 +148,7 @@
             return string.Format("{0} {1}", switches, projectFile);
         }
 
-        protected virtual string GetProjectFile(TaskContext<T> context, ResultBuilder result)
+        protected virtual string GetProjectFile(TaskContext context, ResultBuilder result)
         {
             if (ProjectFile != null)
             {

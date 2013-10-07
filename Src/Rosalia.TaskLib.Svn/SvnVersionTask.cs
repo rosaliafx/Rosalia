@@ -7,7 +7,7 @@
     using Rosalia.Core.Fluent;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public class SvnVersionTask<T> : ExternalToolTask<T, SvnVersionResult>
+    public class SvnVersionTask : ExternalToolTask<SvnVersionResult>
     {
         private static readonly char[] AllowedTrailChars = new[] { 'M', 'S', 'P' };
 
@@ -40,7 +40,7 @@
             return null;
         }
 
-        protected override void ProcessOnOutputDataReceived(string message, ResultBuilder result, TaskContext<T> context)
+        protected override void ProcessOnOutputDataReceived(string message, ResultBuilder result, TaskContext context)
         {
             base.ProcessOnOutputDataReceived(message, result, context);
 
@@ -74,7 +74,7 @@
             }
         }
 
-        protected override string GetToolArguments(TaskContext<T> context, ResultBuilder result)
+        protected override string GetToolArguments(TaskContext context, ResultBuilder result)
         {
             var builder = new StringBuilder();
             builder.Append(Commited ? "-c" : string.Empty);

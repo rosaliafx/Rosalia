@@ -6,13 +6,13 @@
     using Rosalia.Core.Tests;
     using Rosalia.Core.Tests.Stubs;
 
-    public class GenerateAssemblyInfoTaskTests : TaskTestsBase<GenerateAssemblyInfoTaskTests.Context>
+    public class GenerateAssemblyInfoTaskTests : TaskTestsBase
     {
         [Test]
         public void Execute_ValidInput_ShouldGenerateOutput()
         {
             var destination = new FileStub();
-            var task = new GenerateAssemblyInfo<Context>()
+            var task = new GenerateAssemblyInfo()
                 .WithAttribute(_ => new AssemblyVersionAttribute("1.0.42"))
                 .WithAttribute(_ => new AssemblyCompanyAttribute("Starfuckers, Inc."))
                 .ToFile(destination);
@@ -38,13 +38,6 @@ using System.Reflection;
 
 [assembly: AssemblyVersionAttribute(""1.0.42"")]
 [assembly: AssemblyCompanyAttribute(""Starfuckers, Inc."")]"));
-        }
-
-        public class Context
-        {
-            public string VersionNumber { get; set; }
-
-            public string CompanyName { get; set; }
         }
     }
 }

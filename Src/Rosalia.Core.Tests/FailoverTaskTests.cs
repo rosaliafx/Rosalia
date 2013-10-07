@@ -3,7 +3,7 @@
     using NUnit.Framework;
     using Rosalia.Core.Tasks.Flow;
 
-    public class FailoverTaskTests : TaskTestsBase<object>
+    public class FailoverTaskTests : TaskTestsBase
     {
         [Test]
         public void Execute_TargetTaskSucceed_ShouldSucceed()
@@ -11,7 +11,7 @@
             var targetTask = CreateTask();
             var failoverTask = CreateTask();
 
-            var task = new FailoverTask<object, ITask<object>, ITask<object>>(targetTask.Object, failoverTask.Object);
+            var task = new FailoverTask<ITask, ITask>(targetTask.Object, failoverTask.Object);
 
             var result = Execute(task);
 
@@ -24,7 +24,7 @@
             var targetTask = CreateTask(ResultType.Failure);
             var failoverTask = CreateTask();
 
-            var task = new FailoverTask<object, ITask<object>, ITask<object>>(targetTask.Object, failoverTask.Object);
+            var task = new FailoverTask<ITask, ITask>(targetTask.Object, failoverTask.Object);
 
             var result = Execute(task);
 
@@ -37,7 +37,7 @@
             var targetTask = CreateTask(ResultType.Failure);
             var failoverTask = CreateTask(ResultType.Failure);
 
-            var task = new FailoverTask<object, ITask<object>, ITask<object>>(targetTask.Object, failoverTask.Object);
+            var task = new FailoverTask<ITask, ITask>(targetTask.Object, failoverTask.Object);
 
             var result = Execute(task);
 
@@ -50,7 +50,7 @@
             var targetTask = CreateTask();
             var failoverTask = CreateTask();
 
-            var task = new FailoverTask<object, ITask<object>, ITask<object>>(targetTask.Object, failoverTask.Object);
+            var task = new FailoverTask<ITask, ITask>(targetTask.Object, failoverTask.Object);
 
             Execute(task);
 
@@ -64,7 +64,7 @@
             var targetTask = CreateTask(ResultType.Failure);
             var failoverTask = CreateTask();
 
-            var task = new FailoverTask<object, ITask<object>, ITask<object>>(targetTask.Object, failoverTask.Object);
+            var task = new FailoverTask<ITask, ITask>(targetTask.Object, failoverTask.Object);
 
             Execute(task);
 

@@ -7,7 +7,7 @@
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Logging;
 
-    public abstract class AbstractTask<T> : ITask<T>
+    public abstract class AbstractTask : ITask
     {
         private string _name;
 
@@ -55,13 +55,13 @@
 
         public abstract bool HasChildren { get; }
         
-        public abstract IEnumerable<ITask<T>> Children { get; }
+        public abstract IEnumerable<ITask> Children { get; }
 
-        public Action<TaskContext<T>> BeforeExecute { get; set; }
+        public Action<TaskContext> BeforeExecute { get; set; }
 
-        public Action<TaskContext<T>> AfterExecute { get; set; }
+        public Action<TaskContext> AfterExecute { get; set; }
 
-        public ExecutionResult Execute(TaskContext<T> context)
+        public ExecutionResult Execute(TaskContext context)
         {
             var resultBuilder = new ResultBuilder(PostMessage);
 
@@ -126,6 +126,6 @@
             }
         }
 
-        protected abstract void Execute(ResultBuilder resultBuilder, TaskContext<T> context);
+        protected abstract void Execute(ResultBuilder resultBuilder, TaskContext context);
     }
 }

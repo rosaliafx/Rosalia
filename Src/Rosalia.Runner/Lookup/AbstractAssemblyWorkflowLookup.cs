@@ -47,7 +47,7 @@
         {
             return new WorkflowInfo
             {
-                ContextType = GetContextType(workflowBaseType),
+                ContextType = workflowBaseType == typeof(object) ? typeof(object) : GetContextType(workflowBaseType),
                 WorkflowType = type
             };
         }
@@ -77,7 +77,12 @@
                 return null;
             }
 
-            return GetBaseWorkflowType(type.GetInterfaces());
+            if (typeof(IWorkflow).IsAssignableFrom(type))
+            {
+                return GetBaseWorkflowType(type.GetInterfaces()) ?? typeof(object);    
+            }
+
+            return null;
         }
 
         protected abstract IEnumerable<Assembly> GetAssemblies(LookupOptions options);

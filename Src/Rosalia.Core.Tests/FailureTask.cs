@@ -5,7 +5,7 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Events;
 
-    public class FailureTask<T> : ITask<T>
+    public class FailureTask : ITask
     {
         public event EventHandler<TaskMessageEventArgs> MessagePosted;
 
@@ -17,13 +17,13 @@
 
         public bool HasChildren { get; set; }
 
-        public IEnumerable<ITask<T>> Children { get; set; }
+        public IEnumerable<ITask> Children { get; set; }
 
-        public Action<TaskContext<T>> BeforeExecute { get; set; }
+        public Action<TaskContext> BeforeExecute { get; set; }
 
-        public Action<TaskContext<T>> AfterExecute { get; set; }
+        public Action<TaskContext> AfterExecute { get; set; }
 
-        public ExecutionResult Execute(TaskContext<T> context)
+        public ExecutionResult Execute(TaskContext context)
         {
             return new ExecutionResult(ResultType.Failure);
         }

@@ -7,26 +7,26 @@
 
     public static class ContextExtensions
     {
-         public static IEnumerable<IDirectory> FindTaskLibDirectories(this TaskContext<BuildRosaliaContext> context)
-         {
-             return
-                 context.Data.Src.Directories.Where(
-                     d =>
-                     d.Name.StartsWith("Rosalia.TaskLib") && (!d.Name.EndsWith("Tests")) &&
-                     d.Name != "Rosalia.TaskLib.Standard");
-         }
-
-        public static IEnumerable<IFile> GetCoreLibFiles(this TaskContext<BuildRosaliaContext> c)
+        public static IEnumerable<IDirectory> FindTaskLibDirectories(this BuildRosaliaContext data)
         {
-            return c.FileSystem.SearchFilesIn(c.Data.RosaliaRunnerConsoleBin)
+            return
+                data.Src.Directories.Where(
+                    d =>
+                    d.Name.StartsWith("Rosalia.TaskLib") && (!d.Name.EndsWith("Tests")) &&
+                    d.Name != "Rosalia.TaskLib.Standard");
+        }
+
+        public static IEnumerable<IFile> GetCoreLibFiles(this TaskContext c, BuildRosaliaContext data)
+        {
+            return c.FileSystem.SearchFilesIn(data.RosaliaRunnerConsoleBin)
                 .IncludeByFileName(
                     "Rosalia.Core.dll",
                     "Rosalia.TaskLib.Standard.dll");
         }
 
-        public static IEnumerable<IFile> GetRunnerDllFiles(this TaskContext<BuildRosaliaContext> c)
+        public static IEnumerable<IFile> GetRunnerDllFiles(this TaskContext c, BuildRosaliaContext data)
         {
-            return c.FileSystem.SearchFilesIn(c.Data.RosaliaRunnerConsoleBin)
+            return c.FileSystem.SearchFilesIn(data.RosaliaRunnerConsoleBin)
                 .IncludeByFileName(
                     "Rosalia.exe",
                     "Rosalia.Core.dll",

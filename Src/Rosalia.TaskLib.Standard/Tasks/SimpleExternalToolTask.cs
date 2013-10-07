@@ -2,7 +2,7 @@
 {
     using Rosalia.Core.Fluent;
 
-    public class SimpleExternalToolTask<TContext> : ExternalToolTask<TContext, object>
+    public class SimpleExternalToolTask : ExternalToolTask<object>
     {
         protected override object CreateResult(int exitCode, ResultBuilder resultBuilder)
         {

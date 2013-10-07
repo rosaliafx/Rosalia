@@ -5,29 +5,29 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
-    public class RepeatTask<T, TTask, TEnumerableItem> : AbstractNodeTask<T> where TTask : ITask<T>
+    public class RepeatTask<TTask, TEnumerableItem> : AbstractNodeTask where TTask : ITask
     {
-        private Func<TaskContext<T>, IEnumerable<TEnumerableItem>> _enumerable;
-        private Func<TaskContext<T>, TEnumerableItem, TTask> _action;
+        private Func<TaskContext, IEnumerable<TEnumerableItem>> _enumerable;
+        private Func<TaskContext, TEnumerableItem, TTask> _action;
 
-        public override IEnumerable<ITask<T>> Children
+        public override IEnumerable<ITask> Children
         {
             get { yield break; }
         }
 
-        public RepeatTask<T, TTask, TEnumerableItem> ForEach(Func<TaskContext<T>, IEnumerable<TEnumerableItem>> enumerable)
+        public RepeatTask<TTask, TEnumerableItem> ForEach(Func<TaskContext, IEnumerable<TEnumerableItem>> enumerable)
         {
             _enumerable = enumerable;
             return this;
         }
 
-        public RepeatTask<T, TTask, TEnumerableItem> Do(Func<TaskContext<T>, TEnumerableItem, TTask> action)
+        public RepeatTask<TTask, TEnumerableItem> Do(Func<TaskContext, TEnumerableItem, TTask> action)
         {
             _action = action;
             return this;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
             if (_action == null)
             {

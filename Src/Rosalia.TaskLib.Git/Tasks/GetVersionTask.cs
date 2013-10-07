@@ -13,7 +13,7 @@
     /// (see http://www.kernel.org/pub/software/scm/git/docs/git-tag.html)
     /// Task returns [VERSION] and the number of commits from the tag. 
     /// </summary>
-    public class GetVersionTask<T> : AbstractGitTask<T, GetVersionOutput>
+    public class GetVersionTask : AbstractGitTask<GetVersionOutput>
     {
         private GetVersionOutput _result;
 
@@ -22,7 +22,7 @@
             return _result;
         }
 
-        protected override void ProcessOnOutputDataReceived(string message, ResultBuilder result, TaskContext<T> context)
+        protected override void ProcessOnOutputDataReceived(string message, ResultBuilder result, TaskContext context)
         {
             base.ProcessOnOutputDataReceived(message, result, context);
 
@@ -38,7 +38,7 @@
             }
         }
 
-        protected override string GetToolArguments(TaskContext<T> context, ResultBuilder result)
+        protected override string GetToolArguments(TaskContext context, ResultBuilder result)
         {
             return "describe --tags --long";
         }

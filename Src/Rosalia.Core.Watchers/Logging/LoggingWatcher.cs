@@ -18,7 +18,7 @@
 
             eventsAware.TaskExecuting += (sender, args) =>
             {
-                _renderer.AppendMessage(level, string.Format("Start executing task {0}", args.CurrentTask.Name), MessageLevel.Info, MessageType.TaskStart);
+                _renderer.AppendMessage(level, string.Format("Start executing task <{0}>", args.CurrentTask.Name), MessageLevel.Info, MessageType.TaskStart);
                 level++;
             };
 
@@ -28,7 +28,7 @@
 
                 _renderer.AppendMessage(
                     level, 
-                    string.Format("Task {0} executed", args.CurrentTask.Name), 
+                    string.Format("Task <{0}> executed", args.CurrentTask.Name), 
                     args.Result.ResultType == ResultType.Success ? MessageLevel.Success : MessageLevel.Error, 
                     MessageType.TaskStart);
             };

@@ -4,15 +4,15 @@
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Tasks;
 
-    public abstract class TaskWithResult<TContext, TResult> : AbstractLeafTask<TContext>
+    public abstract class TaskWithResult<TResult> : AbstractLeafTask
     {
         public TResult Result { get; private set; }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<TContext> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
             Result = Execute(context, resultBuilder);
         }
 
-        protected abstract TResult Execute(TaskContext<TContext> context, ResultBuilder resultBuilder);
+        protected abstract TResult Execute(TaskContext context, ResultBuilder resultBuilder);
     }
 }

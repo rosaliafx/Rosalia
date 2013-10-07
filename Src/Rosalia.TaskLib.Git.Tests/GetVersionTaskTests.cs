@@ -6,12 +6,12 @@
     using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.Standard.Tests;
 
-    public class GetVersionTaskTests : ExternalToolTaskTestsBase<object, GetVersionOutput>
+    public class GetVersionTaskTests : ExternalToolTaskTestsBase<GetVersionOutput>
     {
         [Test]
         public void Execute_ValidOutput_SholdParse()
         {
-            var task = new GetVersionTask<object>();
+            var task = new GetVersionTask();
             AssertProcessOutputParsing(
                 task,
                 "v0.1.0-10-gcaa0502",
@@ -26,7 +26,7 @@
         [Test]
         public void Execute_NoTagOutput_SholdFail()
         {
-            var task = new GetVersionTask<object>();
+            var task = new GetVersionTask();
             AssertProcessOutputParsing(
                 task,
                 "fatal: No names found, cannot describe anything.",

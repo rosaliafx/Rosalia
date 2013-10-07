@@ -3,14 +3,14 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
-    public abstract class AbstractNodeTask<T> : AbstractTask<T>
+    public abstract class AbstractNodeTask : AbstractTask
     {
         public override bool HasChildren
         {
             get { return true; }
         }
 
-        protected ExecutionResult ExecuteChild(ITask<T> child, TaskContext<T> context)
+        protected ExecutionResult ExecuteChild(ITask child, TaskContext context)
         {
             return context.Executer.Execute(child);
         }

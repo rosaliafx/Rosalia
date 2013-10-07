@@ -43,9 +43,10 @@
     <Compile Include="FileSystem\FileSystemExtensions.cs" />
     <Compile Include="FileSystem\FileSystemItem.cs" />
     <Compile Include="Fluent\RepeaterBuilder.cs" />
+    <Compile Include="GenericWorkflow.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
+    <Compile Include="IDataAware.cs" />
     <Compile Include="Logging\Message.cs" />
-    <Compile Include="TaskContainer.cs" />
     <Compile Include="Tasks\AbstractLeafTask.cs" />
     <Compile Include="Tasks\AbstractNodeTask.cs" />
     <Compile Include="Tasks\AbstractTask.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Logging\MessageLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultType.cs" />
+    <Compile Include="Tasks\Flow\GenericSequenceTask.cs" />
     <Compile Include="Tasks\Flow\RepeatTask.cs" />
     <Compile Include="Tasks\SimpleTask.cs" />
     <Compile Include="Watching\IWorkflowWatcher.cs" />

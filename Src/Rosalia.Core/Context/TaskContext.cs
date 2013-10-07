@@ -7,24 +7,23 @@
     /// <summary>
     /// Task execution context.
     /// </summary>
-    public class TaskContext<T>
+    public class TaskContext
     {
         public TaskContext(
-            T data, 
-            IExecuter<T> executer, 
+            IExecuter executer, 
             IDirectory workDirectory, 
             IEnvironment environment)
         {
             Environment = environment;
             WorkDirectory = workDirectory;
-            Data = data;
+            //Data = data;
             Executer = executer;
             FileSystem = new FileSystemHelper();
         }
 
-        public T Data { get; private set; }
+        //public T Data { get; private set; }
 
-        public IExecuter<T> Executer { get; private set; }
+        public IExecuter Executer { get; private set; }
 
         public IDirectory WorkDirectory { get; private set; }
 

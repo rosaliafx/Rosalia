@@ -1,34 +1,33 @@
 ﻿namespace Rosalia.Build.Helpers
 {
     using Rosalia.Core.Context;
-    using Rosalia.TaskLib.NuGet.Input;
     using Rosalia.TaskLib.NuGet.Tasks;
 
     public static class SpecInputExtensions
     {
-        public static GenerateNuGetSpecTask<T> FillCommonProperties<T>(this GenerateNuGetSpecTask<T> input, TaskContext<BuildRosaliaContext> context)
+        public static GenerateNuGetSpecTask FillCommonProperties(this GenerateNuGetSpecTask input, TaskContext context, BuildRosaliaContext data)
         {
             return input
-                .Version(context.Data.Version)
+                .Version(data.Version)
                 .Authors("Eugene Guryanov")
                 .ProjectUrl("http://rosalia-tool.net")
                 .Tags("automation", "build", "msbuild", "nant", "psake");
         }
 
-        public static GenerateNuGetSpecTask<T> FillTaskLibProperties<T>(this GenerateNuGetSpecTask<T> input, TaskContext<BuildRosaliaContext> context, string taskLib)
+        public static GenerateNuGetSpecTask FillTaskLibProperties(this GenerateNuGetSpecTask input, TaskContext context, BuildRosaliaContext data, string taskLib)
         {
-            var projectDirectory = context.Data.Src.GetDirectory(string.Format("Rosalia.TaskLib.{0}", taskLib));
+            var projectDirectory = data.Src.GetDirectory(string.Format("Rosalia.TaskLib.{0}", taskLib));
 
             return input
                 .Id(string.Format("Rosalia.TaskLib.{0}", taskLib))
                 .Description(string.Format("{0} tasks bundle for Rosalia.", taskLib))
                 .Tags("rosalia", "tasklib", taskLib.ToLower())
                 .WithFile(
-                   projectDirectory.GetDirectory("bin").GetDirectory(context.Data.Configuration).GetFile(string.Format("Rosalia.TaskLib.{0}.dll", taskLib)),
+                   projectDirectory.GetDirectory("bin").GetDirectory(data.Configuration).GetFile(string.Format("Rosalia.TaskLib.{0}.dll", taskLib)),
                    "lib")
-                .WithDependency("Rosalia.Core", context.Data.Version)
+                .WithDependency("Rosalia.Core", data.Version)
                 .WithDependenciesFromPackagesConfig(projectDirectory)
-                .ToFile(context.Data.Artifacts.GetFile(string.Format("Rosalia.TaskLib.{0}.nuspec", taskLib)));
+                .ToFile(data.Artifacts.GetFile(string.Format("Rosalia.TaskLib.{0}.nuspec", taskLib)));
         }
     }
 }

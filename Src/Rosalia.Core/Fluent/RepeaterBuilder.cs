@@ -5,18 +5,18 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Tasks.Flow;
 
-    public class RepeaterBuilder<T, TEnumerableItem>
+    public class RepeaterBuilder<TEnumerableItem>
     {
-        private readonly Func<TaskContext<T>, IEnumerable<TEnumerableItem>> _enumerableProvider;
+        private readonly Func<TaskContext, IEnumerable<TEnumerableItem>> _enumerableProvider;
 
-        public RepeaterBuilder(Func<TaskContext<T>, IEnumerable<TEnumerableItem>> enumerableProvider)
+        public RepeaterBuilder(Func<TaskContext, IEnumerable<TEnumerableItem>> enumerableProvider)
         {
             _enumerableProvider = enumerableProvider;
         }
 
-        public ITask<T> Do<TTask>(Func<TaskContext<T>, TEnumerableItem, TTask> taskProvider) where TTask : ITask<T>
+        public ITask Do<TTask>(Func<TaskContext, TEnumerableItem, TTask> taskProvider) where TTask : ITask
         {
-            return new RepeatTask<T, TTask, TEnumerableItem>()
+            return new RepeatTask<TTask, TEnumerableItem>()
                 .ForEach(_enumerableProvider)
                 .Do(taskProvider);
         }

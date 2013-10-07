@@ -5,14 +5,14 @@
     using Rosalia.Core.Tests.Stubs;
     using Rosalia.TaskLib.NuGet.Tasks;
 
-    public class GenerateNuGetSpecTaskTests : TaskTestsBase<object>
+    public class GenerateNuGetSpecTaskTests : TaskTestsBase
     {
         [Test]
         public void Execute_WithMetadata_ShouldRenderMetadata()
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
+            var task = new GenerateNuGetSpecTask()
                 .Id("testId")
                 .ToFile(destination);
 
@@ -32,7 +32,7 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
+            var task = new GenerateNuGetSpecTask()
                 .WithDependency("id1", "v1.0")
                 .WithDependency("id2")
                 .WithDependency("id3", "v1.0", "net40")
@@ -62,7 +62,7 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
+            var task = new GenerateNuGetSpecTask()
                 .WithReference("My.Reference1.dll")
                 .WithReference("My.Reference2.dll")
                 .ToFile(destination);
@@ -86,7 +86,7 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
+            var task = new GenerateNuGetSpecTask()
                 .WithFrameworkAssembly("System.ServiceModel", "net40")
                 .WithFrameworkAssembly("System.SomethingElse")
                 .ToFile(destination);
@@ -110,7 +110,7 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask<object>()
+            var task = new GenerateNuGetSpecTask()
                 .WithFile(@"bin\Debug\*.dll", "lib")
                 .WithFile(@"bin\Debug\*.pdb", "lib")
                 .WithFile(@"tools\**\*.*", null, @"**\*.log")

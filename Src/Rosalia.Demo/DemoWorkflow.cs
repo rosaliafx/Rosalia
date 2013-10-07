@@ -9,7 +9,7 @@
     using Rosalia.TaskLib.Compression;
     using Rosalia.TaskLib.MsBuild;
 
-    public class DemoWorkflow : Workflow<DemoContext>
+    public class DemoWorkflow : Workflow
     {
         public override void RegisterTasks()
         {
@@ -41,7 +41,7 @@
             /* ======================================================================================== */
             Register(
                 name: "Generate assempbly info",
-                task: new GenerateAssemblyInfo<DemoContext>()
+                task: new GenerateAssemblyInfo()
                     .WithAttribute(_ => new AssemblyCompanyAttribute("DemoCompany"))
                     .WithAttribute(_ => new AssemblyFileVersionAttribute("1.0.0.1")),
                 beforeExecute: (context, task) => task
@@ -50,9 +50,9 @@
             /* ======================================================================================== */
             Register(
                 name: "Build main solution",
-                task: new FailoverTask<DemoContext, MsBuildTask<DemoContext>, SimpleTask<DemoContext>>(
-                    new MsBuildTask<DemoContext>(), 
-                    new SimpleTask<DemoContext>((builder, context) =>
+                task: new FailoverTask<MsBuildTask, SimpleTask>(
+                    new MsBuildTask(), 
+                    new SimpleTask((builder, context) =>
                     {
                         builder.AddWarning("Build task fails because the solition file does not exist");                                    
                     })),
@@ -72,7 +72,7 @@
 
             /* ======================================================================================== */
             Register(
-                task: new CompressTask<DemoContext>(),
+                task: new CompressTask(),
                 beforeExecute: (context, task) =>
                 {
                     var allCsFiles = context.FileSystem

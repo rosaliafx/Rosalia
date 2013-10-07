@@ -6,11 +6,10 @@
     using Rosalia.Core.Tests;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public abstract class ExternalToolTaskTestsBase<TContext, TResult> : TaskTestsBase<TContext>
+    public abstract class ExternalToolTaskTestsBase<TResult> : TaskTestsBase
         where TResult : class
-        where TContext : new()
     {
-        public void AssertCommand(ExternalToolTask<TContext, TResult> task, Action<string, string> assertAction)
+        public void AssertCommand(ExternalToolTask<TResult> task, Action<string, string> assertAction)
         {
             var processStarter = new Mock<IProcessStarter>();
             processStarter
@@ -32,7 +31,7 @@
         }
 
         public void AssertProcessOutputParsing(
-            ExternalToolTask<TContext, TResult> task,
+            ExternalToolTask<TResult> task,
             string processOutput,
             Action<TResult, ExecutionResult> assertResultAction)
         {

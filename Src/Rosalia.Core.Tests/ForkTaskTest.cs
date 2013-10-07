@@ -5,14 +5,14 @@
     using NUnit.Framework;
     using Rosalia.Core.Tasks.Flow;
 
-    public class ForkTaskTest : TaskTestsBase<object>
+    public class ForkTaskTest : TaskTestsBase
     {
         [Test]
         public void Execute_ConditionIsTrue_ShouldExecuteChild()
         {
-            var child = new Mock<ITask<object>>();
+            var child = new Mock<ITask>();
 
-            var task = new ForkTask<object>()
+            var task = new ForkTask()
                 .If(c => true)
                 .Then(child.Object);
 
@@ -24,9 +24,9 @@
         [Test]
         public void Execute_ConditionIsFalse_ShouldNotExecuteChild()
         {
-            var child = new Mock<ITask<object>>();
+            var child = new Mock<ITask>();
 
-            var task = new ForkTask<object>()
+            var task = new ForkTask()
                 .If(c => false)
                 .Then(child.Object);
 
@@ -38,9 +38,9 @@
         [Test]
         public void Execute_ChildFailed_ShouldFail()
         {
-            var task = new ForkTask<object>()
+            var task = new ForkTask()
                 .If(c => true)
-                .Then(new FailureTask<object>());
+                .Then(new FailureTask());
 
             var result = Execute(task);
 
@@ -53,7 +53,7 @@
             var child1 = CreateTask();
             var child2 = CreateTask();
 
-            var task = new ForkTask<object>()
+            var task = new ForkTask()
                 .If(c => true).Then(child1.Object)
                 .If(c => true).Then(child2.Object);
 
@@ -69,7 +69,7 @@
             var child1 = CreateTask();
             var child2 = CreateTask();
 
-            var task = new ForkTask<object>()
+            var task = new ForkTask()
                 .If(c => true).Then(child1.Object)
                 .Else().If(c => true).Then(child2.Object);
 
@@ -83,7 +83,7 @@
         [ExpectedException(ExpectedException = typeof(InvalidOperationException))]
         public void Else_NoChildren_ShouldFail()
         {
-            var task = new ForkTask<object>();
+            var task = new ForkTask();
 
             task.Else();
         }

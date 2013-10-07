@@ -1,17 +1,16 @@
 ﻿namespace Rosalia.TaskLib.Svn.Tests
 {
-    using System;
     using NUnit.Framework;
     using Rosalia.Core;
     using Rosalia.TaskLib.Standard.Tests;
 
-    public class SvnVersionTaskTests : ExternalToolTaskTestsBase<object, SvnVersionResult>
+    public class SvnVersionTaskTests : ExternalToolTaskTestsBase<SvnVersionResult>
     {
         [Test]
         public void Execute_CommitedIsTrue_ShouldAddCommitedOption()
         {
             AssertCommand(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "fake",
                     Commited = true
@@ -23,7 +22,7 @@
         public void Execute_CommitedIsFaluse_ShouldNotAddCommitedOption()
         {
             AssertCommand(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "fake",
                     Commited = false
@@ -35,7 +34,7 @@
         public void Execute_WcPath_ShouldAddWcPath()
         {
             AssertCommand(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "WC_PATH"
                 },
@@ -46,7 +45,7 @@
         public void Execute_WcPathAndTrail_ShouldAddWcPathAndTrail()
         {
             AssertCommand(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "WC_PATH",
                     TrailUrl = "TRAIL"
@@ -58,7 +57,7 @@
         public void Execute_WrongOutput_ShouldFail()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "WC_PATH"
                 }, 
@@ -77,7 +76,7 @@
         public void Execute_UnversionedDirectory_ShouldFail()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "WC_PATH"
                 }, 
@@ -95,7 +94,7 @@
         public void Execute_SingleRevisionNumber_ShouldSucceed()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "WC_PATH"
                 }, 
@@ -116,7 +115,7 @@
         public void Execute_RevisionsWithTrailNumber_ShouldSucceed()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "WC_PATH"
                 },
@@ -141,7 +140,7 @@
         public void Execute_RevisionRangeNumber_ShouldSucceed()
         {
             AssertProcessOutputParsing(
-                new SvnVersionTask<object>
+                new SvnVersionTask
                 {
                     WorkingCopyPath = "WC_PATH"
                 }, 

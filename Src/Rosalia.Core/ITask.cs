@@ -4,14 +4,14 @@
     using System.Collections.Generic;
     using Rosalia.Core.Context;
 
-    public interface ITask<TContext> : IExecutable<TContext>, IIdentifiable
+    public interface ITask : IExecutable, IIdentifiable
     {
         bool HasChildren { get; }
 
-        IEnumerable<ITask<TContext>> Children { get; }
+        IEnumerable<ITask> Children { get; }
 
-        Action<TaskContext<TContext>> BeforeExecute { get; set; }
+        Action<TaskContext> BeforeExecute { get; set; }
 
-        Action<TaskContext<TContext>> AfterExecute { get; set; }
+        Action<TaskContext> AfterExecute { get; set; }
     }
 }

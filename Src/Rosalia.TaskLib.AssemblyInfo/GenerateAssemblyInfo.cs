@@ -10,7 +10,7 @@
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Tasks;
 
-    public class GenerateAssemblyInfo<T> : AbstractLeafTask<T>
+    public class GenerateAssemblyInfo : AbstractLeafTask
     {
         private const string Template =
 @"//------------------------------------------------------------------------------
@@ -34,25 +34,25 @@ using {{Name}};
         private readonly IList<Expression<Action<Attribute>>> _attributeExpressions = new List<Expression<Action<Attribute>>>();
         private IFile _destination;
 
-        public GenerateAssemblyInfo<T> WithAttribute(Expression<Action<Attribute>> attribute)
+        public GenerateAssemblyInfo WithAttribute(Expression<Action<Attribute>> attribute)
         {
             _attributeExpressions.Add(attribute);
             return this;
         }
 
-        public GenerateAssemblyInfo<T> ToFile(string destination)
+        public GenerateAssemblyInfo ToFile(string destination)
         {
             _destination = new DefaultFile(destination);
             return this;
         }
 
-        public GenerateAssemblyInfo<T> ToFile(IFile destination)
+        public GenerateAssemblyInfo ToFile(IFile destination)
         {
             _destination = destination;
             return this;
         }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<T> context)
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
             if (_destination == null)
             {

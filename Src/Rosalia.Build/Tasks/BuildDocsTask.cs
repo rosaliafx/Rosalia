@@ -10,7 +10,7 @@
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Tasks;
 
-    public class BuildDocsTask : AbstractLeafTask<BuildRosaliaContext>
+    public class BuildDocsTask : AbstractLeafTask
     {
         public BuildDocsTask()
         {
@@ -25,13 +25,15 @@
 
         public ITopicComposer TopicComposer { get; set; }
 
-        protected override void Execute(ResultBuilder resultBuilder, TaskContext<BuildRosaliaContext> context)
+        public IDirectory SourceDirectory { get; set; }
+
+        protected override void Execute(ResultBuilder resultBuilder, TaskContext context)
         {
-            var docHoshtProject = context.Data.Src.GetDirectory("Rosalia.Docs");
+            var docHoshtProject = SourceDirectory.GetDirectory("Rosalia.Docs");
             var docTargetDir = docHoshtProject.GetDirectory("content");
             var partialsDir = docTargetDir.GetDirectory("partial");
 
-            var directories = context.Data.Src.Directories.Where(d => d.Name.StartsWith("Rosalia."));
+            var directories = SourceDirectory.Directories.Where(d => d.Name.StartsWith("Rosalia."));
             var descriptors = TopicSearcher.Find(directories);
             var topics = TopicComposer.Compose(descriptors, partialsDir).ToList();
 
