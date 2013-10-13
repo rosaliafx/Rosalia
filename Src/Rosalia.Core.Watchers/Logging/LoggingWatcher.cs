@@ -33,7 +33,7 @@
                     MessageType.TaskStart);
             };
 
-            eventsAware.MessagePosted += (sender, args) =>
+            eventsAware.WorkflowMessagePosted += (sender, args) =>
             {
                 _renderer.AppendMessage(level, args.Message.Text, args.Message.Level, MessageType.TaskMessage);
             };

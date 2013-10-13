@@ -156,12 +156,10 @@
                     Assert.That(svnVersionResult.Max.Number, Is.EqualTo(42));
                 });
         }
-//
-//        private void AssertCommand(SvnVersionInput input, Action<string, string> assertAction)
-//        {
-//            var task = new SvnVersionTask<object>(context => input);
-//
-//            AssertCommand(task, assertAction);
-//        }
+
+        protected override Standard.Tasks.ExternalToolTask<SvnVersionResult> CreateTask()
+        {
+            return new SvnVersionTask();
+        }
     }
 }

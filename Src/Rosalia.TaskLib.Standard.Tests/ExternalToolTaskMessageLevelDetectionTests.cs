@@ -29,6 +29,11 @@
                     });
         }
 
+        protected override ExternalToolTask<object> CreateTask()
+        {
+            return new Task(null);
+        }
+
         internal class Task : ExternalToolTask<object>
         {
             private readonly IList<Func<string, MessageLevel?>> _messageLevelDetectors;

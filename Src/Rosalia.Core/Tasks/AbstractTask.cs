@@ -57,22 +57,27 @@
         
         public abstract IEnumerable<ITask> Children { get; }
 
-        public Action<TaskContext> BeforeExecute { get; set; }
+        public Action<TaskContext, ResultBuilder> BeforeExecute { get; set; }
 
         public Action<TaskContext> AfterExecute { get; set; }
 
         public ExecutionResult Execute(TaskContext context)
         {
-            var resultBuilder = new ResultBuilder(PostMessage);
+            var result = new ResultBuilder(PostMessage);
 
             try
             {
                 if (BeforeExecute != null)
                 {
-                    BeforeExecute(context);
+                    BeforeExecute(context, result);
                 }
 
-                Execute(resultBuilder, context);
+                if (result.HasResult)
+                {
+                    return result;
+                }
+
+                Execute(result, context);
 
                 if (AfterExecute != null)
                 {
@@ -81,10 +86,13 @@
             }
             catch (Exception ex)
             {
-                HandleExecutionException(ex, resultBuilder);
+                HandleExecutionException(ex, result);
             }
 
-            ExecutionResult result = resultBuilder;
+            if (!result.HasResult)
+            {
+                result.Succeed();
+            }
 
             return result;
         }

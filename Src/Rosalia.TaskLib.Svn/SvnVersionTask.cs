@@ -72,6 +72,8 @@
                     throw new Exception(string.Format("Unexpected tool output: {0}", versionString), ex);
                 }
             }
+
+            result.Succeed();
         }
 
         protected override string GetToolArguments(TaskContext context, ResultBuilder result)

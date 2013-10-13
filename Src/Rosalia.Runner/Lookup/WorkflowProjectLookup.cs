@@ -29,7 +29,7 @@
 
             // not a good thing -- storing messages in memory
             var messages = new List<Message>();
-            buildWorkflow.MessagePosted += (sender, args) => messages.Add(args.Message);
+            buildWorkflow.WorkflowMessagePosted += (sender, args) => messages.Add(args.Message);
 
             var buildResult = buildWorkflow.Execute(options.RunningOptions);
 

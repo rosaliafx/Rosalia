@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractTaskTestsBase.cs" />
     <Compile Include="FailoverTaskTests.cs" />
     <Compile Include="FailureTask.cs" />
     <Compile Include="FileSystem\FileSystemHelperTests.cs" />

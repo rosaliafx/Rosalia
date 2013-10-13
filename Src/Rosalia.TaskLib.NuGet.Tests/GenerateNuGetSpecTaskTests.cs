@@ -5,18 +5,16 @@
     using Rosalia.Core.Tests.Stubs;
     using Rosalia.TaskLib.NuGet.Tasks;
 
-    public class GenerateNuGetSpecTaskTests : TaskTestsBase
+    public class GenerateNuGetSpecTaskTests : AbstractTaskTestsBase<GenerateNuGetSpecTask>
     {
         [Test]
         public void Execute_WithMetadata_ShouldRenderMetadata()
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask()
-                .Id("testId")
-                .ToFile(destination);
+            Task.Id("testId").ToFile(destination);
 
-            Execute(task);
+            Execute(Task);
 
             Assert.That(destination.Content, Is.StringContaining(
 @"<?xml version='1.0' encoding='utf-8'?>
@@ -32,13 +30,13 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask()
+            Task
                 .WithDependency("id1", "v1.0")
                 .WithDependency("id2")
                 .WithDependency("id3", "v1.0", "net40")
                 .ToFile(destination);
 
-            Execute(task);
+            Execute(Task);
 
             Assert.That(destination.Content.Trim(), Is.EqualTo(
 @"<?xml version='1.0' encoding='utf-8'?>
@@ -62,12 +60,12 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask()
+            Task
                 .WithReference("My.Reference1.dll")
                 .WithReference("My.Reference2.dll")
                 .ToFile(destination);
 
-            Execute(task);
+            Execute(Task);
 
             Assert.That(destination.Content.Trim(), Is.EqualTo(
 @"<?xml version='1.0' encoding='utf-8'?>
@@ -86,12 +84,12 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask()
+            Task
                 .WithFrameworkAssembly("System.ServiceModel", "net40")
                 .WithFrameworkAssembly("System.SomethingElse")
                 .ToFile(destination);
 
-            Execute(task);
+            Execute(Task);
 
             Assert.That(destination.Content.Trim(), Is.EqualTo(
 @"<?xml version='1.0' encoding='utf-8'?>
@@ -110,13 +108,13 @@
         {
             var destination = new FileStub();
 
-            var task = new GenerateNuGetSpecTask()
+            Task
                 .WithFile(@"bin\Debug\*.dll", "lib")
                 .WithFile(@"bin\Debug\*.pdb", "lib")
                 .WithFile(@"tools\**\*.*", null, @"**\*.log")
                 .ToFile(destination);
 
-            Execute(task);
+            Execute(Task);
 
             Assert.That(destination.Content.Trim(), Is.EqualTo(
 @"<?xml version='1.0' encoding='utf-8'?>

@@ -6,7 +6,7 @@
     using Rosalia.Core.Tests;
     using Rosalia.TaskLib.Standard.Tasks;
 
-    public abstract class ExternalToolTaskTestsBase<TResult> : TaskTestsBase
+    public abstract class ExternalToolTaskTestsBase<TResult> : AbstractTaskTestsBase<ExternalToolTask<TResult>> 
         where TResult : class
     {
         public void AssertCommand(ExternalToolTask<TResult> task, Action<string, string> assertAction)

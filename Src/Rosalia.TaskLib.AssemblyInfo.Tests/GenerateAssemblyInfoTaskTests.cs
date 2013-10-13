@@ -6,7 +6,7 @@
     using Rosalia.Core.Tests;
     using Rosalia.Core.Tests.Stubs;
 
-    public class GenerateAssemblyInfoTaskTests : TaskTestsBase
+    public class GenerateAssemblyInfoTaskTests : AbstractTaskTestsBase<GenerateAssemblyInfo>
     {
         [Test]
         public void Execute_ValidInput_ShouldGenerateOutput()

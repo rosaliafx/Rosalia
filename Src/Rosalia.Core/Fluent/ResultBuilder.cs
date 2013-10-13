@@ -6,7 +6,7 @@
     public class ResultBuilder
     {
         private readonly Action<Message> _messageProcessor;
-        private ResultType _resultType = ResultType.Success;
+        private ResultType? _resultType;
 
         public ResultBuilder(Action<Message> messageProcessor)
         {
@@ -18,12 +18,25 @@
             get { return _resultType == ResultType.Success; }
         }
 
-        private ResultType ResultType
+        public bool HasResult
         {
-            get { return _resultType; }
+            get { return _resultType.HasValue; }
         }
 
         public bool HasErrors { get; private set; }
+
+        private ResultType ResultType
+        {
+            get
+            {
+                if (!_resultType.HasValue)
+                {
+                    throw new Exception("Result type was not set");
+                }
+
+                return _resultType.Value;
+            }
+        }
 
         public static implicit operator ExecutionResult(ResultBuilder builder)
         {

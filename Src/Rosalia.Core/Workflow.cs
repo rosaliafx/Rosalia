@@ -8,11 +8,9 @@
     using Rosalia.Core.Fluent;
     using Rosalia.Core.Tasks.Flow;
 
-    public abstract class Workflow : IWorkflow, IExecuter
+    public abstract class Workflow : AbstractSequenceTask, IWorkflow, IExecuter
     {
         private object _data;
-
-        private AbstractSequenceTask _rootTask;
 
         private WorkflowContext _workflowContext;
 
@@ -20,7 +18,7 @@
 
         public event EventHandler WorkflowExecuted;
 
-        public event EventHandler<TaskMessageEventArgs> MessagePosted;
+        public event EventHandler<TaskMessageEventArgs> WorkflowMessagePosted;
 
         public event EventHandler<TaskEventArgs> TaskExecuting;
 
@@ -28,21 +26,7 @@
 
         public int TasksCount
         {
-            get { return SubtasksCount(_rootTask) + 1; }
-        }
-
-        public void Register(Action<ResultBuilder, TaskContext> task, string name = null)
-        {
-            _rootTask.Register(task, name);
-        }
-
-        public void Register<TTask>(
-            TTask task, 
-            Action<TaskContext, TTask> beforeExecute = null,
-            Action<TaskContext, TTask> afterExecute = null, 
-            string name = null) where TTask : ITask
-        {
-            _rootTask.Register(task, beforeExecute, afterExecute, name);
+            get { return SubtasksCount(this) + 1; }
         }
 
         public virtual ExecutionResult Execute(object inputData)
@@ -51,7 +35,7 @@
 
             OnWorkflowExecuting(CreateContext());
 
-            var executionResult = Execute(_rootTask);
+            var executionResult = Execute(this);
 
             OnWorkflowExecuted();
 
@@ -61,8 +45,6 @@
         public virtual void Init(WorkflowContext context)
         {
             _workflowContext = context;
-
-            _rootTask = new SequenceTask();
 
             RegisterTasks();
         }
@@ -89,16 +71,11 @@
             return result;
         }
 
-        /// <summary>
-        /// Registers workflow tasks. Use Name, Task and TaskAction properties.
-        /// </summary>
-        public abstract void RegisterTasks();
-
         protected virtual void OnTaskMessagePosted(object sender, TaskMessageEventArgs e)
         {
-            if (MessagePosted != null)
+            if (WorkflowMessagePosted != null)
             {
-                MessagePosted(this, new TaskMessageEventArgs(e.Message, e.Source));
+                WorkflowMessagePosted(this, new TaskMessageEventArgs(e.Message, e.Source));
             }
         }
 
@@ -152,14 +129,13 @@
         {
             if (WorkflowExecuting != null)
             {
-                WorkflowExecuting(this, new WorkflowStartEventArgs(_rootTask));
+                WorkflowExecuting(this, new WorkflowStartEventArgs(/*_rootTask*/ this));
             }
         }
 
         private TaskContext CreateContext()
         {
             return new TaskContext(
-                /*_inputData, */
                 this, 
                 _workflowContext.WorkDirectory,
                 _workflowContext.Environment);

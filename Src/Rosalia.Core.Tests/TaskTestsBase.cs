@@ -22,6 +22,11 @@
             get { return _executer; }
         }
 
+        public EnvironmentStub Environment
+        {
+            get { return _environment; }
+        }
+
         protected MessageCollector Logger
         {
             get { return _logger; }
@@ -30,11 +35,6 @@
         protected Mock<IDirectory> WorkDirectory
         {
             get { return _workDirectory; }
-        }
-
-        public EnvironmentStub Environment
-        {
-            get { return _environment; }
         }
 
         protected static void AssertWasNotExecuted(Mock<ITask> child)
@@ -82,6 +82,12 @@
 
                     return result;
                 });
+
+            InternalInit();
+        }
+
+        protected virtual void InternalInit()
+        {
         }
 
         protected Mock<ITask> CreateTask(ResultType resultType = ResultType.Success)

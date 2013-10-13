@@ -49,7 +49,7 @@
         {
             if (beforeExecute != null)
             {
-                task.BeforeExecute = context => beforeExecute.Invoke(context, task);
+                task.BeforeExecute = (context, result) => beforeExecute.Invoke(context, task);
             }
 
             if (afterExecute != null)

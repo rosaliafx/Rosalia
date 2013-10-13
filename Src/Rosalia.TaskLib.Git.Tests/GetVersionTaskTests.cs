@@ -37,5 +37,10 @@
                         Assert.That(Logger.LastError.Text, Is.EqualTo("fatal: No names found, cannot describe anything."));
                     });
         }
+
+        protected override Standard.Tasks.ExternalToolTask<GetVersionOutput> CreateTask()
+        {
+            return new GetVersionTask();
+        }
     }
 }

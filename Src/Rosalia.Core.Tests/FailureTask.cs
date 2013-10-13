@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Rosalia.Core.Context;
     using Rosalia.Core.Events;
+    using Rosalia.Core.Fluent;
 
     public class FailureTask : ITask
     {
@@ -19,7 +20,7 @@
 
         public IEnumerable<ITask> Children { get; set; }
 
-        public Action<TaskContext> BeforeExecute { get; set; }
+        public Action<TaskContext, ResultBuilder> BeforeExecute { get; set; }
 
         public Action<TaskContext> AfterExecute { get; set; }
 
