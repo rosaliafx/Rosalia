@@ -60,7 +60,7 @@
     <Compile Include="Stubs\FileStub.cs" />
     <Compile Include="SuccessTask.cs" />
     <Compile Include="TaskTestsBase.cs" />
-    <Compile Include="SequenceTaskTests.cs" />
+    <Compile Include="AbstractSequenceTaskTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

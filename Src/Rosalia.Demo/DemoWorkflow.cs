@@ -16,20 +16,20 @@
             /* ======================================================================================== */
             Register(
                 name: "Print simple info message",
-                task: (result, context) => result.AddInfo("Start executing the demo workflow"));
+                task: () => Result.AddInfo("Start executing the demo workflow"));
             
             /* ======================================================================================== */
             Register(
                 name: "Copy actual artifacts to tools",
-                task: (builder, context) =>
+                task: () =>
                 {
-                    var toolsDirectory = context.WorkDirectory
+                    var toolsDirectory = Context.WorkDirectory
                         .Parent
                         .Parent
                         .GetDirectory("Tools")
                         .GetDirectory("Rosalia");
 
-                    context.WorkDirectory
+                    Context.WorkDirectory
                         .Parent
                         .GetDirectory("Rosalia.Runner.Console")
                         .GetDirectory(@"bin\Debug")
@@ -44,8 +44,8 @@
                 task: new GenerateAssemblyInfo()
                     .WithAttribute(_ => new AssemblyCompanyAttribute("DemoCompany"))
                     .WithAttribute(_ => new AssemblyFileVersionAttribute("1.0.0.1")),
-                beforeExecute: (context, task) => task
-                    .ToFile(context.WorkDirectory.GetFile("CommonAssemblyInfo.cs")));
+                beforeExecute: task => task
+                    .ToFile(Context.WorkDirectory.GetFile("CommonAssemblyInfo.cs")));
 
             /* ======================================================================================== */
             Register(
@@ -56,27 +56,27 @@
                     {
                         builder.AddWarning("Build task fails because the solition file does not exist");                                    
                     })),
-                beforeExecute: (context, task) => task.Target.WithProjectFile("NoFile.sln"));
+                beforeExecute: task => task.Target.WithProjectFile("NoFile.sln"));
 
             /* ======================================================================================== */
             Register(
                 name: "List current directory files",
-                task: (builder, context) =>
+                task: () =>
                 {
-                    builder.AddInfo("This task lists current directory files");
-                    foreach (var file in context.WorkDirectory.Files)
+                    Result.AddInfo("This task lists current directory files");
+                    foreach (var file in Context.WorkDirectory.Files)
                     {
-                        builder.AddInfo(file.AbsolutePath);
+                        Result.AddInfo(file.AbsolutePath);
                     }
                 });
 
             /* ======================================================================================== */
             Register(
                 task: new CompressTask(),
-                beforeExecute: (context, task) =>
+                beforeExecute: task =>
                 {
-                    var allCsFiles = context.FileSystem
-                        .SearchFilesIn(context.WorkDirectory)
+                    var allCsFiles = Context.FileSystem
+                        .SearchFilesIn(Context.WorkDirectory)
                         .IncludeByExtension(".cs");
 
                     foreach (var file in allCsFiles.All)
@@ -84,23 +84,23 @@
                         task.WithFile(Path.GetFileName(file.AbsolutePath), file);
                     }
 
-                    task.ToFile(context.WorkDirectory.GetFile("cs_files.zip"));
+                    task.ToFile(Context.WorkDirectory.GetFile("cs_files.zip"));
                 });
 
             /* ======================================================================================== */
 
             Register(
                 name: "Test sequence",
-                task: Sequence()
+                task: new SequenceTask()
                     .Register(
                         name: "sub 1",
-                        task: (builder, context) => builder.AddInfo("sub 1 info"))
+                        task: () => Result.AddInfo("sub 1 info"))
                     .Register(
                         name: "sub 2",
-                        task: (builder, context) => builder.AddWarning("sub 2 info"))
+                        task: () => Result.AddWarning("sub 2 info"))
                     .Register(
                         name: "sub 3",
-                        task: (builder, context) => builder.AddInfo("sub 3 info")));
+                        task: () => Result.AddInfo("sub 3 info")));
         }
     }
 }

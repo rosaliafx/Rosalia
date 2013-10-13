@@ -102,20 +102,15 @@
             }
         }
 
-        protected SequenceTask Sequence(params ITask[] children)
-        {
-            return new SequenceTask(children);
-        }
+//        protected ConditionBuilder If(Predicate<TaskContext> condition)
+//        {
+//            return new ConditionBuilder(new ForkTask(), condition);
+//        }
 
-        protected ConditionBuilder If(Predicate<TaskContext> condition)
-        {
-            return new ConditionBuilder(new ForkTask(), condition);
-        }
-
-        protected RepeaterBuilder<TEnumerableItem> ForEach<TEnumerableItem>(Func<TaskContext, IEnumerable<TEnumerableItem>> enumerableProvider)
-        {
-            return new RepeaterBuilder<TEnumerableItem>(enumerableProvider);
-        }
+//        protected RepeaterBuilder<TEnumerableItem> ForEach<TEnumerableItem>(Func<TaskContext, IEnumerable<TEnumerableItem>> enumerableProvider)
+//        {
+//            return new RepeaterBuilder<TEnumerableItem>(enumerableProvider);
+//        }
 
         protected virtual void OnWorkflowExecuted()
         {

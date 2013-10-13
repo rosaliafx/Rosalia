@@ -9,7 +9,7 @@
         {
             Register(
                 task: new MsBuildTask(),
-                beforeExecute: (context, task) => task
+                beforeExecute: task => task
                     .WithProjectFile(Data.InputFile)
                     .WithConfiguration(Configuration()));
         }

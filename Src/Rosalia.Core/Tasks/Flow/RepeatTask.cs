@@ -5,23 +5,23 @@
     using Rosalia.Core.Context;
     using Rosalia.Core.Fluent;
 
-    public class RepeatTask<TTask, TEnumerableItem> : AbstractNodeTask where TTask : ITask
+    public class RepeatTask<TEnumerableItem> : AbstractNodeTask
     {
         private Func<TaskContext, IEnumerable<TEnumerableItem>> _enumerable;
-        private Func<TaskContext, TEnumerableItem, TTask> _action;
+        private Func<TaskContext, TEnumerableItem, ITask> _action;
 
         public override IEnumerable<ITask> Children
         {
             get { yield break; }
         }
 
-        public RepeatTask<TTask, TEnumerableItem> ForEach(Func<TaskContext, IEnumerable<TEnumerableItem>> enumerable)
+        public RepeatTask<TEnumerableItem> ForEach(Func<TaskContext, IEnumerable<TEnumerableItem>> enumerable)
         {
             _enumerable = enumerable;
             return this;
         }
 
-        public RepeatTask<TTask, TEnumerableItem> Do(Func<TaskContext, TEnumerableItem, TTask> action)
+        public RepeatTask<TEnumerableItem> Do(Func<TaskContext, TEnumerableItem, ITask> action)
         {
             _action = action;
             return this;

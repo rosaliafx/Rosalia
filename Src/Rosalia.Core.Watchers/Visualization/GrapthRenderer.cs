@@ -32,7 +32,7 @@
             var task = ((Composite) item.Data).Task;
 
             //if (IsInstanceOfGenericType(typeof(SequenceTask<>), task))
-            if (task is SequenceTask)
+            if (task is AbstractSequenceTask)
             {
                 return LayoutType.Vertical;
             }

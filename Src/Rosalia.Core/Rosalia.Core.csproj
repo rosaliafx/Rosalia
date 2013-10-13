@@ -42,7 +42,6 @@
     <Compile Include="FileSystem\ExtensionInfo.cs" />
     <Compile Include="FileSystem\FileSystemExtensions.cs" />
     <Compile Include="FileSystem\FileSystemItem.cs" />
-    <Compile Include="Fluent\RepeaterBuilder.cs" />
     <Compile Include="GenericWorkflow.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="IDataAware.cs" />
@@ -83,10 +82,10 @@
     <Compile Include="ResultType.cs" />
     <Compile Include="Tasks\Flow\GenericSequenceTask.cs" />
     <Compile Include="Tasks\Flow\RepeatTask.cs" />
+    <Compile Include="Tasks\Flow\SequenceTask.cs" />
     <Compile Include="Tasks\SimpleTask.cs" />
     <Compile Include="Watching\IWorkflowWatcher.cs" />
     <Compile Include="Workflow.cs" />
-    <Compile Include="Tasks\Flow\SequenceTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\intro.md" />

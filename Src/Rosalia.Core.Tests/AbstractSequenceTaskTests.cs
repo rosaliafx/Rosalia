@@ -5,13 +5,13 @@
     using NUnit.Framework;
     using Rosalia.Core.Tasks.Flow;
 
-    public class SequenceTaskTests : TaskTestsBase
+    public class AbstractSequenceTaskTests : TaskTestsBase
     {
         [Test]
         public void Execute_SuccessfulSingleTask_ShouldSucceed()
         {
             var context = CreateContext();
-            var task = new SequenceTask(new SuccessTask());
+            var task = new Sequence(new SuccessTask());
 
             var result = task.Execute(context);
 
@@ -23,7 +23,7 @@
         {
             var context = CreateContext();
             var child = new SuccessTask();
-            var task = new SequenceTask(child);
+            var task = new Sequence(child);
 
             task.Execute(context);
 
@@ -34,7 +34,7 @@
         public void Execute_HasFailureTask_ShouldFail()
         {
             var context = CreateContext();
-            var task = new SequenceTask(new SuccessTask(), new FailureTask());
+            var task = new Sequence(new SuccessTask(), new FailureTask());
 
             var result = task.Execute(context);
 
@@ -68,7 +68,7 @@
             allChildren.Add(failureChild);
             allChildren.AddRange(afterFailureTask);
 
-            var task = new SequenceTask(allChildren);
+            var task = new Sequence(allChildren);
 
             task.Execute(context);
 
@@ -84,6 +84,25 @@
             {
                 var child = afterFailureChild;
                 Executer.Verify(e => e.Execute(child), Times.Never());
+            }
+        }
+
+        internal class Sequence : AbstractSequenceTask
+        {
+            public Sequence()
+            {
+            }
+
+            public Sequence(params ITask[] children) : base(children)
+            {
+            }
+
+            public Sequence(IList<ITask> children) : base(children)
+            {
+            }
+
+            public override void RegisterTasks()
+            {
             }
         }
     }
