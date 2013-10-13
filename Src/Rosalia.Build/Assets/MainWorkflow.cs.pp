@@ -5,23 +5,21 @@
     using Rosalia.Core.FileSystem;
     using Rosalia.Core.Logging;
 
-    public class MainWorkflow : Workflow<Context>
+    public class MainWorkflow : Workflow
     {
-        public override ITask<Context> RootTask
+        public override void RegisterTasks()
         {
-            get
-            {
-                return Sequence(
-                    //// Task 1
-                    Task((result, c) => result.AddInfo("Hello...")),
+            Register(
+                name: "Task 1",
+                task: () => {
+                    Result.AddInfo("Hello...")
+                });
 
-                    //// Task 2
-                    Task((result, c) => c.Data.Message = "...world"),
-
-                    //// Task 3
-                    Task((result, c) => result.AddInfo(c.Data.Message))
-                );
-            }
+            Register(
+                name: "Task 2",
+                task: () => {
+                    Result.AddInfo("...world")
+                });
         }
     }
 }

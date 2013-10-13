@@ -89,19 +89,19 @@
             Register(
                 name: "Generate spec for Task Libs",
                 task: ForEach(
-                    c => Data.FindTaskLibDirectories(),
-                    (context, directory) => Register(
+                    () => Data.FindTaskLibDirectories(),
+                    directory => Register(
                         name: "Generate spec for directory " + directory.Name,
                         task: new GenerateNuGetSpecTask()
-                            .FillCommonProperties(context, Data)
-                            .FillTaskLibProperties(context, Data, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))));
+                            .FillCommonProperties(Context, Data)
+                            .FillTaskLibProperties(Context, Data, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))));
 
             /* ======================================================================================== */
             Register(
                 name: "Generate NuGet packages",
                 task: ForEach(
-                    c => Data.Artifacts.Files.IncludeByExtension(".nuspec"),
-                    (context, file) => Register(
+                    () => Data.Artifacts.Files.IncludeByExtension(".nuspec"),
+                    file => Register(
                         name: "Generate nuget package " + file.Name,
                         task: new GeneratePackageTask
                         {

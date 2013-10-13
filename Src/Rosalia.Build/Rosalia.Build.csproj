@@ -105,7 +105,6 @@
     <Compile Include="DocSupport\TopicDescriptor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Context.cs.pp" />
     <None Include="Assets\Install.ps1" />
     <None Include="Assets\MainWorkflow.cs.pp" />
     <None Include="packages.config" />
