@@ -50,5 +50,16 @@
 
             Assert.That(messages.Count, Is.EqualTo(1));
         }
+
+        [Test]
+        public void AddMessage_TextWithSpecialChars_ShouldNotFail()
+        {
+            var messages = new List<Message>();
+            var builder = new ResultBuilder(messages.Add);
+
+            builder.AddMessage(MessageLevel.Info, "{0}");
+
+            Assert.That(messages.Count, Is.EqualTo(1));
+        }
     }
 }

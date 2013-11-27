@@ -50,7 +50,10 @@
                 HasErrors = true;
             }
 
-            var formattedText = string.Format(text, args);
+            var formattedText = args.Length > 0 ?
+                string.Format(text, args) :
+                text;
+
             _messageProcessor.Invoke(new Message(formattedText, level));
             return this;
         }
