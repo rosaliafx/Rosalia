@@ -11,9 +11,9 @@ namespace Rosalia.Core.Engine.Execution
 
     public class ParallelExecutionStrategy : IExecutionStrategy
     {
-        public ITaskResult<IResultsStorage> Execute(Layer[] layers, ILogRenderer logRenderer)
+        public ITaskResult<IResultsStorage> Execute(Layer[] layers, TaskContext initialContext)
         {
-            var context = new TaskContext(this, logRenderer);
+            var context = initialContext;
             FailureResult<IResultsStorage> failure = null;
 
             foreach (var layer in layers)

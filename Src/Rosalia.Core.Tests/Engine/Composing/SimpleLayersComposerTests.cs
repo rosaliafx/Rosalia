@@ -1,5 +1,6 @@
 ﻿namespace Rosalia.Core.Tests.Engine.Composing
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using NUnit.Framework;
@@ -81,17 +82,19 @@
         }
 
         [Test]
-        [ExpectedException]
         public void Compose_CircularReference_ShouldThrowException()
         {
-            var map = new TaskMap();
-            var idPrimary = new Identity();
-            var idSecondary = new Identity();
+            Assert.Throws<Exception>(() =>
+            {
+                var map = new TaskMap();
+                var idPrimary = new Identity();
+                var idSecondary = new Identity();
 
-            map[idPrimary] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idSecondary));
-            map[idSecondary] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idPrimary));
+                map[idPrimary] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idSecondary));
+                map[idSecondary] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idPrimary));
 
-            ComposeWithAllTasksAsFilter(map);
+                ComposeWithAllTasksAsFilter(map);
+            });
         }
 
         private static FuncTask<object> FakeFlowable()

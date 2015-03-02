@@ -11,6 +11,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TestingSupport", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.FileSystem", "Rosalia.FileSystem\Rosalia.FileSystem.csproj", "{38B399DC-A34C-440B-8DAD-7F0A280F9531}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Standard", "Rosalia.TaskLib.Standard\Rosalia.TaskLib.Standard.csproj", "{F545724B-32D0-461A-8AE8-2C0F4E62F79D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskLib", "TaskLib", "{BDB53CC3-71A7-4314-B39D-D655E6E4237B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3B86141B-0ABC-4CDE-8AEB-039B0D610B63}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskLib", "TaskLib", "{40CC4A8D-A5F5-4988-BB2B-5F11889200C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Standard.Tests", "Rosalia.TaskLib.Standard.Tests\Rosalia.TaskLib.Standard.Tests.csproj", "{22577F7C-B35F-4992-A574-1758B3C98251}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +43,21 @@ Global
 		{38B399DC-A34C-440B-8DAD-7F0A280F9531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38B399DC-A34C-440B-8DAD-7F0A280F9531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38B399DC-A34C-440B-8DAD-7F0A280F9531}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F545724B-32D0-461A-8AE8-2C0F4E62F79D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F545724B-32D0-461A-8AE8-2C0F4E62F79D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F545724B-32D0-461A-8AE8-2C0F4E62F79D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F545724B-32D0-461A-8AE8-2C0F4E62F79D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22577F7C-B35F-4992-A574-1758B3C98251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22577F7C-B35F-4992-A574-1758B3C98251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22577F7C-B35F-4992-A574-1758B3C98251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22577F7C-B35F-4992-A574-1758B3C98251}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F545724B-32D0-461A-8AE8-2C0F4E62F79D} = {BDB53CC3-71A7-4314-B39D-D655E6E4237B}
+		{40CC4A8D-A5F5-4988-BB2B-5F11889200C2} = {3B86141B-0ABC-4CDE-8AEB-039B0D610B63}
+		{22577F7C-B35F-4992-A574-1758B3C98251} = {40CC4A8D-A5F5-4988-BB2B-5F11889200C2}
 	EndGlobalSection
 EndGlobal

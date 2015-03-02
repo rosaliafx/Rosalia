@@ -1,10 +1,13 @@
 ﻿namespace Rosalia.Core.Tasks
 {
     using System;
+    using System.Linq;
     using Rosalia.Core.Tasks.Results;
 
     public abstract class AbstractTask<T> : ITask<T> where T : class
     {
+        public Type[] UnswallowedExceptionTypes { get; set; }
+
         public ITaskResult<T> Execute(TaskContext context)
         {
             try
@@ -13,6 +16,14 @@
             }
             catch (Exception ex)
             {
+                if (UnswallowedExceptionTypes != null)
+                {
+                    if (UnswallowedExceptionTypes.Any(type => type.IsInstanceOfType(ex)))
+                    {
+                        throw ex;
+                    }
+                }
+
                 return new FailureResult<T>(ex);
             }
         }

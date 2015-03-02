@@ -1,7 +1,9 @@
 ﻿namespace Rosalia.Core.Tasks
 {
+    using System.Collections;
     using Rosalia.Core.Engine.Execution;
     using Rosalia.Core.Logging;
+    using Rosalia.FileSystem;
 
     public class TaskContext
     {
@@ -10,17 +12,19 @@
         private readonly Identity _identity;
         private readonly ILogRenderer _logRenderer;
         private readonly LogHelper _log;
+        private readonly IDirectory _workDirectory;
 
-        public TaskContext(IExecutionStrategy executionStrategy, ILogRenderer logRenderer) : this(ResultsStorage.Empty, executionStrategy, null, logRenderer)
+        public TaskContext(IExecutionStrategy executionStrategy, ILogRenderer logRenderer, IDirectory workDirectory) : this(ResultsStorage.Empty, executionStrategy, null, logRenderer, workDirectory)
         {
         }
 
-        private TaskContext(IResultsStorage results, IExecutionStrategy executionStrategy, Identity identity, ILogRenderer logRenderer)
+        private TaskContext(IResultsStorage results, IExecutionStrategy executionStrategy, Identity identity, ILogRenderer logRenderer, IDirectory workDirectory)
         {
             _identity = identity;
             _results = results;
             _executionStrategy = executionStrategy;
             _logRenderer = logRenderer;
+            _workDirectory = workDirectory;
             _log = new LogHelper(message => logRenderer.Render(message, Identity));
         }
 
@@ -49,13 +53,19 @@
             get { return _identity; }
         }
 
+        public IDirectory WorkDirectory
+        {
+            get { return _workDirectory; }
+        }
+
         public TaskContext CreateFor(Identity task)
         {
             return new TaskContext(
                 Results,
                 ExecutionStrategy,
                 task,
-                LogRenderer);
+                LogRenderer,
+                WorkDirectory);
         }
 
         public TaskContext CreateDerivedFor<T>(Identity task, T value)
@@ -64,7 +74,8 @@
                 Results.CreateDerived(task, value),
                 ExecutionStrategy,
                 Identity,
-                LogRenderer);
+                LogRenderer,
+                WorkDirectory);
         }
     }
 }

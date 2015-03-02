@@ -21,7 +21,7 @@
             RegisteredTasks definitions = _taskRegistry.GetRegisteredTasks();
             Identities tasksToExecute = _tasksToExecute.IsEmpty ? definitions.StartupTaskIds : _tasksToExecute;
             Layer[] layers = _layersComposer.Compose(definitions, tasksToExecute);
-            ITaskResult<IResultsStorage> results = context.ExecutionStrategy.Execute(layers, context.LogRenderer);
+            ITaskResult<IResultsStorage> results = context.ExecutionStrategy.Execute(layers, context);
 
             if (!results.IsSuccess)
             {

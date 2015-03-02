@@ -33,8 +33,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.0.5509.17454, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NUnit.3.0.0-alpha-5\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,7 +52,8 @@
     <Compile Include="Executables\FailureTask.cs" />
     <Compile Include="Executables\Task.cs" />
     <Compile Include="Executables\ValTask.cs" />
-    <Compile Include="Helpers\ExecutableExtensions.cs" />
+    <Compile Include="Helpers\ResultWrapper.cs" />
+    <Compile Include="Helpers\TaskExtensions.cs" />
     <Compile Include="Helpers\Subflow.cs" />
     <Compile Include="Helpers\SubflowExtensions.cs" />
     <Compile Include="Helpers\TaskDefinitionsMapExtensions.cs" />
@@ -56,11 +61,20 @@
     <Compile Include="Helpers\QuickWorkflow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleLogRenderer.cs" />
+    <Compile Include="SpyLogRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">
       <Project>{EDD2B71B-404F-4E73-8833-2D74ACE77F8F}</Project>
       <Name>Rosalia.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.FileSystem\Rosalia.FileSystem.csproj">
+      <Project>{38B399DC-A34C-440B-8DAD-7F0A280F9531}</Project>
+      <Name>Rosalia.FileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rosalia.TaskLib.Standard\Rosalia.TaskLib.Standard.csproj">
+      <Project>{f545724b-32d0-461a-8ae8-2c0f4e62f79d}</Project>
+      <Name>Rosalia.TaskLib.Standard</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -8,9 +8,9 @@
 
     public class SequenceExecutionStrategy : IExecutionStrategy
     {
-        public ITaskResult<IResultsStorage> Execute(Layer[] layers, ILogRenderer logRenderer)
+        public ITaskResult<IResultsStorage> Execute(Layer[] layers, TaskContext initialContext)
         {
-            var context = new TaskContext(this, logRenderer);
+            var context = initialContext;
 
             foreach (var layer in layers)
             {
