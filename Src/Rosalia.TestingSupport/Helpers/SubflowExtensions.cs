@@ -8,7 +8,7 @@
     {
         public static ResultWrapper<T> Execute<T>(this TaskRegistry<T> subflow) where T : class
         {
-            return new SubflowTask<T>(subflow, Identities.Empty).Execute();
+            return TaskExtensions.Execute(new SubflowTask<T>(subflow, Identities.Empty));
         }
     }
 }

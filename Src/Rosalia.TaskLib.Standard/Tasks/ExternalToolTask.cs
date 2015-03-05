@@ -7,6 +7,14 @@
     using Rosalia.Core.Tasks.Results;
     using Rosalia.FileSystem;
 
+    public abstract class ExternalToolTask : ExternalToolTask<Nothing>
+    {
+        protected override Nothing CreateResult(int exitCode, TaskContext context)
+        {
+            return Nothing.Value;
+        }
+    }
+
     public abstract class ExternalToolTask<TResult> : AbstractTask<TResult> where TResult : class
     {
         private readonly IList<Func<string, MessageLevel?>> _messageLevelDetectors = new List<Func<string, MessageLevel?>>();
@@ -38,7 +46,7 @@
             FillMessageLevelDetectors(_messageLevelDetectors);
 
             var toolPath = GetToolPath(context);
-            var toolArguments = GetToolArguments(context, context);
+            var toolArguments = GetToolArguments(context);
 
             context.Log.Info(
                 "Start external tool with command line: {0}{1} {2}",
@@ -72,7 +80,7 @@
         {
         }
 
-        protected virtual string GetToolArguments(TaskContext context, TaskContext result)
+        protected virtual string GetToolArguments(TaskContext context)
         {
             return Arguments ?? string.Empty;
         }

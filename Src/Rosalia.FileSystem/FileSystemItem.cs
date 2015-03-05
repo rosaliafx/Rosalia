@@ -10,7 +10,7 @@
             AbsolutePath = absolutePath;
         }
 
-        public string AbsolutePath { get; private set; }
+        public virtual string AbsolutePath { get; private set; }
 
         public abstract bool Exists { get; }
 

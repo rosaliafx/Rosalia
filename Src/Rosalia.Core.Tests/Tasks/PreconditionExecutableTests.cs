@@ -15,7 +15,7 @@
                 Task.Const("foo"),
                 () => true);
 
-            var result = precondition.Execute();
+            var result = TaskExtensions.Execute(precondition);
 
             result.AssertSuccess();
             result.AssertDataIs("foo");
@@ -29,7 +29,7 @@
                 () => false,
                 () => "bar");
 
-            var result = precondition.Execute();
+            var result = TaskExtensions.Execute(precondition);
 
             result.AssertSuccess();
             result.AssertDataIs("bar");
@@ -43,7 +43,7 @@
                 () => false,
                 "bar");
 
-            var result = precondition.Execute();
+            var result = TaskExtensions.Execute(precondition);
 
             result.AssertSuccess();
             result.AssertDataIs("bar");
@@ -56,7 +56,7 @@
                 Task.Const("foo"),
                 () => false);
 
-            var result = precondition.Execute();
+            var result = TaskExtensions.Execute(precondition);
 
             result.AssertSuccess();
             result.AssertDataIs(null);

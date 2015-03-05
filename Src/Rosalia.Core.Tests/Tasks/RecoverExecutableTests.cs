@@ -15,7 +15,7 @@
                 Task.Const("foo"),
                 () => "bar");
 
-            var result = recovery.Execute();
+            var result = TaskExtensions.Execute(recovery);
 
             result.AssertSuccess();
             result.AssertDataIs("foo");
@@ -28,7 +28,7 @@
                 Task.Failure<string>(),
                 () => "bar");
 
-            var result = recovery.Execute();
+            var result = TaskExtensions.Execute(recovery);
 
             result.AssertSuccess();
             result.AssertDataIs("bar");
@@ -41,7 +41,7 @@
                 Task.Failure<string>(),
                 "bar");
 
-            var result = recovery.Execute();
+            var result = TaskExtensions.Execute(recovery);
 
             result.AssertSuccess();
             result.AssertDataIs("bar");
@@ -52,7 +52,7 @@
         {
             var recovery = new RecoverTask<string>(Task.Failure<string>());
 
-            var result = recovery.Execute();
+            var result = TaskExtensions.Execute(recovery);
 
             result.AssertSuccess();
             result.AssertDataIs(null);

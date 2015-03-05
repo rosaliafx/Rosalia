@@ -1,38 +1,57 @@
 ﻿namespace Rosalia.TestingSupport.Helpers
 {
     using System;
+    using System.IO;
     using Moq;
+    using NUnit.Framework;
+    using NUnit.Framework.Internal;
     using Rosalia.Core;
     using Rosalia.Core.Engine.Execution;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
+    using Rosalia.FileSystem;
     using Rosalia.TaskLib.Standard;
     using Rosalia.TaskLib.Standard.Tasks;
+    using Rosalia.TestingSupport.FileSystem;
 
     public static class TaskExtensions
     {
-        public static ResultWrapper<T> Execute<T>(this ITask<T> task) where T : class
+        public static ResultWrapper<T> Execute<T>(this ITask<T> task, IDirectory workDirectory = null) where T : class
         {
             var spyLogRenderer = new SpyLogRenderer();
             var logRenderer = new CompositeLogRenderer(
                 new SimpleLogRenderer(),
                 spyLogRenderer);
 
-            ITaskResult<T> result = task.Execute(CreateContext(logRenderer).CreateFor(new Identity("TestTask")));
+            ITaskResult<T> result = task.Execute(CreateContext(workDirectory, logRenderer).CreateFor(new Identity("TestTask")));
 
             return new ResultWrapper<T>(
                 result,
                 spyLogRenderer.Messages);
         }
 
-        public static TaskContext CreateContext(ILogRenderer logRenderer = null)
+        public static TaskContext CreateContext(IDirectory workDirectory = null, ILogRenderer logRenderer = null)
         {
-            return new TaskContext(new SequenceExecutionStrategy(), logRenderer ?? new SimpleLogRenderer(), null /* todo */);
+            return new TaskContext(
+                new SequenceExecutionStrategy(), 
+                logRenderer ?? new SimpleLogRenderer(), 
+                workDirectory ?? new DirectoryStub(Directory.GetCurrentDirectory()));
         }
 
         public static void AssertCommand<TResult>(this ExternalToolTask<TResult> task, Action<string, string> assertAction) where TResult : class
         {
+            AssertCommand<TResult>(task, null, assertAction);
+        }
+
+        public static void AssertCommand<TResult>(this ExternalToolTask<TResult> task, IDirectory workDirectoryStub, Action<string, string> assertAction) where TResult : class
+        {
+            task.UnswallowedExceptionTypes = new[]
+            {
+                typeof (NUnitException),
+                typeof (ResultStateException)
+            };
+
             var processStarter = new Mock<IProcessStarter>();
             processStarter
                 .Setup(x => x.StartProcess(
@@ -48,7 +67,7 @@
 
             task.ProcessStarter = processStarter.Object;
 
-            task.Execute();
+            task.Execute(workDirectoryStub).AssertSuccess();
         }
 
         public static void AssertProcessOutputParsing<TResult>(
@@ -82,7 +101,7 @@
 
             task.ProcessStarter = processStarter.Object;
 
-            var taskResult = task.Execute();
+            var taskResult = Execute(task);
 
             assertResultAction(taskResult);
         }

@@ -52,6 +52,9 @@
     <Compile Include="Executables\FailureTask.cs" />
     <Compile Include="Executables\Task.cs" />
     <Compile Include="Executables\ValTask.cs" />
+    <Compile Include="FileSystem\DirectoryStub.cs" />
+    <Compile Include="FileSystem\FileStub.cs" />
+    <Compile Include="FileSystem\IFileSystemStub.cs" />
     <Compile Include="Helpers\ResultWrapper.cs" />
     <Compile Include="Helpers\TaskExtensions.cs" />
     <Compile Include="Helpers\Subflow.cs" />
