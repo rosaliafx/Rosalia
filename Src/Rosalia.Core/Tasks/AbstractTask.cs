@@ -4,6 +4,17 @@
     using System.Linq;
     using Rosalia.Core.Tasks.Results;
 
+    public abstract class AbstractTask : AbstractTask<Nothing>
+    {
+        protected ITaskResult<Nothing> Success
+        {
+            get
+            {
+                return new SuccessResult<Nothing>(Nothing.Value);
+            }
+        }
+    }
+
     public abstract class AbstractTask<T> : ITask<T> where T : class
     {
         public Type[] UnswallowedExceptionTypes { get; set; }

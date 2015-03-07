@@ -29,6 +29,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.Runner.Console", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.Demo", "Rosalia.Demo\Rosalia.Demo.csproj", "{B1F5B658-130A-41C2-BBC8-596F075EF9C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.AssemblyInfo", "Rosalia.TaskLib.AssemblyInfo\Rosalia.TaskLib.AssemblyInfo.csproj", "{7E2114D1-544E-404E-BB18-55E0D27D8C4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.AssemblyInfo.Tests", "Rosalia.TaskLib.AssemblyInfo.Tests\Rosalia.TaskLib.AssemblyInfo.Tests.csproj", "{C70C891E-2F50-4D71-8DAF-D5729D6B0535}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{B1F5B658-130A-41C2-BBC8-596F075EF9C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1F5B658-130A-41C2-BBC8-596F075EF9C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1F5B658-130A-41C2-BBC8-596F075EF9C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E2114D1-544E-404E-BB18-55E0D27D8C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E2114D1-544E-404E-BB18-55E0D27D8C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E2114D1-544E-404E-BB18-55E0D27D8C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E2114D1-544E-404E-BB18-55E0D27D8C4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C70C891E-2F50-4D71-8DAF-D5729D6B0535}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70C891E-2F50-4D71-8DAF-D5729D6B0535}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70C891E-2F50-4D71-8DAF-D5729D6B0535}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70C891E-2F50-4D71-8DAF-D5729D6B0535}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,5 +99,7 @@ Global
 		{22577F7C-B35F-4992-A574-1758B3C98251} = {40CC4A8D-A5F5-4988-BB2B-5F11889200C2}
 		{4A7E35BE-461C-425F-9F83-DE8EC2D5EE37} = {BDB53CC3-71A7-4314-B39D-D655E6E4237B}
 		{397F6487-E3DC-4330-920B-BBB63C8CEB36} = {40CC4A8D-A5F5-4988-BB2B-5F11889200C2}
+		{7E2114D1-544E-404E-BB18-55E0D27D8C4D} = {BDB53CC3-71A7-4314-B39D-D655E6E4237B}
+		{C70C891E-2F50-4D71-8DAF-D5729D6B0535} = {40CC4A8D-A5F5-4988-BB2B-5F11889200C2}
 	EndGlobalSection
 EndGlobal
