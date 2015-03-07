@@ -49,7 +49,7 @@
                 }
             }
 
-            protected override object CreateResult(int exitCode, TaskContext context)
+            protected override object CreateResult(int exitCode, TaskContext context, IList<Message> aggregatedOutput)
             {
                 return null;
             }

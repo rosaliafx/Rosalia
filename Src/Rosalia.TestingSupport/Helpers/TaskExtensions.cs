@@ -7,6 +7,7 @@
     using NUnit.Framework.Internal;
     using Rosalia.Core;
     using Rosalia.Core.Engine.Execution;
+    using Rosalia.Core.Environment;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
@@ -31,12 +32,13 @@
                 spyLogRenderer.Messages);
         }
 
-        public static TaskContext CreateContext(IDirectory workDirectory = null, ILogRenderer logRenderer = null)
+        public static TaskContext CreateContext(IDirectory workDirectory = null, ILogRenderer logRenderer = null, IEnvironment environment = null)
         {
             return new TaskContext(
                 new SequenceExecutionStrategy(), 
                 logRenderer ?? new SimpleLogRenderer(), 
-                workDirectory ?? new DirectoryStub(Directory.GetCurrentDirectory()));
+                workDirectory ?? new DirectoryStub(Directory.GetCurrentDirectory()),
+                environment ?? new DefaultEnvironment());
         }
 
         public static void AssertCommand<TResult>(this ExternalToolTask<TResult> task, Action<string, string> assertAction) where TResult : class

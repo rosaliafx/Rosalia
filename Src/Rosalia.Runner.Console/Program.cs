@@ -6,6 +6,7 @@
     using System.Reflection;
     using Rosalia.Core;
     using Rosalia.Core.Engine.Execution;
+    using Rosalia.Core.Environment;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
@@ -153,7 +154,8 @@
             var context = new TaskContext(
                 new ParallelExecutionStrategy(), 
                 logRenderer,
-                runningOptions.WorkDirectory);
+                runningOptions.WorkDirectory,
+                new DefaultEnvironment());
             
             var result = executer.Execute(context);
 

@@ -35,6 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.AssemblyInf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Compression", "Rosalia.TaskLib.Compression\Rosalia.TaskLib.Compression.csproj", "{26559941-4A81-43C6-89F7-A27459E49763}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Git", "Rosalia.TaskLib.Git\Rosalia.TaskLib.Git.csproj", "{0B0951AF-F0DC-4AE9-ABB9-1188BF6790C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Git.Tests", "Rosalia.TaskLib.Git.Tests\Rosalia.TaskLib.Git.Tests.csproj", "{87926FF1-F7DE-49F6-B0E8-81AD2A17D406}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +97,14 @@ Global
 		{26559941-4A81-43C6-89F7-A27459E49763}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26559941-4A81-43C6-89F7-A27459E49763}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26559941-4A81-43C6-89F7-A27459E49763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B0951AF-F0DC-4AE9-ABB9-1188BF6790C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B0951AF-F0DC-4AE9-ABB9-1188BF6790C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B0951AF-F0DC-4AE9-ABB9-1188BF6790C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B0951AF-F0DC-4AE9-ABB9-1188BF6790C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87926FF1-F7DE-49F6-B0E8-81AD2A17D406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87926FF1-F7DE-49F6-B0E8-81AD2A17D406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87926FF1-F7DE-49F6-B0E8-81AD2A17D406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87926FF1-F7DE-49F6-B0E8-81AD2A17D406}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,5 +120,7 @@ Global
 		{7E2114D1-544E-404E-BB18-55E0D27D8C4D} = {BDB53CC3-71A7-4314-B39D-D655E6E4237B}
 		{C70C891E-2F50-4D71-8DAF-D5729D6B0535} = {40CC4A8D-A5F5-4988-BB2B-5F11889200C2}
 		{26559941-4A81-43C6-89F7-A27459E49763} = {BDB53CC3-71A7-4314-B39D-D655E6E4237B}
+		{0B0951AF-F0DC-4AE9-ABB9-1188BF6790C4} = {BDB53CC3-71A7-4314-B39D-D655E6E4237B}
+		{87926FF1-F7DE-49F6-B0E8-81AD2A17D406} = {40CC4A8D-A5F5-4988-BB2B-5F11889200C2}
 	EndGlobalSection
 EndGlobal

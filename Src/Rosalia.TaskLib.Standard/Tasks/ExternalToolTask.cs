@@ -9,7 +9,7 @@
 
     public abstract class ExternalToolTask : ExternalToolTask<Nothing>
     {
-        protected override Nothing CreateResult(int exitCode, TaskContext context)
+        protected override Nothing CreateResult(int exitCode, TaskContext context, IList<Message> aggregatedOutput)
         {
             return Nothing.Value;
         }
@@ -55,20 +55,23 @@
                 toolArguments);
 
             var workDirectory = GetToolWorkDirectory(context);
+            var aggregatedOutput = new List<Message>();
             var exitCode = ProcessStarter.StartProcess(
                 toolPath,
                 toolArguments,
                 workDirectory == null ? null : workDirectory.AbsolutePath,
                 outpuMessage =>
                 {
-                    ProcessOnOutputDataReceived(outpuMessage, context);
+                    var level = ProcessOnOutputDataReceived(outpuMessage, context);
+                    HandleOutput(outpuMessage, level, aggregatedOutput, context);
                 },
                 errorMessage =>
                 {
-                    ProcessOnErrorDataReceived(errorMessage, context);
+                    var level = ProcessOnErrorDataReceived(errorMessage, context);
+                    HandleOutput(errorMessage, level, aggregatedOutput, context);
                 });
 
-            return ProcessExitCode(exitCode, context);
+            return ProcessExitCode(exitCode, context, aggregatedOutput);
         }
 
         protected virtual IEnumerable<IFile> GetToolPathLookup(TaskContext context)
@@ -108,7 +111,7 @@
             throw new Exception("Tool path is not set!");
         }
 
-        protected virtual ITaskResult<TResult> ProcessExitCode(int exitCode, TaskContext context)
+        protected virtual ITaskResult<TResult> ProcessExitCode(int exitCode, TaskContext context, IList<Message> aggregatedOutput)
         {
             if (exitCode != 0)
             {
@@ -116,12 +119,31 @@
                 return new FailureResult<TResult>(null);
             }
 
-            return new SuccessResult<TResult>(CreateResult(exitCode, context));
+            return new SuccessResult<TResult>(CreateResult(exitCode, context, aggregatedOutput));
         }
 
-        protected abstract TResult CreateResult(int exitCode, TaskContext context);
+        protected abstract TResult CreateResult(int exitCode, TaskContext context, IList<Message> aggregatedOutput);
 
-        protected virtual void ProcessOnOutputDataReceived(string message, TaskContext context)
+        protected virtual bool AggregateForResultConstruction(string message, MessageLevel level)
+        {
+            return false;
+        }
+
+        protected virtual void HandleOutput(
+            string message, 
+            MessageLevel level, 
+            IList<Message> aggregatedOutput,
+            TaskContext context)
+        {
+            context.Log.AddMessage(level, message);
+
+            if (AggregateForResultConstruction(message, level))
+            {
+                aggregatedOutput.Add(new Message(message, level));
+            }
+        }
+
+        protected virtual MessageLevel ProcessOnOutputDataReceived(string message, TaskContext context)
         {
             foreach (var messageLevelDetector in _messageLevelDetectors)
             {
@@ -129,17 +151,19 @@
 
                 if (level.HasValue)
                 {
-                    context.Log.AddMessage(level.Value, message);
-                    return;
+                    //context.Log.AddMessage(level.Value, message);
+                    return level.Value;
                 }
             }
 
-            context.Log.Info(message);
+            return MessageLevel.Info;
+            //context.Log.Info(message);
         }
 
-        protected virtual void ProcessOnErrorDataReceived(string message, TaskContext context)
+        protected virtual MessageLevel ProcessOnErrorDataReceived(string message, TaskContext context)
         {
-            context.Log.Error(message);
+            return MessageLevel.Error;
+            //context.Log.Error(message);
         }
 
         protected virtual IDirectory GetToolWorkDirectory(TaskContext context)

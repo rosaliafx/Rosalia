@@ -1,7 +1,7 @@
 ﻿namespace Rosalia.Core.Tasks
 {
-    using System.Collections;
     using Rosalia.Core.Engine.Execution;
+    using Rosalia.Core.Environment;
     using Rosalia.Core.Logging;
     using Rosalia.FileSystem;
 
@@ -13,18 +13,20 @@
         private readonly ILogRenderer _logRenderer;
         private readonly LogHelper _log;
         private readonly IDirectory _workDirectory;
+        private readonly IEnvironment _environment;
 
-        public TaskContext(IExecutionStrategy executionStrategy, ILogRenderer logRenderer, IDirectory workDirectory) : this(ResultsStorage.Empty, executionStrategy, null, logRenderer, workDirectory)
+        public TaskContext(IExecutionStrategy executionStrategy, ILogRenderer logRenderer, IDirectory workDirectory, IEnvironment environment) : this(ResultsStorage.Empty, executionStrategy, null, logRenderer, workDirectory, environment)
         {
         }
 
-        private TaskContext(IResultsStorage results, IExecutionStrategy executionStrategy, Identity identity, ILogRenderer logRenderer, IDirectory workDirectory)
+        private TaskContext(IResultsStorage results, IExecutionStrategy executionStrategy, Identity identity, ILogRenderer logRenderer, IDirectory workDirectory, IEnvironment environment)
         {
             _identity = identity;
             _results = results;
             _executionStrategy = executionStrategy;
             _logRenderer = logRenderer;
             _workDirectory = workDirectory;
+            _environment = environment;
             _log = new LogHelper(message => logRenderer.Render(message, Identity));
         }
 
@@ -58,6 +60,11 @@
             get { return _workDirectory; }
         }
 
+        public IEnvironment Environment
+        {
+            get { return _environment; }
+        }
+
         public TaskContext CreateFor(Identity task)
         {
             return new TaskContext(
@@ -65,7 +72,8 @@
                 ExecutionStrategy,
                 task,
                 LogRenderer,
-                WorkDirectory);
+                WorkDirectory,
+                Environment);
         }
 
         public TaskContext CreateDerivedFor<T>(Identity task, T value)
@@ -75,7 +83,8 @@
                 ExecutionStrategy,
                 Identity,
                 LogRenderer,
-                WorkDirectory);
+                WorkDirectory,
+                Environment);
         }
     }
 }

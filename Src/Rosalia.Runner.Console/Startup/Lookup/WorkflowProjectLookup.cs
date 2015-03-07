@@ -6,6 +6,7 @@
     using System.Reflection;
     using Rosalia.Core;
     using Rosalia.Core.Engine.Execution;
+    using Rosalia.Core.Environment;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
@@ -26,7 +27,12 @@
             var buildWorkflow = new BuildWorkflowProjectWorkflow(options.RunningOptions);
             var executerTask = new SubflowTask<Nothing>(buildWorkflow, Identities.Empty);
 
-            var taskContext = new TaskContext(new SequenceExecutionStrategy(), options.RunningOptions.LogRenderer, options.RunningOptions.WorkDirectory);
+            var taskContext = new TaskContext(
+                new SequenceExecutionStrategy(), 
+                options.RunningOptions.LogRenderer, 
+                options.RunningOptions.WorkDirectory,
+                new DefaultEnvironment());
+
             var buildResult = executerTask.Execute(taskContext);
 
 //            buildWorkflow.Init(new WorkflowContext(

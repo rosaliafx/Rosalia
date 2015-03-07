@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using NUnit.Framework;
+    using NUnit.Framework.Constraints;
     using Rosalia.Core;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks.Results;
@@ -11,6 +12,11 @@
     {
         private readonly ITaskResult<T> _result;
         private readonly IList<Tuple<Message, Identity>> _messages;
+
+        public T Data
+        {
+            get { return _result.Data; }
+        }
 
         public ResultWrapper(ITaskResult<T> result, IList<Tuple<Message, Identity>> messages)
         {
@@ -56,7 +62,15 @@
                 }
             }
 
-            Assert.Fail(string.Format("Message [{0}] with level {1} not found", message, level));
+            Assert.Fail("Message [{0}] with level {1} not found", message, level);
+        }
+
+        public void AssertFailure()
+        {
+            if (_result.IsSuccess)
+            {
+                Assert.Fail("Expected failure result but was success");
+            }
         }
     }
 }
