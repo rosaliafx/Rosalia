@@ -9,11 +9,27 @@
             _nestedRenderers = nestedRenderers;
         }
 
+        public void Init()
+        {
+            foreach (var renderer in _nestedRenderers)
+            {
+                renderer.Init();
+            }
+        }
+
         public void Render(Message message, Identity source)
         {
             foreach (var nestedRenderer in _nestedRenderers)
             {
                 nestedRenderer.Render(message, source);
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var renderer in _nestedRenderers)
+            {
+                renderer.Dispose();
             }
         }
     }

@@ -49,7 +49,9 @@
     <Compile Include="Api\TaskRegistry.cs" />
     <Compile Include="Api\TaskRegistryApiHelper.cs" />
     <Compile Include="Api\Workflow.cs" />
+    <Compile Include="Logging\ColoredConsoleLogRenderer.cs" />
     <Compile Include="Logging\CompositeLogRenderer.cs" />
+    <Compile Include="Logging\HtmlLogRenderer.cs" />
     <Compile Include="Logging\ILogRenderer.cs" />
     <Compile Include="Tasks\Results\Nothing.cs" />
     <Compile Include="Tasks\Futures\ITaskFuture.cs" />

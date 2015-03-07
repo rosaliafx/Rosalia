@@ -14,9 +14,17 @@
             get { return _messages; }
         }
 
+        public void Init()
+        {
+        }
+
         public void Render(Message message, Identity source)
         {
             Messages.Add(new Tuple<Message, Identity>(message, source));
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

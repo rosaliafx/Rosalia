@@ -1,7 +1,10 @@
 ﻿namespace Rosalia.Core.Logging
 {
-    public interface ILogRenderer
+    using System;
+
+    public interface ILogRenderer : IDisposable
     {
+        void Init();
         void Render(Message message, Identity source);
     }
 }
