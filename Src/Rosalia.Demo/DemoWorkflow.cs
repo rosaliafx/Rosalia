@@ -9,13 +9,26 @@
         protected override void RegisterTasks()
         {
             Task(
-                "Greet",
+                "Greet1",
                 context =>
                 {
                     context.Log.Info("Hello, Rosalia!");
-                    context.Log.Warning("Oh, no, {0}", Message);
-                    context.Log.Error("Oh, no, {0}", 42);
                 });
+
+            var greet2 = Task(
+                "Greet2",
+                context =>
+                {
+                    context.Log.Warning("Oh, no, {0}", Message);
+                });
+
+            Task(
+                "Greet3",
+                context =>
+                {
+                    context.Log.Error("Oh, no, {0}", 42);
+                },
+                DependsOn(greet2));
         }
     }
 }

@@ -41,22 +41,33 @@
         }
     </style>
 </head>
-<body><div id='log'>");
+<body><table id='log'>
+<thead>
+    <tr>
+        <th>Level</th>
+        <th>Task</th>
+        <th>Message</th>
+    </tr>
+</thead>
+<tbody>");
         }
 
         public void Render(Message message, Identity source)
         {
-            _writerProvider.Value.WriteLine("<div class='item {0}'>", message.Level);
-            _writerProvider.Value.WriteLine("<span class='message'><pre>{0}</pre></span>", 
-                //HttpUtility.HtmlEncode(message)
-                message); //todo
-            _writerProvider.Value.WriteLine("</div>");
+            _writerProvider.Value.WriteLine("<tr class='item {0}'>", message.Level);
+            _writerProvider.Value.WriteLine("<td>{0}</td>", message.Level);
+            _writerProvider.Value.WriteLine("<td>{0}</td>", source.Value);
+            _writerProvider.Value.WriteLine("<td>{0}</td>", message.Text);
+//            _writerProvider.Value.WriteLine("<span class='message'><pre>{0}</pre></span>", 
+//                //HttpUtility.HtmlEncode(message)
+//                message.Text); //todo
+            _writerProvider.Value.WriteLine("</tr>");
         }
 
         public void Dispose()
         {
             _writerProvider.Value.WriteLine(
-@"</div></body></html>");
+@"</tbody></table></body></html>");
             _writerProvider.Value.Flush();
             _writerProvider.Value.Close();
         }

@@ -1,5 +1,8 @@
 ﻿namespace Rosalia.Core.Logging
 {
+    using System.Diagnostics;
+
+    [DebuggerDisplay("[{Level}] {Text}")]
     public class Message
     {
         private readonly string _text;

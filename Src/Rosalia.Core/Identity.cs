@@ -52,5 +52,10 @@
         {
             return _value.Equals(other._value);
         }
+
+        public static implicit operator Identity (string value)
+        {
+            return new Identity(value);
+        }
     }
 }

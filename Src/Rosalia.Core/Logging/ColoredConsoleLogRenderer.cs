@@ -32,7 +32,7 @@
                     return ConsoleColor.Gray;
                 case MessageLevel.Success:
                     return ConsoleColor.DarkGreen;
-                case MessageLevel.Warning:
+                case MessageLevel.Warn:
                     return ConsoleColor.DarkYellow;
                 case MessageLevel.Error:
                     return ConsoleColor.DarkRed;

@@ -2,19 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using Rosalia.Core;
     using Rosalia.Core.Api;
-    using Rosalia.Core.Logging;
-    using Rosalia.FileSystem;
+    using Rosalia.Core.Tasks;
     using Rosalia.Runner.Console.Startup.Instantiating;
     using Rosalia.Runner.Console.Startup.Lookup;
 
     public class Runner
     {
+        private static readonly Identity Id = "Runner";
+
         public InitializationResult Init(RunningOptions options)
         {
+            LogHelper log = null;
             try
             {
                 if (options.InputFile == null)
@@ -26,78 +27,46 @@
                 {
                     throw new Exception(string.Format("Input file {0} does not exist!", options.InputFile.AbsolutePath));
                 }
-                InitLogger(options);
-
-                // todo log runner messages
-                //_logRenderer.AppendMessage(0, "Initializing...", MessageLevel.Info, MessageType.System);
-
-                //options.InputFile = new DefaultFile(SanitizeInputFilePath(options));
+                
+                log = InitLogger(options);
+                log.Info("Initializing...");
 
                 IWorkflowCreator workflowCreator = new ReflectionWorkflowCreator();
-//                IContextCreator contextCreator = new ReflectionContextCreator();
-//                IList<IWorkflowMonitor> watchers = new List<IWorkflowMonitor>
-//                {
-//                    new LoggingMonitor(_logRenderer),
-//                };
-//
-//                foreach (var outputPath in options.VisualisationFilesPath)
-//                {
-//                    var extension = Path.GetExtension(outputPath);
-//                    if (extension.Equals(".svg", StringComparison.InvariantCultureIgnoreCase))
-//                    {
-//                        watchers.Add(new SvgVisualizeMonitor(outputPath));
-//                    }
-//
-//                    if (extension.Equals(".png", StringComparison.InvariantCultureIgnoreCase))
-//                    {
-//                        watchers.Add(new GraphicsVisualizeMonitor(outputPath));
-//                    }
-//                }
-
                 IList<IWorkflowLookup> lookups = new List<IWorkflowLookup>
                 {
                     new ExactAssemblyWorkflowLookup(),
                     new WorkflowProjectLookup()
                 };
 
-                var workflowInfo = GetWorkflowInfo(options, lookups);
-
-                var _workflow = (IWorkflow)workflowCreator.CreateWorkflow(workflowInfo);
+                WorkflowInfo workflowInfo = GetWorkflowInfo(options, lookups, log);
+                IWorkflow workflow = (IWorkflow) workflowCreator.CreateWorkflow(workflowInfo);
                 
                 foreach (var property in options.Properties)
                 {
-                    var contextProperty = _workflow.GetType().GetProperty(property.Key);
+                    var contextProperty = workflow.GetType().GetProperty(property.Key);
                     if (contextProperty != null)
                     {
                         var convertedPropertyValue = Convert.ChangeType(property.Value, contextProperty.PropertyType);
-                        contextProperty.SetValue(_workflow, convertedPropertyValue, new object[0]);
+                        contextProperty.SetValue(workflow, convertedPropertyValue, new object[0]);
                     }
                 }
 
-//                foreach (var watcher in watchers)
-//                {
-//                    watcher.Register(_workflow);
-//                }
+                log.Info("Workflow initialized");
 
-                // todo log
-                //_logRenderer.AppendMessage(0, "Workflow initialized", MessageLevel.Success, MessageType.System);
-
-                return new InitializationResult(_workflow);
+                return new InitializationResult(workflow);
             }
             catch (Exception ex)
             {
-                if (options.LogRenderer != null)
+                if (log != null)
                 {
-                    // todo log
-                    //options.LogRenderer.Render( ex.Message, MessageLevel.Error);
+                    log.Error(ex.Message);
                 }
 
                 return new InitializationResult();
             }
         }
 
-        
-        private void InitLogger(RunningOptions options)
+        private LogHelper InitLogger(RunningOptions options)
         {
             var logRenderer = options.LogRenderer;
             if (logRenderer == null)
@@ -106,32 +75,32 @@
             }
 
             logRenderer.Init();
+
+            return new LogHelper(m => logRenderer.Render(m, Id));
         }
 
-        protected WorkflowInfo GetWorkflowInfo(RunningOptions options, IList<IWorkflowLookup> lookups)
+        protected WorkflowInfo GetWorkflowInfo(RunningOptions options, IList<IWorkflowLookup> lookups, LogHelper log)
         {
-            var _logRenderer = options.LogRenderer;
-            _logRenderer.Render(new Message("Searching for workflows...", MessageLevel.Info), new Identity("Runner"));
+            log.Info("Searching for workflows...");
 
             var lookupOptions = new LookupOptions(options);
             foreach (var lookup in lookups)
             {
                 if (lookup.CanHandle(lookupOptions))
                 {
-                    var message = string.Format("using lookup {0} for workflow searching", lookup.GetType());
-                    _logRenderer.Render(new Message(message, MessageLevel.Info), new Identity("Runner"));
+                    log.Info("using lookup {0} for workflow searching", lookup.GetType());
                     var foundWorkflows = lookup.Find(lookupOptions);
-                    return SelectDefaultWorkflow(foundWorkflows.ToList(), options);
+
+                    return SelectDefaultWorkflow(foundWorkflows.ToList(), options, log);
                 }
             }
 
             throw new Exception(string.Format("No lookup to handle input file: {0}", options.InputFile));
         }
 
-        private WorkflowInfo SelectDefaultWorkflow(IList<WorkflowInfo> foundWorkflows, RunningOptions options)
+        private WorkflowInfo SelectDefaultWorkflow(IList<WorkflowInfo> foundWorkflows, RunningOptions options, LogHelper log)
         {
-            var _logRenderer = options.LogRenderer;
-            _logRenderer.Render(new Message(string.Format("workflows found: {0}", foundWorkflows.Count), MessageLevel.Info), new Identity("Runner"));
+            log.Info("workflows found: {0}", foundWorkflows.Count);
 
             if (foundWorkflows.Count == 0)
             {
@@ -141,14 +110,13 @@
             WorkflowInfo workflowToExecute = null;
             if (foundWorkflows.Count > 1)
             {
-                if (string.IsNullOrEmpty(options.DefaultWorkflowType))
+                if (string.IsNullOrEmpty(options.Workflow))
                 {
                     throw new Exception("Multiple workflows found but default workflow was not set!");
                 }
 
-                workflowToExecute = foundWorkflows.FirstOrDefault(info =>
-                    info.WorkflowType.FullName == options.DefaultWorkflowType ||
-                    info.WorkflowType.Name == options.DefaultWorkflowType);
+                workflowToExecute = foundWorkflows.FirstOrDefault(info => 
+                    info.WorkflowType.FullName.Contains(options.Workflow));
             }
             else
             {
@@ -160,22 +128,9 @@
                 throw new Exception("Could not select default workflow to execute.");
             }
 
-            _logRenderer.Render(new Message(string.Format("Workflow to execute: {0}", workflowToExecute.WorkflowType.Name), MessageLevel.Info), new Identity("Runner"));
-//            _logRenderer.AppendMessage(
-//                1, 
-//                string.Format("Workflow to execute: {0}", workflowToExecute.WorkflowType.Name), 
-//                MessageLevel.Info,
-//                MessageType.System);
+            log.Info("Workflow to execute: {0}", workflowToExecute.WorkflowType.Name);
 
             return workflowToExecute;
         }
-
-//        public void Dispose()
-//        {
-//            if (_logRenderer != null)
-//            {
-//                _logRenderer.Dispose();
-//            }
-//        }
     }
 }

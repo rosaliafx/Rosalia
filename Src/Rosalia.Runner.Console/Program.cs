@@ -51,6 +51,14 @@
                         (v, s) => options.Properties.Add(s, v)
                     },
                     {
+                        new Option("w|workflow", "Set workflow type (if multiples in assembly)"), 
+                        (v, s) => options.Workflow = v
+                    },
+                    {
+                        new Option("t|task", "Set task to run"), 
+                        (v, s) => options.Tasks += new Identity(v)
+                    },
+                    {
                         new Option("hl|hold", "Do not close console"), 
                         (v, s) => options.Hold = true
                     },
@@ -149,7 +157,7 @@
 
             var executer = new SubflowTask<Nothing>(
                 initializationResult.Workflow,
-                Identities.Empty);
+                options.Tasks);
             
             var context = new TaskContext(
                 new ParallelExecutionStrategy(), 

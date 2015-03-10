@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Runner.Console.Startup
 {
     using System.Collections.Generic;
+    using Rosalia.Core;
     using Rosalia.Core.Logging;
     using Rosalia.FileSystem;
 
@@ -10,11 +11,11 @@
 
         public IFile InputFile { get; set; }
 
-        public string DefaultWorkflowType { get; set; }
-
         public string WorkflowProjectBuildConfiguration { get; set; }
 
         public string WorkflowBuildOutputPath { get; set; }
+
+        public string Workflow { get; set; }
 
         public ILogRenderer LogRenderer { get; set; }
 

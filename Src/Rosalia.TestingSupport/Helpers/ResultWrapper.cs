@@ -72,5 +72,17 @@
                 Assert.Fail("Expected failure result but was success");
             }
         }
+
+        public void AssertFailedWith(string message)
+        {
+            AssertFailure();
+
+            Assert.That(_result, Is.InstanceOf<FailureResult<T>>());
+
+            var exception = ((FailureResult<T>) _result).Error;
+
+            Assert.That(exception, Is.Not.Null, "Failure result exception");
+            Assert.That(exception.Message, Is.EqualTo(message));
+        }
     }
 }

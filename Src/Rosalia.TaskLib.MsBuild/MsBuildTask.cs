@@ -37,7 +37,7 @@
             base.FillMessageLevelDetectors(detectors);
 
             detectors.Add(message => message.IndexOf(" error ") >= 0 ? MessageLevel.Error : (MessageLevel?)null);
-            detectors.Add(message => message.IndexOf(" warning ") >= 0 ? MessageLevel.Warning : (MessageLevel?)null);
+            detectors.Add(message => message.IndexOf(" warning ") >= 0 ? MessageLevel.Warn : (MessageLevel?)null);
         }
 
         protected override IEnumerable<IFile> GetToolPathLookup(TaskContext context)

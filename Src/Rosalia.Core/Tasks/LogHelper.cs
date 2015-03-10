@@ -19,7 +19,7 @@
 
         public void Warning(string text, params object[] args)
         {
-            AddMessage(MessageLevel.Warning, text, args);
+            AddMessage(MessageLevel.Warn, text, args);
         }
 
         public void Error(string text, params object[] args)

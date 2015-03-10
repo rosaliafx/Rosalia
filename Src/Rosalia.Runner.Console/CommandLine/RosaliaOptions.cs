@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Runner.Console.CommandLine
 {
     using System.Collections.Generic;
+    using Rosalia.Core;
 
     public class RosaliaOptions
     {
@@ -8,6 +9,7 @@
         {
             OutputFiles = new List<string>();
             Properties = new Dictionary<string, string>();
+            Tasks = Identities.Empty;
         }
 
         public bool ShowHelp { get; set; }
@@ -23,6 +25,10 @@
         public string WorkflowBuildOutputPath { get; set; }
 
         public string WorkDirectory { get; set; }
+
+        public string Workflow { get; set; }
+
+        public Identities Tasks { get; set; }
 
         public IList<string> OutputFiles { get; private set; }
 

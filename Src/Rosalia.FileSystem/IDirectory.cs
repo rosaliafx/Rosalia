@@ -19,5 +19,10 @@
         public abstract IFile GetFile(string name);
 
         public abstract UnknownFileSystemItem this[string path] { get; }
+
+        public static implicit operator IDirectory(string path)
+        {
+            return new DefaultDirectory(path);
+        }
     }
 }
