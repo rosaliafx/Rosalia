@@ -9,6 +9,8 @@ namespace Rosalia.Runner.Console.CommandLine
             public const int WorkflowFailure = -1;
             public const int RunnerInitializationFailure = -2;
             public const int OptionsParsingFailure = -3;
+            public const int WrongInputFile = -4;
+            public const int UnknownError = -10;
         }
     }
 }

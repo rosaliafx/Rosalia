@@ -45,11 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLine\RosaliaOptionsConfig.cs" />
+    <Compile Include="CommandLine\Support\IProgramStep.cs" />
     <Compile Include="CommandLine\Support\Option.cs" />
     <Compile Include="CommandLine\Support\OptionsConfig.cs" />
     <Compile Include="CommandLine\Support\OptionsParser.cs" />
     <Compile Include="CommandLine\RosaliaOptions.cs" />
     <Compile Include="CommandLine\ExitCode.cs" />
+    <Compile Include="CommandLine\Support\ProgramContext.cs" />
+    <Compile Include="CommandLine\Support\ProgramSteps.cs" />
+    <Compile Include="CommandLine\Utils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\BuildWorkflowProjectWorkflow.cs" />
@@ -64,6 +69,15 @@
     <Compile Include="Startup\Lookup\WorkflowProjectLookup.cs" />
     <Compile Include="Startup\Runner.cs" />
     <Compile Include="Startup\RunningOptions.cs" />
+    <Compile Include="Steps\AssertInputFileSetStep.cs" />
+    <Compile Include="Steps\ExecuteWorkflowStep.cs" />
+    <Compile Include="Steps\InitializeWorkflowStep.cs" />
+    <Compile Include="Steps\ParseInputStep.cs" />
+    <Compile Include="Steps\SetupInputFileStep.cs" />
+    <Compile Include="Steps\SetupLogRendererStep.cs" />
+    <Compile Include="Steps\SetupWorkDirectoryStep.cs" />
+    <Compile Include="Steps\ShowHelpStep.cs" />
+    <Compile Include="Steps\ShowLogoStep.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">

@@ -1,19 +1,8 @@
 ﻿namespace Rosalia.Runner.Console
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using Rosalia.Core;
-    using Rosalia.Core.Engine.Execution;
-    using Rosalia.Core.Environment;
-    using Rosalia.Core.Logging;
-    using Rosalia.Core.Tasks;
-    using Rosalia.Core.Tasks.Results;
-    using Rosalia.FileSystem;
-    using Rosalia.Runner.Console.CommandLine;
     using Rosalia.Runner.Console.CommandLine.Support;
-    using Rosalia.Runner.Console.Startup;
+    using Rosalia.Runner.Console.Steps;
 
     public class Program
     {
@@ -31,208 +20,202 @@
 
         public static int Main(string[] args)
         {
-            OptionsConfig optionsConfig = null;
-            var options = new RosaliaOptions();
-
-            try
+            var context = new ProgramContext
             {
-                optionsConfig = new OptionsConfig
-                {
-                    {
-                        new Option("nl|nologo", "Do not show Rosalia logo"), 
-                        (v, s) => options.NoLogo = true
-                    },
-                    {
-                        new Option("h|help|?", "Show this help message"), 
-                        (v, s) => options.ShowHelp = true
-                    },
-                    {
-                        new Option("p|prop|property", "Set property"), 
-                        (v, s) => options.Properties.Add(s, v)
-                    },
-                    {
-                        new Option("w|workflow", "Set workflow type (if multiples in assembly)"), 
-                        (v, s) => options.Workflow = v
-                    },
-                    {
-                        new Option("t|task", "Set task to run"), 
-                        (v, s) => options.Tasks += new Identity(v)
-                    },
-                    {
-                        new Option("hl|hold", "Do not close console"), 
-                        (v, s) => options.Hold = true
-                    },
-                    {
-                        new Option("wd|workDirectory", "Work directory"), 
-                        (v, s) => options.WorkDirectory = v
-                    },
-                    {
-                        new Option("workflowBuildOutput", "Workflow project build output path"), 
-                        (v, s) => options.WorkflowBuildOutputPath = v
-                    },
-                    {
-                        new Option("workflowBuildConfiguration", "Workflow build configuration"), 
-                        (v, s) => options.WorkflowProjectBuildConfiguration = v
-                    },
-                    {
-                        new Option("o|out|output", "Path to a file to write log to"), 
-                        (v, s) => options.OutputFiles.Add(v)
-                    }
-                };
-
-                new OptionsParser().Parse(args, optionsConfig);
-
-                if (args.Length > 0)
-                {
-                    options.InputFile = args[args.Length - 1];
-                }
-            }
-            catch (Exception)
-            {
-                // todo log exception message
-                ShowLogo();
-                ShowHelp(optionsConfig);
-
-                return Exit(true, ExitCode.Error.OptionsParsingFailure);
-            }
-
-            if (!options.NoLogo)
-            {
-                ShowLogo();
-            }
-
-            if (options.ShowHelp)
-            {
-                ShowHelp(optionsConfig);
-                return Exit(options.Hold, ExitCode.Ok);
-            }
-
-            var logRenderers = new List<ILogRenderer>
-            {
-                new ColoredConsoleLogRenderer()
+                Args = args
             };
 
-            var workDirectory = string.IsNullOrEmpty(options.WorkDirectory) ?
-                    Directory.GetCurrentDirectory() :
-                    options.WorkDirectory;
-
-            if (!Path.IsPathRooted(workDirectory))
+            var steps = new ProgramSteps
             {
-                workDirectory = Path.Combine(Directory.GetCurrentDirectory(), workDirectory);
-            }
-
-            Directory.SetCurrentDirectory(workDirectory);
-
-            foreach (var path in options.OutputFiles)
-            {
-                var currentPath = path;
-                if (Path.GetExtension(path).Equals(".html", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    logRenderers.Add(new HtmlLogRenderer(new Lazy<TextWriter>(() => File.CreateText(currentPath))));
-                }
-            }
-
-            ILogRenderer logRenderer = new CompositeLogRenderer(logRenderers.ToArray());
-
-            var runner = new Runner();
-            var workDirectoryObj = new DefaultDirectory(workDirectory);
-            var runningOptions = new RunningOptions
-            {
-                InputFile = GetInputFile(options, workDirectoryObj),
-                WorkflowBuildOutputPath = options.WorkflowBuildOutputPath,
-                WorkflowProjectBuildConfiguration = options.WorkflowProjectBuildConfiguration,
-                LogRenderer = logRenderer,
-                WorkDirectory = workDirectoryObj,
-                Properties = options.Properties
+                new ParseInputStep(),
+                new ShowLogoStep(),
+                new ShowHelpStep(),
+                new SetupWorkDirectoryStep(),
+                new SetupLogRendererStep(),
+                new AssertInputFileSetStep(),
+                new SetupInputFileStep(),
+                new InitializeWorkflowStep(),
+                new ExecuteWorkflowStep()
             };
 
-            var initializationResult = runner.Init(runningOptions);
+            int result = steps.Execute(context);
+            bool hold = context.Options != null && context.Options.Hold;
 
-            if (!initializationResult.IsSuccess)
-            {
-                return Exit(options.Hold, ExitCode.Error.RunnerInitializationFailure);
-            }
+            return Exit(hold, result);
 
-            Console.WriteLine();
+//            OptionsConfig optionsConfig = null;
+//            RosaliaOptions options = new RosaliaOptions();
 
-            var executer = new SubflowTask<Nothing>(
-                initializationResult.Workflow,
-                options.Tasks);
-            
-            var context = new TaskContext(
-                new ParallelExecutionStrategy(), 
-                logRenderer,
-                runningOptions.WorkDirectory,
-                new DefaultEnvironment());
-            
-            var result = executer.Execute(context);
+//            try
+//            {
+//                optionsConfig = RosaliaOptionsConfig.Create(options);
+//
+//                new OptionsParser().Parse(args, optionsConfig);
+//
+//                if (args.Length > 0)
+//                {
+//                    options.InputFile = args[args.Length - 1];
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                ShowLogo();
+//                ShowHelp(optionsConfig);
+//
+//                Console.WriteLine("An error occured while parsing input arguments: {0}", ex.Message);
+//
+//                return Exit(false, ExitCode.Error.OptionsParsingFailure);
+//            }
 
-            logRenderer.Dispose();
+//            if (!options.NoLogo)
+//            {
+//                ShowLogo();
+//            }
 
-            if (result.IsSuccess)
-            {
-                return Exit(options.Hold, ExitCode.Ok);
-            }
+//            if (options.ShowHelp)
+//            {
+//                ShowHelp(optionsConfig);
+//                return Exit(options.Hold, ExitCode.Ok);
+//            }
 
-            return Exit(options.Hold, ExitCode.Error.WorkflowFailure);
+//            string workDirectory = SetupWorkDirectory(options);
+
+//            using (ILogRenderer logRenderer = SetupLogRenderer(options))
+//            {
+//                var log = new LogHelper(message => logRenderer.Render(message, "Runner"));
+
+//                if (options.InputFile == null)
+//                {
+//                    log.Error("Input file path is not set");
+//                    ShowHelp(optionsConfig);
+//                    return Exit(false, ExitCode.Error.OptionsParsingFailure);
+//                }
+
+//                DefaultDirectory workDirectoryObj = new DefaultDirectory(workDirectory);
+//                IFile inputFile = GetInputFile(options, workDirectoryObj);
+//                if (!inputFile.Exists)
+//                {
+//                    log.Error("Input file {0} does not exist!", inputFile.AbsolutePath);
+//                    ShowHelp(optionsConfig);
+//                    return Exit(false, ExitCode.Error.OptionsParsingFailure);
+//                }
+
+//                InitializationResult initializationResult = InitializeWorkflow(options, workDirectoryObj, logRenderer, inputFile);
+//
+//                if (!initializationResult.IsSuccess)
+//                {
+//                    return Exit(options.Hold, ExitCode.Error.RunnerInitializationFailure);
+//                }
+//
+//                Console.WriteLine();
+
+//                ITaskResult<Nothing> result = ExecuteWorkflow(
+//                    initializationResult.Workflow, 
+//                    options.Tasks, 
+//                    logRenderer, 
+//                    workDirectoryObj);
+//
+//                if (result.IsSuccess)
+//                {
+//                    return Exit(options.Hold, ExitCode.Ok);
+//                }
+//            }
+
+//            return Exit(options.Hold, ExitCode.Error.WorkflowFailure);
         }
 
-        private static IFile GetInputFile(RosaliaOptions options, DefaultDirectory workDirectory)
-        {
-            var inputFile = options.InputFile;
-            if (string.IsNullOrEmpty(inputFile))
-            {
-                return null;
-                
-            }
+//        private static ITaskResult<Nothing> ExecuteWorkflow(
+//            IWorkflow workflow, 
+//            Identities tasks,
+//            ILogRenderer logRenderer, 
+//            DefaultDirectory workDirectoryObj)
+//        {
+//            var executer = new SubflowTask<Nothing>(
+//                workflow,
+//                tasks);
+//
+//            var context = new TaskContext(
+//                new ParallelExecutionStrategy(),
+//                logRenderer,
+//                workDirectoryObj,
+//                new DefaultEnvironment());
+//
+//            return executer.Execute(context);
+//        }
+//
+//        private static InitializationResult InitializeWorkflow(
+//            RosaliaOptions options, 
+//            DefaultDirectory workDirectory,
+//            ILogRenderer logRenderer, 
+//            IFile inputFile)
+//        {
+//            var runner = new Runner();
+//
+//            var runningOptions = new RunningOptions
+//            {
+//                InputFile = inputFile,
+//                WorkflowBuildOutputPath = options.WorkflowBuildOutputPath,
+//                WorkflowProjectBuildConfiguration = options.WorkflowProjectBuildConfiguration,
+//                LogRenderer = logRenderer,
+//                WorkDirectory = workDirectory,
+//                Properties = options.Properties
+//            };
+//
+//            return runner.Init(runningOptions);
+//        }
 
-            IFile result = Path.IsPathRooted(inputFile)
-                ? new DefaultFile(inputFile)
-                : workDirectory[options.InputFile].AsFile();
+//        private static ILogRenderer SetupLogRenderer(RosaliaOptions options)
+//        {
+//            var logRenderers = new List<ILogRenderer>
+//            {
+//                new ColoredConsoleLogRenderer()
+//            };
+//
+//            foreach (var path in options.OutputFiles)
+//            {
+//                var currentPath = path;
+//                if (Path.GetExtension(path).Equals(".html", StringComparison.InvariantCultureIgnoreCase))
+//                {
+//                    logRenderers.Add(new HtmlLogRenderer(new Lazy<TextWriter>(() => File.CreateText(currentPath))));
+//                }
+//            }
+//
+//            return new CompositeLogRenderer(logRenderers.ToArray());
+//        }
 
-            return result;
-        }
+//        private static string SetupWorkDirectory(RosaliaOptions options)
+//        {
+//            var workDirectory = string.IsNullOrEmpty(options.WorkDirectory)
+//                ? Directory.GetCurrentDirectory()
+//                : options.WorkDirectory;
+//
+//            if (!Path.IsPathRooted(workDirectory))
+//            {
+//                workDirectory = Path.Combine(Directory.GetCurrentDirectory(), workDirectory);
+//            }
+//
+//            Directory.SetCurrentDirectory(workDirectory);
+//            return workDirectory;
+//        }
 
-        private static void ShowHelp(OptionsConfig optionsConfig)
-        {
-            Console.WriteLine("Usage: ");
-            Console.WriteLine();
-            Console.WriteLine("        Rosalia.exe [OPTIONS] WORKFLOW_DLL");
-            Console.WriteLine("   or   Rosalia.exe [OPTIONS] WORKFLOW_PROJECT");
-            Console.WriteLine();
-            Console.WriteLine("where");
-            Console.WriteLine();
-            Console.WriteLine("    WORKFLOW_DLL       Absolute or relative path to a workflow dll file");
-            Console.WriteLine("    WORKFLOW_PROJECT   Absolute or relative path to a workflow csprj file");
-            Console.WriteLine();
-            Console.WriteLine("and options include");
-            Console.WriteLine();
+//        private static IFile GetInputFile(RosaliaOptions options, DefaultDirectory workDirectory)
+//        {
+//            var inputFile = options.InputFile;
+//            if (string.IsNullOrEmpty(inputFile))
+//            {
+//                return null;
+//                
+//            }
+//
+//            IFile result = Path.IsPathRooted(inputFile)
+//                ? new DefaultFile(inputFile)
+//                : workDirectory[options.InputFile].AsFile();
+//
+//            return result;
+//        }
 
-            foreach (var option in optionsConfig)
-            {
-                Console.WriteLine("    " + option.Key.Description);
-                foreach (var aliase in option.Key.Aliases)
-                {
-                    Console.WriteLine("        /{0}", aliase);
-                }
+        
 
-                Console.WriteLine();
-            }
-        }
-
-        private static void ShowLogo()
-        {
-            Console.WriteLine(
-@"
-  _____                 _ _       
- |  __ \               | (_)      
- | |__) |___  ___  __ _| |_  __ _ 
- |  _  // _ \/ __|/ _` | | |/ _` |
- | | \ \ (_) \__ \ (_| | | | (_| |
- |_|  \_\___/|___/\__,_|_|_|\__,_|
-");
-            Console.WriteLine(" v{0}", Assembly.GetExecutingAssembly().GetName().Version);
-            Console.WriteLine();
-        }
+        
     }
 }

@@ -18,15 +18,7 @@
             LogHelper log = null;
             try
             {
-                if (options.InputFile == null)
-                {
-                    throw new Exception("Input file path is not set");
-                }
-
-                if (!options.InputFile.Exists)
-                {
-                    throw new Exception(string.Format("Input file {0} does not exist!", options.InputFile.AbsolutePath));
-                }
+                
                 
                 log = InitLogger(options);
                 log.Info("Initializing...");
