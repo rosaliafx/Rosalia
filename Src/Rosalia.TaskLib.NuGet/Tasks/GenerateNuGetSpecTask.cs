@@ -252,6 +252,7 @@
 
         protected override ITaskResult<Nothing> SafeExecute(TaskContext context)
         {
+            Destination.EnsureExists();
             using (var writer = new StreamWriter(Destination.WriteStream))
             {
                 writer.WriteLine("<?xml version='1.0' encoding='utf-8'?>");

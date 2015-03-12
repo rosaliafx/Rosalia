@@ -45,7 +45,7 @@
                 workDirectory,
                 new DefaultEnvironment());
 
-            return executer.Execute(context);
+            return executer.Execute(context.CreateFor("Executer"));
         }
     }
 }

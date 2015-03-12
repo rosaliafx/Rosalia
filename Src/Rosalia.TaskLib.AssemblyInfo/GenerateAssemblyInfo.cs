@@ -75,6 +75,8 @@ using {{Name}};
                 throw new Exception("Destination file could not be null");
             }
 
+            _destination.EnsureExists();
+
             var model = new Model
             {
                 Attributes = new List<AttributeInfo>(),

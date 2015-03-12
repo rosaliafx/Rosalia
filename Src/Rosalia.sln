@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Svn", "Rosa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.TaskLib.Svn.Tests", "Rosalia.TaskLib.Svn.Tests\Rosalia.TaskLib.Svn.Tests.csproj", "{1B623F4C-0902-4964-9EC0-5D0F8CB2019A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rosalia.Build", "Rosalia.Build\Rosalia.Build.csproj", "{081AE958-9717-415B-8111-C45C94D33018}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,9 @@ Global
 		{1B623F4C-0902-4964-9EC0-5D0F8CB2019A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B623F4C-0902-4964-9EC0-5D0F8CB2019A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B623F4C-0902-4964-9EC0-5D0F8CB2019A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{081AE958-9717-415B-8111-C45C94D33018}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{081AE958-9717-415B-8111-C45C94D33018}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{081AE958-9717-415B-8111-C45C94D33018}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
