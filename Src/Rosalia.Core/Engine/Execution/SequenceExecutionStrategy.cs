@@ -4,12 +4,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using Rosalia.Core.Engine.Composing;
+    using Rosalia.Core.Interception;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
 
     public class SequenceExecutionStrategy : IExecutionStrategy
     {
-        public ITaskResult<IdentityWithResult[]> Execute(Layer layer, Func<Identity, TaskContext> contextFactory)
+        public ITaskResult<IdentityWithResult[]> Execute(Layer layer, Func<Identity, TaskContext> contextFactory, ITaskInterceptor interceptor)
         {
             IList<IdentityWithResult> resultStorage = new List<IdentityWithResult>();
 

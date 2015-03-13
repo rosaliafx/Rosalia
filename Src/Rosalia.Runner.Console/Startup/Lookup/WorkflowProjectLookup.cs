@@ -31,7 +31,8 @@
                 new SequenceExecutionStrategy(), 
                 options.RunningOptions.LogRenderer, 
                 options.RunningOptions.WorkDirectory,
-                new DefaultEnvironment());
+                new DefaultEnvironment(), 
+                interceptor: null);
 
             var buildResult = executerTask.Execute(taskContext);
 

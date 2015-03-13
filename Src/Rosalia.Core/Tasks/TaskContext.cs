@@ -4,6 +4,7 @@
     using System.Linq;
     using Rosalia.Core.Engine.Execution;
     using Rosalia.Core.Environment;
+    using Rosalia.Core.Interception;
     using Rosalia.Core.Logging;
     using Rosalia.FileSystem;
 
@@ -16,12 +17,13 @@
         private readonly LogHelper _log;
         private readonly IDirectory _workDirectory;
         private readonly IEnvironment _environment;
+        private readonly ITaskInterceptor _interceptor;
 
-        public TaskContext(IExecutionStrategy executionStrategy, ILogRenderer logRenderer, IDirectory workDirectory, IEnvironment environment) : this(ResultsStorage.Empty, executionStrategy, null, logRenderer, workDirectory, environment)
+        public TaskContext(IExecutionStrategy executionStrategy, ILogRenderer logRenderer, IDirectory workDirectory, IEnvironment environment, ITaskInterceptor interceptor) : this(ResultsStorage.Empty, executionStrategy, null, logRenderer, workDirectory, environment, interceptor)
         {
         }
 
-        private TaskContext(IResultsStorage results, IExecutionStrategy executionStrategy, Identity identity, ILogRenderer logRenderer, IDirectory workDirectory, IEnvironment environment)
+        private TaskContext(IResultsStorage results, IExecutionStrategy executionStrategy, Identity identity, ILogRenderer logRenderer, IDirectory workDirectory, IEnvironment environment, ITaskInterceptor interceptor)
         {
             _identity = identity;
             _results = results;
@@ -29,6 +31,7 @@
             _logRenderer = logRenderer;
             _workDirectory = workDirectory;
             _environment = environment;
+            _interceptor = interceptor;
             _log = new LogHelper(message => logRenderer.Render(message, Identity));
         }
 
@@ -67,6 +70,11 @@
             get { return _environment; }
         }
 
+        public ITaskInterceptor Interceptor
+        {
+            get { return _interceptor; }
+        }
+
         public TaskContext CreateFor(Identity task)
         {
             return new TaskContext(
@@ -75,20 +83,9 @@
                 task,
                 LogRenderer,
                 WorkDirectory,
-                Environment);
+                Environment,
+                Interceptor);
         }
-
-//        [Obsolete]
-//        public TaskContext CreateDerivedFor<T>(Identity task, T value)
-//        {
-//            return new TaskContext(
-//                Results.CreateDerived(task, value),
-//                ExecutionStrategy,
-//                Identity,
-//                LogRenderer,
-//                WorkDirectory,
-//                Environment);
-//        }
 
         public TaskContext CreateDerived(IdentityWithResult[] resultsToAdd)
         {
@@ -100,7 +97,8 @@
                 Identity,
                 LogRenderer,
                 WorkDirectory,
-                Environment);
+                Environment,
+                Interceptor);
         }
     }
 }

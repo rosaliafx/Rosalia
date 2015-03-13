@@ -8,6 +8,7 @@
     using Rosalia.Core;
     using Rosalia.Core.Engine.Execution;
     using Rosalia.Core.Environment;
+    using Rosalia.Core.Interception;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
@@ -32,13 +33,18 @@
                 spyLogRenderer.Messages);
         }
 
-        public static TaskContext CreateContext(IDirectory workDirectory = null, ILogRenderer logRenderer = null, IEnvironment environment = null)
+        public static TaskContext CreateContext(
+            IDirectory workDirectory = null, 
+            ILogRenderer logRenderer = null, 
+            IEnvironment environment = null,
+            ITaskInterceptor interceptor = null)
         {
             return new TaskContext(
                 new SequenceExecutionStrategy(), 
                 logRenderer ?? new SimpleLogRenderer(), 
                 workDirectory ?? new DirectoryStub(Directory.GetCurrentDirectory()),
-                environment ?? new DefaultEnvironment());
+                environment ?? new DefaultEnvironment(),
+                interceptor);
         }
 
         public static void AssertCommand<TResult>(this ExternalToolTask<TResult> task, Action<string, string> assertAction) where TResult : class

@@ -24,7 +24,7 @@
 
             foreach (Layer layer in layers)
             {
-                ITaskResult<IdentityWithResult[]> layerResults = context.ExecutionStrategy.Execute(layer, context.CreateFor);
+                ITaskResult<IdentityWithResult[]> layerResults = context.ExecutionStrategy.Execute(layer, context.CreateFor, context.Interceptor);
                 if (!layerResults.IsSuccess)
                 {
                     return new FailureResult<T>(layerResults.Error);

@@ -43,7 +43,8 @@
                 new ParallelExecutionStrategy(),
                 logRenderer,
                 workDirectory,
-                new DefaultEnvironment());
+                new DefaultEnvironment(),
+                null /* todo */);
 
             return executer.Execute(context.CreateFor("Executer"));
         }

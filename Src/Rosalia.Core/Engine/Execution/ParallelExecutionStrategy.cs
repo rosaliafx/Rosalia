@@ -6,12 +6,13 @@ namespace Rosalia.Core.Engine.Execution
     using System.Collections.Concurrent;
     using System.Linq;
     using Rosalia.Core.Engine.Composing;
+    using Rosalia.Core.Interception;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
 
     public class ParallelExecutionStrategy : IExecutionStrategy
     {
-        public ITaskResult<IdentityWithResult[]> Execute(Layer layer, Func<Identity, TaskContext> contextFactory)
+        public ITaskResult<IdentityWithResult[]> Execute(Layer layer, Func<Identity, TaskContext> contextFactory, ITaskInterceptor interceptor)
         {
             ITaskResult<IdentityWithResult[]> failure = null;
 

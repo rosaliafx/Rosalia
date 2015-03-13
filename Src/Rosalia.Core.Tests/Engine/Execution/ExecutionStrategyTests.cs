@@ -28,7 +28,8 @@
                     { "task1", new ValTask<string>("foo") },
                     { "task2", new ValTask<string>("bar") }
                 },
-                ContextFactory);
+                ContextFactory, 
+                null);
 
             result.AssertSuccess();
 
@@ -50,7 +51,8 @@
                     { "task1", new ValTask<string>("foo") },
                     { "task2", new FailureTask<string>() }
                 },
-                ContextFactory);
+                ContextFactory, 
+                null);
 
             result.AssertFailure();
         }
