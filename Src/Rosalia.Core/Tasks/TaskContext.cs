@@ -1,5 +1,7 @@
 ﻿namespace Rosalia.Core.Tasks
 {
+    using System;
+    using System.Linq;
     using Rosalia.Core.Engine.Execution;
     using Rosalia.Core.Environment;
     using Rosalia.Core.Logging;
@@ -76,10 +78,24 @@
                 Environment);
         }
 
-        public TaskContext CreateDerivedFor<T>(Identity task, T value)
+//        [Obsolete]
+//        public TaskContext CreateDerivedFor<T>(Identity task, T value)
+//        {
+//            return new TaskContext(
+//                Results.CreateDerived(task, value),
+//                ExecutionStrategy,
+//                Identity,
+//                LogRenderer,
+//                WorkDirectory,
+//                Environment);
+//        }
+
+        public TaskContext CreateDerived(IdentityWithResult[] resultsToAdd)
         {
             return new TaskContext(
-                Results.CreateDerived(task, value),
+                resultsToAdd.Aggregate(
+                    Results,
+                    (results, identityWithResult) => results.CreateDerived(identityWithResult.Identity, identityWithResult.Value)),
                 ExecutionStrategy,
                 Identity,
                 LogRenderer,

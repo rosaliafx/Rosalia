@@ -107,7 +107,7 @@
 
             /* ======================================================================================== */
             
-            Task(
+            var nuspecRosaliaExe = Task(
                 "nuspecRosaliaExe",
 
                 from data in solutionTreeTask
@@ -126,17 +126,23 @@
                     
                 DependsOn(nuspecCore));
 
-//            /* ======================================================================================== */
-//            Register(
-//                name: "Generate spec for Task Libs",
-//                task: ForEach(
-//                    () => Data.FindTaskLibDirectories(),
-//                    directory => Register(
-//                        name: "Generate spec for directory " + directory.Name,
-//                        task: new GenerateNuGetSpecTask()
-//                            .FillCommonProperties(Context, Data)
-//                            .FillTaskLibProperties(Context, Data, directory.Name.Replace("Rosalia.TaskLib.", string.Empty)))));
-//
+            /* ======================================================================================== */
+            ITaskFuture<Nothing> nuspecTaskLibs = Task(
+                "nuspecTaskLibs",
+                from data in solutionTreeTask
+                from version in solutionVersionTask
+                select ForEach(data.FindTaskLibDirectories()).Do(tasklibDir =>
+                {
+                    var libCode = tasklibDir.Name.Replace("Rosalia.TaskLib.", string.Empty);
+                    var taskLibNuspec = string.Format("Rosalia.TaskLib.{0}.nuspec", libCode);
+
+                    return new GenerateNuGetSpecTask(data.Artifacts[taskLibNuspec])
+                        .FillCommonProperties(version)
+                        .FillTaskLibProperties(data, version, libCode);
+                }),
+                
+                DependsOn(nuspecRosaliaExe));
+
 //            /* ======================================================================================== */
 //            Register(
 //                name: "Generate NuGet packages",

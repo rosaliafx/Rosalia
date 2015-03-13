@@ -76,6 +76,13 @@
             return new LinqTaskFuture<TResult>(delegatingTask, new ITaskFuture<object>[] { input });
         }
 
+        public static ITaskFuture<TResult> Select<TResult, TInput>(this ITaskFuture<TInput> input, Func<TInput, ITaskRegistry<TResult>> map)
+            where TResult : class
+            where TInput : class
+        {
+            return Select(input, inputArg => map.Invoke(inputArg).ToTask());
+        }
+
         public static ITaskFuture<Nothing> Select<TInput>(this ITaskFuture<TInput> input, Func<TInput, Action<TaskContext>> map)
             where TInput : class
         {
@@ -147,6 +154,17 @@
             });
 
             return new LinqTaskFuture<TResult>(delegatingTask, allDependencies);
+        }
+
+        public static ITaskFuture<TResult> SelectMany<TInput, TIntermediate, TResult>(
+            this ITaskFuture<TInput> input,
+            Func<TInput, ITaskFuture<TIntermediate>> func,
+            Func<TInput, TIntermediate, ITaskRegistry<TResult>> resultSelector) 
+                where TResult : class 
+                where TInput : class 
+                where TIntermediate : class
+        {
+            return SelectMany(input, func, (inputArg, intermediaArg) => resultSelector.Invoke(inputArg, intermediaArg).ToTask());
         }
 
         public static ITaskFuture<Nothing> SelectMany<TInput, TIntermediate>(

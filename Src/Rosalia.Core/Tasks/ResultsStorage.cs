@@ -1,5 +1,7 @@
 ﻿namespace Rosalia.Core.Tasks
 {
+    using System;
+
     public static class ResultsStorage
     {
         public static readonly IResultsStorage Empty = new Nil();

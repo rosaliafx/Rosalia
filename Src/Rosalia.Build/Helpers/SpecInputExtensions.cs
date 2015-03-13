@@ -14,7 +14,7 @@
                 .Tags("automation", "build", "msbuild", "nant", "psake");
         }
 
-        public static GenerateNuGetSpecTask FillTaskLibProperties(this GenerateNuGetSpecTask input, TaskContext context, BuildData data, string version, string taskLib)
+        public static GenerateNuGetSpecTask FillTaskLibProperties(this GenerateNuGetSpecTask input, BuildData data, string version, string taskLib)
         {
             var projectDirectory = data.Src.GetDirectory(string.Format("Rosalia.TaskLib.{0}", taskLib));
 

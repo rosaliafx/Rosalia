@@ -21,12 +21,26 @@
             RegisteredTasks definitions = _taskRegistry.GetRegisteredTasks();
             Identities tasksToExecute = _tasksToExecute.IsEmpty ? definitions.StartupTaskIds : _tasksToExecute;
             Layer[] layers = _layersComposer.Compose(definitions, tasksToExecute);
-            ITaskResult<IResultsStorage> results = context.ExecutionStrategy.Execute(layers, context);
 
-            if (!results.IsSuccess)
+            foreach (Layer layer in layers)
             {
-                return new FailureResult<T>(results.Error);
+                ITaskResult<IdentityWithResult[]> layerResults = context.ExecutionStrategy.Execute(layer, context.CreateFor);
+                if (!layerResults.IsSuccess)
+                {
+                    return new FailureResult<T>(layerResults.Error);
+                }
+
+                context = context.CreateDerived(layerResults.Data);
             }
+
+            // -------------------
+
+//            ITaskResult<IResultsStorage> results = context.ExecutionStrategy.Execute(layers, context);
+//
+//            if (!results.IsSuccess)
+//            {
+//                return new FailureResult<T>(results.Error);
+//            }
 
             Identity mainExecutableId = definitions.ResultTaskId;
             if (mainExecutableId == null)
@@ -34,7 +48,7 @@
                 return new SuccessResult<T>(default(T));
             }
 
-            return new SuccessResult<T>(results.Data.GetValueOf<T>(mainExecutableId));
+            return new SuccessResult<T>(context.Results.GetValueOf<T>(mainExecutableId));
         }
     }
 }

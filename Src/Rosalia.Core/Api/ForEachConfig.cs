@@ -62,7 +62,7 @@
                     var itemResults = taskDefinitions.Select(def => def.FetchValue(context)).ToList();
                     return _aggregator.Invoke(itemResults).AsTaskResult();
                 }), 
-                new ITaskBehavior[] { });
+                taskDefinitions.Select(def => new DependsOnBehavior(def.Identity)).Cast<ITaskBehavior>().ToArray());
 
             var resultTaskId = resultTask.Identity;
 
