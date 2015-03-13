@@ -16,6 +16,16 @@ namespace Rosalia.TestingSupport.Helpers
             return result;
         }
 
+        public static ITaskResult<T> AssertFailure<T>(this ITaskResult<T> result)
+        {
+            if (result.IsSuccess)
+            {
+                Assert.Fail("Expected failure result but was success");
+            }
+
+            return result;
+        }
+
         public static ITaskResult<T> AssertDataIs<T>(this ITaskResult<T> result, T expected)
         {
             result.AssertSuccess();

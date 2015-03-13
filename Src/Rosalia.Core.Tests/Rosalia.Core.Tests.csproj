@@ -53,6 +53,9 @@
     <Compile Include="Api\AbstractTaskRegistry_Syntax_RegisterFunc.cs" />
     <Compile Include="Api\AbstractTaskRegistry_Syntax_RegisterTask.cs" />
     <Compile Include="Engine\Composing\SimpleLayersComposerTests.cs" />
+    <Compile Include="Engine\Execution\ExecutionStrategyTests.cs" />
+    <Compile Include="Engine\Execution\ParallelExecutionStrategyTests.cs" />
+    <Compile Include="Engine\Execution\SequenceExecutionStrategyTests.cs" />
     <Compile Include="Tasks\PreconditionExecutableTests.cs" />
     <Compile Include="Tasks\RecoverExecutableTests.cs" />
     <Compile Include="IdentitiesTests.cs" />
