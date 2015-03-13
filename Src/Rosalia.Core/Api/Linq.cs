@@ -8,6 +8,11 @@
 
     public static class Linq
     {
+        public static ITask<T> ToTask<T>(this ITaskRegistry<T> registry) where T : class
+        {
+            return new SubflowTask<T>(registry, Identities.Empty);
+        }
+
         public static ITask<TResult> AsExecutable<TResult>(this ITask<TResult> task) where TResult : class
         {
             return task;

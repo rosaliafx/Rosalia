@@ -42,5 +42,15 @@
             string id,
             Action task,
             params ITaskBehavior[] behaviors);
+
+        ITaskFuture<T> Task<T>(
+            string id,
+            ITaskRegistry<T> task,
+            params ITaskBehavior[] behaviors) where T : class;
+
+        ITaskFuture<T> Task<T>(
+            string id,
+            Func<TaskContext, ITaskRegistry<T>> task,
+            params ITaskBehavior[] behaviors) where T : class;
     }
 }
