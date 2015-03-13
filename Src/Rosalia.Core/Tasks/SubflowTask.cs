@@ -33,15 +33,6 @@
                 context = context.CreateDerived(layerResults.Data);
             }
 
-            // -------------------
-
-//            ITaskResult<IResultsStorage> results = context.ExecutionStrategy.Execute(layers, context);
-//
-//            if (!results.IsSuccess)
-//            {
-//                return new FailureResult<T>(results.Error);
-//            }
-
             Identity mainExecutableId = definitions.ResultTaskId;
             if (mainExecutableId == null)
             {
