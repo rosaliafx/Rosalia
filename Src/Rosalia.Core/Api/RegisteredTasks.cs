@@ -7,18 +7,18 @@
 
     public class RegisteredTasks
     {
-        private readonly IDictionary<Identity, FlowableWithDependencies> _map;
+        private readonly IDictionary<Identity, TaskWithBehaviors> _map;
         private readonly Identity _resultTaskId;
         private readonly Identities _startupTaskIds;
 
-        public RegisteredTasks(IDictionary<Identity, FlowableWithDependencies> map, Identity resultTaskId, Identities startupTaskIds)
+        public RegisteredTasks(IDictionary<Identity, TaskWithBehaviors> map, Identity resultTaskId, Identities startupTaskIds)
         {
             _map = map;
             _resultTaskId = resultTaskId;
             _startupTaskIds = startupTaskIds;
         }
 
-        public FlowableWithDependencies this[Identity identity]
+        public TaskWithBehaviors this[Identity identity]
         {
             get { return _map[identity]; }
         }
@@ -33,12 +33,12 @@
             get { return _startupTaskIds; }
         }
 
-        public IEnumerable<T> Transform<T>(Func<Identity, FlowableWithDependencies, T> selector)
+        public IEnumerable<T> Transform<T>(Func<Identity, TaskWithBehaviors, T> selector)
         {
             return _map.Select(pair => selector(pair.Key, pair.Value));
         }
 
-        public IEnumerable<T> Transform<T>(Identities filter, Func<Identity, FlowableWithDependencies, T> selector)
+        public IEnumerable<T> Transform<T>(Identities filter, Func<Identity, TaskWithBehaviors, T> selector)
         {
             return _map.Where(pair => filter.Contains(pair.Key)).Select(pair => selector(pair.Key, pair.Value));
         }

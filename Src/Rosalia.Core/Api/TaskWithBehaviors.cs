@@ -4,13 +4,12 @@
     using Rosalia.Core.Api.Behaviors;
     using Rosalia.Core.Tasks;
 
-    public class FlowableWithDependencies
+    public class TaskWithBehaviors
     {
         private readonly ITask<object> _task;
         private readonly ITaskBehavior[] _behaviors;
-        //private readonly Identities _dependencies;
 
-        public FlowableWithDependencies(ITask<object> task, params ITaskBehavior[] behaviors)
+        public TaskWithBehaviors(ITask<object> task, params ITaskBehavior[] behaviors)
         {
             _task = task;
             _behaviors = behaviors;

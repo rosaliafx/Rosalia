@@ -8,9 +8,9 @@
 
     public class TaskMap
     {
-        private readonly IDictionary<Identity, FlowableWithDependencies> _map = new Dictionary<Identity, FlowableWithDependencies>();
+        private readonly IDictionary<Identity, TaskWithBehaviors> _map = new Dictionary<Identity, TaskWithBehaviors>();
 
-        public IDictionary<Identity, FlowableWithDependencies> Map
+        public IDictionary<Identity, TaskWithBehaviors> Map
         {
             get { return _map; }
         }
@@ -19,12 +19,12 @@
         {
             Identity identity = CreateIdentity(id);
 
-            this[identity] = new FlowableWithDependencies(task, behaviors);
+            this[identity] = new TaskWithBehaviors(task, behaviors);
 
             return new RegistrationTaskFuture<T>(identity);
         }
 
-        public FlowableWithDependencies this[Identity identity]
+        public TaskWithBehaviors this[Identity identity]
         {
             get { return Map[identity]; }
             set { Map[identity] = value; }
