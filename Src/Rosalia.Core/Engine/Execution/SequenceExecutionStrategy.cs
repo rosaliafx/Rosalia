@@ -16,9 +16,20 @@
 
             foreach (var item in layer.Items)
             {
-                var id = item.Id;
-                var executable = item.Task;
-                var result = executable.Execute(contextFactory(id));
+                Identity id = item.Id;
+                ITask<object> executable = item.Task;
+                TaskContext context = contextFactory(id);
+
+                if (interceptor != null)
+                {
+                     interceptor.BeforeTaskExecute(id, executable, context);
+                }
+                
+                ITaskResult<object> result = executable.Execute(context);
+                if (interceptor != null)
+                {
+                    interceptor.AfterTaskExecute(id, executable, context, result);
+                }
 
                 if (!result.IsSuccess)
                 {

@@ -20,7 +20,18 @@ namespace Rosalia.Core.Engine.Execution
             var layerTasks = layer.Items.Select(item => SystemTask.Factory.StartNew(() =>
             {
                 Identity id = item.Id;
-                ITaskResult<object> result = item.Task.Execute(contextFactory(id));
+                TaskContext taskContext = contextFactory(id);
+
+                if (interceptor != null)
+                {
+                    interceptor.BeforeTaskExecute(id, item.Task, taskContext);
+                }
+                
+                ITaskResult<object> result = item.Task.Execute(taskContext);
+                if (interceptor != null)
+                {
+                    interceptor.AfterTaskExecute(id, item.Task, taskContext, result);
+                }
 
                 if (result.IsSuccess)
                 {

@@ -5,8 +5,8 @@
 
     public interface ITaskInterceptor
     {
-        void BeforeTaskExecute(Identity id, ITask<object> task);
+        void BeforeTaskExecute(Identity id, ITask<object> task, TaskContext context);
 
-        void AfterTaskExecute(Identity id, ITask<object> task, ITaskResult<object> result);
+        void AfterTaskExecute(Identity id, ITask<object> task, TaskContext context, ITaskResult<object> result);
     }
 }

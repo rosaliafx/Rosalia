@@ -4,10 +4,13 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Moq;
     using NUnit.Framework;
     using Rosalia.Core.Engine.Composing;
     using Rosalia.Core.Engine.Execution;
+    using Rosalia.Core.Interception;
     using Rosalia.Core.Tasks;
+    using Rosalia.Core.Tasks.Results;
     using Rosalia.TestingSupport.Executables;
     using Rosalia.TestingSupport.Helpers;
 
@@ -17,6 +20,42 @@
         private static readonly Func<Identity, TaskContext> ContextFactory = id => TaskExtensions.CreateContext().CreateFor(id);
 
         protected abstract IExecutionStrategy CreateStrategy();
+
+        [Test]
+        public void Execute_ShouldCallInterceptorBeforeTaskExecution()
+        {
+            var strategy = CreateStrategy();
+            var interceptor = new Mock<ITaskInterceptor>();
+
+            var task = new ValTask<string>("foo");
+            strategy.Execute(
+                new LayerBuilder
+                {
+                    { "task1", task },
+                },
+                ContextFactory,
+                interceptor.Object);
+
+            interceptor.Verify(x => x.BeforeTaskExecute("task1", task, It.IsAny<TaskContext>()));
+        }
+
+        [Test]
+        public void Execute_ShouldCallInterceptorAfterTaskExecution()
+        {
+            var strategy = CreateStrategy();
+            var interceptor = new Mock<ITaskInterceptor>();
+
+            var task = new ValTask<string>("foo");
+            strategy.Execute(
+                new LayerBuilder
+                {
+                    { "task1", task },
+                },
+                ContextFactory,
+                interceptor.Object);
+
+            interceptor.Verify(x => x.AfterTaskExecute("task1", task, It.IsAny<TaskContext>(), It.IsAny<ITaskResult<string>>()));
+        }
 
         [Test]
         public void Execute_SuccessTasks_ShouldReturnResults()
