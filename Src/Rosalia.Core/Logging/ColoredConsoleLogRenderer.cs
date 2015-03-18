@@ -3,12 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
 
     public class ColoredConsoleLogRenderer : ILogRenderer
     {
         private int _consoleWidth;
-        private object _lockObject = new object();
+        private readonly object _lockObject = new object();
 
         public void Init()
         {
@@ -63,15 +62,15 @@
 
                 if (_lastSource == null || !Equals(_lastSource, source))
                 {
-                    // WriteColored(string.Format("[{0}] ", level), GetColorForLevel(level));
                     WriteColored(string.Format("[{0}]", source.Value), ConsoleColor.DarkMagenta);
                     Console.WriteLine();    
                 }
 
                 var lines = message.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
-
                 var procesedLines = new List<string>();
-                var fullIndentSize = 8;
+                
+                const int fullIndentSize = 8;
+
                 var maxWidth = _consoleWidth - fullIndentSize - 1;
                 foreach (var line in lines)
                 {
@@ -87,8 +86,6 @@
 
                 if (procesedLines.Count > 0)
                 {
-                    //Console.Write(new string(' ', fullIndentSize));
-
                     var levelString = " " + level.ToString().ToUpper();
                     WriteColored(levelString, ConsoleColor.DarkGray);
                     Console.Write(new string(' ', fullIndentSize - levelString.Length));

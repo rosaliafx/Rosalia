@@ -57,10 +57,7 @@
             _writerProvider.Value.WriteLine("<tr class='item {0}'>", message.Level);
             _writerProvider.Value.WriteLine("<td>{0}</td>", message.Level);
             _writerProvider.Value.WriteLine("<td>{0}</td>", source.Value);
-            _writerProvider.Value.WriteLine("<td>{0}</td>", message.Text);
-//            _writerProvider.Value.WriteLine("<span class='message'><pre>{0}</pre></span>", 
-//                //HttpUtility.HtmlEncode(message)
-//                message.Text); //todo
+            _writerProvider.Value.WriteLine("<td><pre>{0}</pre></td>", message.Text);
             _writerProvider.Value.WriteLine("</tr>");
         }
 

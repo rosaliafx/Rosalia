@@ -6,7 +6,7 @@
 
     public class CompositeInterceptor : ITaskInterceptor
     {
-        private ITaskInterceptor[] _nestedInterceptors;
+        private readonly ITaskInterceptor[] _nestedInterceptors;
 
         public CompositeInterceptor(params ITaskInterceptor[] nestedInterceptors)
         {

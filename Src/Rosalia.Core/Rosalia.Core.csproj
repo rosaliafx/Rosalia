@@ -84,7 +84,7 @@
     <Compile Include="Engine\Execution\ParallelExecutionStrategy.cs" />
     <Compile Include="Engine\Execution\SequenceExecutionStrategy.cs" />
     <Compile Include="Engine\Composing\Layer.cs" />
-    <Compile Include="Api\FlowableWithDependencies.cs" />
+    <Compile Include="Api\TaskWithBehaviors.cs" />
     <Compile Include="Tasks\FuncTask.cs" />
     <Compile Include="Tasks\ITask.cs" />
     <Compile Include="Identities.cs" />
