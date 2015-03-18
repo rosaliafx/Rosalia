@@ -1,6 +1,7 @@
 ﻿namespace Rosalia.Demo
 {
     using Rosalia.Core.Api;
+    using Rosalia.Core.Tasks.Results;
 
     public class DemoWorkflow : Workflow
     {
@@ -20,6 +21,14 @@
                 context =>
                 {
                     context.Log.Warning("Oh, no, {0}", Message);
+                    return new
+                    {
+                        Name = "John",
+                        Address = new {
+                            Country = "Foo",
+                            City = "Bar"
+                        }
+                    }.AsTaskResult();
                 });
 
             Task(

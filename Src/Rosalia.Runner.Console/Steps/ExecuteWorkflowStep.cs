@@ -4,6 +4,7 @@
     using Rosalia.Core.Api;
     using Rosalia.Core.Engine.Execution;
     using Rosalia.Core.Environment;
+    using Rosalia.Core.Interception;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
@@ -44,7 +45,8 @@
                 logRenderer,
                 workDirectory,
                 new DefaultEnvironment(),
-                null /* todo */);
+                new CompositeInterceptor(
+                    new LoggingInterceptor()));
 
             return executer.Execute(context.CreateFor("Executer"));
         }
