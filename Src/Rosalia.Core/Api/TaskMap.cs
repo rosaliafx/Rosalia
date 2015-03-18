@@ -35,13 +35,6 @@
             return string.IsNullOrEmpty(id) ? new Identity() : new Identity(id);
         }
 
-//        private static Identities GetIdentities(ITaskBehavior[] behaviors)
-//        {
-//            return new Identities(behaviors
-//                .OfType<DependsOnBehavior>()
-//                .Select(task => task.Identity).ToArray());
-//        }
-
         public Identities DefaultTasks()
         {
             return new Identities(_map

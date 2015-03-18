@@ -51,7 +51,7 @@
 
             foreach (TItem item in _source)
             {
-                taskDefinitions.Add(map.Register("task_" + index, _task.Invoke(item), new ITaskBehavior[] {}));
+                taskDefinitions.Add(map.Register(/* todo: check task name */ "task_" + index, _task.Invoke(item), new ITaskBehavior[] {}));
                 index++;
             }
 
