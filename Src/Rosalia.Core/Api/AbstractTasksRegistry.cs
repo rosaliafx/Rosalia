@@ -11,7 +11,7 @@
     public class AbstractTasksRegistry : TaskRegistryApiHelper, ITaskRegistryApi
     {
         private readonly TaskMap _taskMap = new TaskMap();
-        private Identity _lastRegisteredTask = null;
+        private Identity _lastRegisteredTask;
 
         protected TaskMap TaskMap
         {
@@ -65,21 +65,13 @@
             ITaskFuture<T> task,
             params ITaskBehavior[] behaviors) where T : class
         {
-            //            ILinqTaskFuture linqTask = (ILinqTaskFuture)task;
-            //            List<ITaskFuture<object>> allDependencies = new List<ITaskFuture<object>>(linqTask.Dependencies);
-            //
-            //            allDependencies.AddRange(dependencies);
-            //
-            //            return TaskMap.Register(id, (ITask<T>)linqTask.task, allDependencies.ToArray());
-
             ILinqTaskFuture linqTask = (ILinqTaskFuture)task;
-
             List<ITaskBehavior> allDependencies = new List<ITaskBehavior>();
+
             allDependencies.AddRange(linqTask.Dependencies.Select(t => new DependsOnBehavior(t.Identity)));
             allDependencies.AddRange(behaviors);
 
             return DoRegister(id, (ITask<T>)linqTask.Task, allDependencies.ToArray());
-            //return TaskMap.Register(id, (ITask<T>)linqTask.Task, allDependencies.ToArray());
         }
 
         public ITaskFuture<Nothing> Task(
