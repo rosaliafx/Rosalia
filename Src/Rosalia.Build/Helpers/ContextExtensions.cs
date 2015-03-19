@@ -20,6 +20,7 @@
             return data.RosaliaRunnerConsoleBin.SearchFilesIn()
                 .IncludeByFileName(
                     "Rosalia.Core.dll",
+                    "Rosalia.FileSystem.dll",
                     "Rosalia.TaskLib.Standard.dll");
         }
 
@@ -29,8 +30,7 @@
                 .IncludeByFileName(
                     "Rosalia.exe",
                     "Rosalia.Core.dll",
-                    "Rosalia.Core.Watchers.dll",
-                    "Rosalia.Runner.dll",
+                    "Rosalia.FileSystem.dll",
                     "Rosalia.TaskLib.Standard.dll",
                     "Rosalia.TaskLib.MsBuild.dll");
         }
