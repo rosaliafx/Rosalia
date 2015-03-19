@@ -24,6 +24,11 @@
             _sourceFiles.Add(new FileToCompress(file, entityPath));
         }
 
+        public IEnumerator GetEnumerator()
+        {
+            return _sourceFiles.GetEnumerator();
+        }
+
         protected override ITaskResult<Nothing> SafeExecute(TaskContext context)
         {
             if (Destination == null)
@@ -54,11 +59,6 @@
             }
 
             return Success;
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _sourceFiles.GetEnumerator();
         }
     }
 }

@@ -34,7 +34,6 @@
             if (string.IsNullOrEmpty(inputFile))
             {
                 return null;
-
             }
 
             IFile result = Path.IsPathRooted(inputFile)

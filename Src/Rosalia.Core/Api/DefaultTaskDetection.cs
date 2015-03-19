@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Determines how the default tasks should be defined if no explicit 
-    /// bahaviours were assigned.
+    /// behaviors were assigned.
     /// </summary>
     public enum DefaultTaskDetection
     {

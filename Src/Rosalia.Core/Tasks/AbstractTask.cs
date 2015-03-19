@@ -23,10 +23,7 @@
         {
             try
             {
-                var result = SafeExecute(context);
-
-//                LogResult(context, result);
-                return result;
+                return SafeExecute(context);
             }
             catch (Exception ex)
             {
@@ -38,25 +35,9 @@
                     }
                 }
 
-                var result = new FailureResult<T>(ex);
-
-//                LogResult(context, result);
-
-                return result;
+                return new FailureResult<T>(ex);
             }
         }
-
-//        protected virtual void LogResult(TaskContext context, ITaskResult<T> result)
-//        {
-//            if (result.IsSuccess)
-//            {
-//                context.Log.Info("Completed. Result is {0}", result.Data);
-//            }
-//            else
-//            {
-//                context.Log.Error(result.Error == null ? "Unknown error occured" : result.Error.Message);
-//            }
-//        }
 
         protected abstract ITaskResult<T> SafeExecute(TaskContext context);
     }

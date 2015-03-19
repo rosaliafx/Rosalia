@@ -20,6 +20,5 @@
         public ILogRenderer LogRenderer { get; set; }
 
         public IDictionary<string, string> Properties { get; set; }
-
     }
 }

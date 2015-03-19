@@ -95,7 +95,6 @@
             return new LinqTaskFuture<Nothing>(delegatingTask, new ITaskFuture<object>[] { input });
         }
         
-        
         public static ITaskFuture<TResult> SelectMany<TInput, TIntermediate, TResult>(
             this ITaskFuture<TInput> input,
             Func<TInput, ITaskFuture<TIntermediate>> func,

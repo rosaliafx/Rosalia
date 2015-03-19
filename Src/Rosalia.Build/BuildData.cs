@@ -5,9 +5,13 @@
     public class BuildData
     {
         public string Configuration { get; set; }
+
         public IDirectory ProjectRootDirectory { get; set; }
+
         public IDirectory Src { get; set; }
+
         public IFile SolutionFile { get; set; }
+
         public IDirectory Artifacts { get; set; }
 
         public IDirectory BuildAssets

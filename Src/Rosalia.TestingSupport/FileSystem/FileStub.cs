@@ -61,13 +61,7 @@
                 _contentStream = new MemoryStream(Encoding.Default.GetBytes(value));
             }
         }
-//
-//        public string AbsolutePath { get; set; }
-//
-//        public override bool Exists { get; private set; }
-//
-//        public string NameWithoutExtension { get; set; }
-//
+  
         public override Stream ReadStream
         {
             get { return _contentStream; }
@@ -82,14 +76,12 @@
                 return _contentStream;
             }
         }
-//
-//        public ExtensionInfo Extension { get; set; }
-//
+  
         public override long Length
         {
             get { return _contentStream.Length; }
         }
-//
+  
         public override IDirectory Directory
         {
             get { return ParentDirectory; }
@@ -101,20 +93,19 @@
             ((FileStub) destination).Content = Content;
         }
 
-        public void CopyTo(IDirectory directory)
+        public override void CopyTo(IDirectory directory)
         {
             // todo
         }
 
-        public void EnsureExists()
+        public override void EnsureExists()
         {
             _exists = true;
         }
 
-        public void Delete()
+        public override void Delete()
         {
             _exists = false;
         }
-        
     }
 }

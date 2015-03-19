@@ -1,12 +1,12 @@
 ﻿namespace Rosalia.Core.Tests.Api
 {
     using NUnit.Framework;
-    using Rosalia.TestingSupport.Executables;
-    using Rosalia.TestingSupport.Helpers;
     using Rosalia.Core.Api;
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
     using Rosalia.FileSystem;
+    using Rosalia.TestingSupport.Executables;
+    using Rosalia.TestingSupport.Helpers;
 
     [TestFixture]
     public class AbstractTaskRegistry_Syntax_LinqAction
@@ -24,9 +24,6 @@
                         from foo in fooTask
                         select context =>
                         {
-                            IDirectory dir = w.WorkDirectory      [".."]["Src"]["DotNet"]["Artifacts"];
-                            IFile file = w.WorkDirectory          [".."]["Src"]["DotNet"]["Artifacts"];
-
                             context.Log.Info("Log info!");
                         });
                 })

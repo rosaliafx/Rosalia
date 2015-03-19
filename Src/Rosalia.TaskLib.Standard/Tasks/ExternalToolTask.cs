@@ -151,19 +151,16 @@
 
                 if (level.HasValue)
                 {
-                    //context.Log.AddMessage(level.Value, message);
                     return level.Value;
                 }
             }
 
             return MessageLevel.Info;
-            //context.Log.Info(message);
         }
 
         protected virtual MessageLevel ProcessOnErrorDataReceived(string message, TaskContext context)
         {
             return MessageLevel.Error;
-            //context.Log.Error(message);
         }
 
         protected virtual IDirectory GetToolWorkDirectory(TaskContext context)

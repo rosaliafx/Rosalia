@@ -6,8 +6,9 @@
 
     public class ColoredConsoleLogRenderer : ILogRenderer
     {
-        private int _consoleWidth;
         private readonly object _lockObject = new object();
+        private int _consoleWidth;
+        private Identity _lastSource;
 
         public void Init()
         {
@@ -23,36 +24,9 @@
             }
         }
 
-        private ConsoleColor GetColorForLevel(MessageLevel level)
-        {
-            switch (level)
-            {
-                case MessageLevel.Info:
-                    return ConsoleColor.Gray;
-                case MessageLevel.Success:
-                    return ConsoleColor.DarkGreen;
-                case MessageLevel.Warn:
-                    return ConsoleColor.DarkYellow;
-                case MessageLevel.Error:
-                    return ConsoleColor.DarkRed;
-                default:
-                    throw new ArgumentOutOfRangeException("level");
-            }
-        }
-
-        private void WriteColored(string text, ConsoleColor consoleColor)
-        {
-            var initialColor = Console.ForegroundColor;
-            Console.ForegroundColor = consoleColor;
-            Console.Write(text);
-            Console.ForegroundColor = initialColor;
-        }
-
         public void Dispose()
         {
         }
-
-        private Identity _lastSource;
 
         public void Render(Message message, Identity source)
         {
@@ -110,6 +84,31 @@
 
                 _lastSource = source;
             }
+        }
+
+        private ConsoleColor GetColorForLevel(MessageLevel level)
+        {
+            switch (level)
+            {
+                case MessageLevel.Info:
+                    return ConsoleColor.Gray;
+                case MessageLevel.Success:
+                    return ConsoleColor.DarkGreen;
+                case MessageLevel.Warn:
+                    return ConsoleColor.DarkYellow;
+                case MessageLevel.Error:
+                    return ConsoleColor.DarkRed;
+                default:
+                    throw new ArgumentOutOfRangeException("level");
+            }
+        }
+
+        private void WriteColored(string text, ConsoleColor consoleColor)
+        {
+            var initialColor = Console.ForegroundColor;
+            Console.ForegroundColor = consoleColor;
+            Console.Write(text);
+            Console.ForegroundColor = initialColor;
         }
     }
 }
