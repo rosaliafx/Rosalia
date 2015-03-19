@@ -1,7 +1,7 @@
 ﻿namespace Rosalia.Core.Tests.Api
 {
     using NUnit.Framework;
-    using Rosalia.Core.Tasks.Results;
+    using Rosalia.Core.Api;
     using Rosalia.TestingSupport.Executables;
     using Rosalia.TestingSupport.Helpers;
 

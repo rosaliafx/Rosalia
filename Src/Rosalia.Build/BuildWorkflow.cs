@@ -1,12 +1,10 @@
 ﻿namespace Rosalia.Build
 {
     using System.Reflection;
-    using System.Runtime.Remoting.Contexts;
     using Rosalia.Build.Helpers;
     using Rosalia.Core.Api;
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
-    using Rosalia.FileSystem;
     using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.MsBuild;

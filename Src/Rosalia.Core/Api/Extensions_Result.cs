@@ -1,6 +1,8 @@
-﻿namespace Rosalia.Core.Tasks.Results
+﻿namespace Rosalia.Core.Api
 {
-    public static class ResultsExtensions
+    using Rosalia.Core.Tasks.Results;
+
+    public static partial class Extensions
     {
         public static ITaskResult<T> AsTaskResult<T>(this T value)
         {

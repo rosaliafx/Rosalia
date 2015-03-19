@@ -1,6 +1,8 @@
 ﻿namespace Rosalia.Demo
 {
+    using System;
     using Rosalia.Core.Api;
+    using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
 
     public class DemoWorkflow : Workflow
@@ -31,8 +33,6 @@
                     }.AsTaskResult();
                 });
 
-            string x = greet2.FetchValue(null).Name;
-
             Task(
                 "Greet3",
                 context =>
@@ -40,6 +40,11 @@
                     context.Log.Error("Oh, no, {0}", 42);
                 },
                 DependsOn(greet2));
+
+            Task(
+                "",
+                from v in greet2
+                select new {}.AsTaskResult());
         }
     }
 }

@@ -6,58 +6,8 @@
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
 
-    public static class Linq
+    public static partial class Extensions
     {
-        public static ITask<T> ToTask<T>(this ITaskRegistry<T> registry) where T : class
-        {
-            return new SubflowTask<T>(registry, Identities.Empty);
-        }
-
-        public static ITask<TResult> AsExecutable<TResult>(this ITask<TResult> task) where TResult : class
-        {
-            return task;
-        }
-
-        public static ITask<TResult> WithPrecondition<TResult>(this ITask<TResult> task, Func<bool> predicate, Func<TResult> defaultValueProvider) where TResult : class
-        {
-            return new PreconditionTask<TResult>(task, predicate, defaultValueProvider);
-        }
-
-        public static ITask<TResult> WithPrecondition<TResult>(this ITask<TResult> task, Func<bool> predicate, TResult defaultValue) where TResult : class
-        {
-            return new PreconditionTask<TResult>(task, predicate, defaultValue);
-        }
-
-        public static ITask<TResult> WithPrecondition<TResult>(this ITask<TResult> task, Func<bool> predicate) where TResult : class
-        {
-            return new PreconditionTask<TResult>(task, predicate);
-        }
-
-        public static ITask<TResult> WithPrecondition<TResult>(this ITask<TResult> task, bool predicate, Func<TResult> defaultValueProvider) where TResult : class
-        {
-            return new PreconditionTask<TResult>(task, () => predicate, defaultValueProvider);
-        }
-
-        public static ITask<TResult> WithPrecondition<TResult>(this ITask<TResult> task, bool predicate, TResult defaultValue) where TResult : class
-        {
-            return new PreconditionTask<TResult>(task, () => predicate, defaultValue);
-        }
-
-        public static ITask<TResult> WithPrecondition<TResult>(this ITask<TResult> task, bool predicate) where TResult : class
-        {
-            return new PreconditionTask<TResult>(task, () => predicate);
-        }
-
-        public static ITask<TResult> RecoverWith<TResult>(this ITask<TResult> task, Func<TResult> valueProvider) where TResult : class
-        {
-            return new RecoverTask<TResult>(task, valueProvider);
-        }
-
-        public static ITask<TResult> RecoverWith<TResult>(this ITask<TResult> task, TResult value) where TResult : class
-        {
-            return new RecoverTask<TResult>(task, value);
-        }
-
         public static ITaskFuture<TResult> Select<TResult, TInput>(this ITaskFuture<TInput> input, Func<TInput, ITask<TResult>> map)
             where TResult : class
             where TInput : class
@@ -109,7 +59,7 @@
                 TInput inputValue = input.FetchValue(context);
                 ITaskFuture<TIntermediate> intermediate = func.Invoke(inputValue);
                 
-                return new SuccessResult<TResult>(resultSelector.Invoke(inputValue, intermediate.FetchValue(context))); //.Execute(context);
+                return new SuccessResult<TResult>(resultSelector.Invoke(inputValue, intermediate.FetchValue(context)));
             });
 
             return new LinqTaskFuture<TResult>(delegatingTask, allDependencies);
@@ -218,7 +168,6 @@
     {
         private readonly ITask<TResult> _task;
         private readonly ITaskFuture<object>[] _dependencies;
-        private Identity _identity;
 
         public LinqTaskFuture(ITask<TResult> task, ITaskFuture<object>[] dependencies)
         {
@@ -228,7 +177,7 @@
 
         public override Identity Identity
         {
-            get { return _identity; }
+            get { return null; }
         }
 
         public ITask<object> Task

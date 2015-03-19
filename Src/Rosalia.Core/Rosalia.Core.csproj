@@ -43,6 +43,10 @@
     <Compile Include="Api\Behaviors\DependsOnBehavior.cs" />
     <Compile Include="Api\Behaviors\ITaskBehavior.cs" />
     <Compile Include="Api\DefaultTaskDetection.cs" />
+    <Compile Include="Api\Extensions_Recovery.cs" />
+    <Compile Include="Api\Extensions_Precondition.cs" />
+    <Compile Include="Api\Extensions_Task.cs" />
+    <Compile Include="Api\Extensions_Result.cs" />
     <Compile Include="Api\ForEachConfig.cs" />
     <Compile Include="Api\ITaskRegistryApi.cs" />
     <Compile Include="Api\RegisteredTasks.cs" />
@@ -66,10 +70,9 @@
     <Compile Include="Tasks\Futures\TaskFuture.cs" />
     <Compile Include="Tasks\Futures\RegistrationTaskFuture.cs" />
     <Compile Include="Tasks\Results\ITaskResult.cs" />
-    <Compile Include="Tasks\Results\ResultsExtensions.cs" />
     <Compile Include="Tasks\Results\SuccessResult.cs" />
     <Compile Include="Tasks\Results\FailureResult.cs" />
-    <Compile Include="Api\Linq.cs" />
+    <Compile Include="Api\Extensions_Linq.cs" />
     <Compile Include="Identity.cs" />
     <Compile Include="Api\AbstractTasksRegistry.cs" />
     <Compile Include="Tasks\AbstractTask.cs" />
