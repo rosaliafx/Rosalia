@@ -1,8 +1,10 @@
 ﻿namespace Rosalia.Build
 {
+    using System;
     using System.Reflection;
     using Rosalia.Build.Helpers;
     using Rosalia.Core.Api;
+    using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
     using Rosalia.TaskLib.AssemblyInfo;
@@ -43,7 +45,11 @@
             var solutionVersionTask = Task(
                 "solutionVersion",
                 from value in gitVersionTask
-                select (value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount).AsTaskResult());
+                select new
+                {
+                    SolutionVersion = value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount,
+                    NuGetVersion = value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount + "-alpha"
+                }.AsTaskResult());
 
             /* ======================================================================================== */
 
@@ -57,8 +63,8 @@
                     Attributes =
                     {
                         _ => new AssemblyProductAttribute("Rosalia"),
-                        _ => new AssemblyVersionAttribute(version),
-                        _ => new AssemblyFileVersionAttribute(version)
+                        _ => new AssemblyVersionAttribute(version.SolutionVersion),
+                        _ => new AssemblyFileVersionAttribute(version.SolutionVersion)
                     }
                 }.AsExecutable());
 
@@ -95,7 +101,7 @@
                 from version in solutionVersionTask
                 select new GenerateNuGetSpecTask(data.NuSpecRosaliaCore)
                     .Id("Rosalia.Core")
-                    .FillCommonProperties(version)
+                    .FillCommonProperties(version.NuGetVersion)
                     .Description("Core libs for Rosalia framework.")
                     .WithFiles(data.GetCoreLibFiles(), "lib")
                     .AsExecutable(),
@@ -112,13 +118,13 @@
                 from version in solutionVersionTask
                 select new GenerateNuGetSpecTask(data.NuSpecRosalia)
                     .Id("Rosalia")
-                    .FillCommonProperties(version)
+                    .FillCommonProperties(version.NuGetVersion)
                     .Description("Automation tool that allows writing build, install or other workflows in C#. This package automatically integrates Rosalia to your Class Library project.")
                     .WithFile(data.RosaliaPackageInstallScript, "tools")
                     .WithFile(data.RosaliaRunnerConsoleExe, "tools")
                     .WithFiles(data.GetRunnerDllFiles(), "tools")
                     .WithFiles(data.BuildAssets.Files.IncludeByExtension(".pp"), "content")
-                    .WithDependency("Rosalia.Core", version)
+                    .WithDependency("Rosalia.Core", version.NuGetVersion)
                     .WithDependency("NuGetPowerTools", version: "0.29")
                     .AsExecutable(),
                     
@@ -135,8 +141,8 @@
                     var taskLibNuspec = string.Format("Rosalia.TaskLib.{0}.nuspec", libCode);
 
                     return new GenerateNuGetSpecTask(data.Artifacts[taskLibNuspec])
-                        .FillCommonProperties(version)
-                        .FillTaskLibProperties(data, version, libCode);
+                        .FillCommonProperties(version.NuGetVersion)
+                        .FillTaskLibProperties(data, version.NuGetVersion, libCode);
                 }),
                 
                 DependsOn(nuspecRosaliaExe));
