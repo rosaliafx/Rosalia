@@ -146,32 +146,17 @@
             Task(
                 "Generate NuGet packages",
                 from data in solutionTreeTask
-                select ForEach(data.Artifacts.Files.IncludeByExtension(".nuspec")).Do(file => new GeneratePackageTask(file)),
+                select ForEach(data.Artifacts.Files.IncludeByExtension(".nuspec")).Do(file => 
+                    new GeneratePackageTask(file)
+                    {
+                        ToolPath = data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath
+                    }),
                 
                 Default(),
 
                 DependsOn(nuspecCore),
                 DependsOn(nuspecRosaliaExe),
                 DependsOn(nuspecTaskLibs));
-
-//            /* ======================================================================================== */
-//            Register(
-//                name: "Genarate docs",
-//                task: new BuildDocsTask(),
-//                beforeExecute: task => task.SourceDirectory = Data.Src);
-//
-//            /* ======================================================================================== */
-//            Register(
-//                name: "Push documentation to GhPages",
-//                task: new PrepareDocsForDeploymentTask(),
-//                beforeExecute: task =>
-//                {
-//                    if (!Context.WorkDirectory.GetFile("private_data.yaml").Exists)
-//                    {
-//                        Result.AddWarning("No private data yaml file. Skip docs deployment.");
-//                        Result.Succeed();
-//                    }
-//                });
         }
     }
 }
