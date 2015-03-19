@@ -38,7 +38,9 @@
         {
             ITask<Nothing> delegatingTask = new FuncTask<Nothing>(context =>
             {
-                map.Invoke(input.FetchValue(context));
+                var action = map.Invoke(input.FetchValue(context));
+                action.Invoke(context);
+
                 return Nothing.Value.AsTaskResult();
             });
 

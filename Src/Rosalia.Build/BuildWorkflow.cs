@@ -66,7 +66,7 @@
                         _ => new AssemblyVersionAttribute(version.SolutionVersion),
                         _ => new AssemblyFileVersionAttribute(version.SolutionVersion)
                     }
-                }.AsExecutable());
+                }.AsTask());
 
             /* ======================================================================================== */
 
@@ -80,7 +80,7 @@
                     {
                         MsBuildSwitch.Configuration(data.Configuration)
                     }
-                }.AsExecutable(),
+                }.AsTask(),
                 DependsOn(generateAssemblyInfoTask));
 
             /* ======================================================================================== */
@@ -104,7 +104,7 @@
                     .FillCommonProperties(version.NuGetVersion)
                     .Description("Core libs for Rosalia framework.")
                     .WithFiles(data.GetCoreLibFiles(), "lib")
-                    .AsExecutable(),
+                    .AsTask(),
                     
                 DependsOn(buildSolution),
                 DependsOn(clearArtifacts));
@@ -126,7 +126,7 @@
                     .WithFiles(data.BuildAssets.Files.IncludeByExtension(".pp"), "content")
                     .WithDependency("Rosalia.Core", version.NuGetVersion)
                     .WithDependency("NuGetPowerTools", version: "0.29")
-                    .AsExecutable(),
+                    .AsTask(),
                     
                 DependsOn(nuspecCore));
 
