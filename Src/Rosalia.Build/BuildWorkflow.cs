@@ -141,18 +141,19 @@
                 
                 DependsOn(nuspecRosaliaExe));
 
-//            /* ======================================================================================== */
-//            Register(
-//                name: "Generate NuGet packages",
-//                task: ForEach(
-//                    () => Data.Artifacts.Files.IncludeByExtension(".nuspec"),
-//                    file => Register(
-//                        name: "Generate nuget package " + file.Name,
-//                        task: new GeneratePackageTask
-//                        {
-//                            SpecFile = file
-//                        })));
-//
+            /* ======================================================================================== */
+
+            Task(
+                "Generate NuGet packages",
+                from data in solutionTreeTask
+                select ForEach(data.Artifacts.Files.IncludeByExtension(".nuspec")).Do(file => new GeneratePackageTask(file)),
+                
+                Default(),
+
+                DependsOn(nuspecCore),
+                DependsOn(nuspecRosaliaExe),
+                DependsOn(nuspecTaskLibs));
+
 //            /* ======================================================================================== */
 //            Register(
 //                name: "Genarate docs",
