@@ -25,8 +25,8 @@
         public void Compose_IndependentTasks_ShouldGoToTheSameLayer()
         {
             var map = new TaskMap();
-            map[new Identity()] = new FlowableWithDependencies(FakeFlowable());
-            map[new Identity()] = new FlowableWithDependencies(FakeFlowable());
+            map[new Identity()] = new TaskWithBehaviors(FakeFlowable());
+            map[new Identity()] = new TaskWithBehaviors(FakeFlowable());
 
             var result = ComposeWithAllTasksAsFilter(map).ToList();
 
@@ -42,8 +42,8 @@
             var idPrimary = new Identity();
             var idSecondary = new Identity();
 
-            map[idPrimary] = new FlowableWithDependencies(FakeFlowable());
-            map[idSecondary] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idPrimary));
+            map[idPrimary] = new TaskWithBehaviors(FakeFlowable());
+            map[idSecondary] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
 
             var result = ComposeWithAllTasksAsFilter(map).ToList();
 
@@ -65,9 +65,9 @@
             var idSecondary1 = new Identity();
             var idSecondary2 = new Identity();
 
-            map[idPrimary] = new FlowableWithDependencies(FakeFlowable());
-            map[idSecondary1] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idPrimary));
-            map[idSecondary2] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idPrimary));
+            map[idPrimary] = new TaskWithBehaviors(FakeFlowable());
+            map[idSecondary1] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
+            map[idSecondary2] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
 
             var result = ComposeWithFilter(map, Identities.Empty + idSecondary2).ToList();
 
@@ -90,8 +90,8 @@
                 var idPrimary = new Identity();
                 var idSecondary = new Identity();
 
-                map[idPrimary] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idSecondary));
-                map[idSecondary] = new FlowableWithDependencies(FakeFlowable(), new DependsOnBehavior(idPrimary));
+                map[idPrimary] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idSecondary));
+                map[idSecondary] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
 
                 ComposeWithAllTasksAsFilter(map);
             });

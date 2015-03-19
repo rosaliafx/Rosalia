@@ -24,7 +24,7 @@ namespace Rosalia.TestingSupport.Helpers
         {
             return definitions
                 .Transform((identity, dependencies) => new TaskDefinitionAssertions(identity, dependencies, definitions))
-                .FirstOrDefault(x => x.FlowableWithDependencies.Task == task) ?? new TaskDefinitionAssertions(definitions, string.Format("Task for task {0} not found", task));
+                .FirstOrDefault(x => x.TaskWithBehaviors.Task == task) ?? new TaskDefinitionAssertions(definitions, string.Format("Task for task {0} not found", task));
         }
 
         public static TaskDefinitionAssertions DefinitionById(this RegisteredTasks definitions, string id)
@@ -38,14 +38,14 @@ namespace Rosalia.TestingSupport.Helpers
     public class TaskDefinitionAssertions
     {
         private readonly Identity _identity;
-        private readonly FlowableWithDependencies _flowableWithDependencies;
+        private readonly TaskWithBehaviors _taskWithBehaviors;
         private readonly RegisteredTasks _definitions;
         private readonly string _notFoundMessage;
 
-        public TaskDefinitionAssertions(Identity identity, FlowableWithDependencies flowableWithDependencies, RegisteredTasks definitions)
+        public TaskDefinitionAssertions(Identity identity, TaskWithBehaviors taskWithBehaviors, RegisteredTasks definitions)
         {
             _identity = identity;
-            _flowableWithDependencies = flowableWithDependencies;
+            _taskWithBehaviors = taskWithBehaviors;
             _definitions = definitions;
         }
 
@@ -60,14 +60,14 @@ namespace Rosalia.TestingSupport.Helpers
             get { return _identity; }
         }
 
-        public FlowableWithDependencies FlowableWithDependencies
+        public TaskWithBehaviors TaskWithBehaviors
         {
-            get { return _flowableWithDependencies; }
+            get { return _taskWithBehaviors; }
         }
 
         public TaskDefinitionAssertions AssertDefined()
         {
-            if (Identity == null || FlowableWithDependencies == null)
+            if (Identity == null || TaskWithBehaviors == null)
             {
                 Assert.Fail(_notFoundMessage);
             }
@@ -78,7 +78,7 @@ namespace Rosalia.TestingSupport.Helpers
         public TaskDefinitionAssertions AssertHasNoDependencies()
         {
             AssertDefined();
-            Assert.That(_flowableWithDependencies.Dependencies.Items, Is.Null.Or.Empty);
+            Assert.That(_taskWithBehaviors.Dependencies.Items, Is.Null.Or.Empty);
 
             return this;
         }
@@ -86,9 +86,9 @@ namespace Rosalia.TestingSupport.Helpers
         public TaskDefinitionAssertions AssertDependsOn(string dependencyId)
         {
             AssertDefined();
-            Assert.That(_flowableWithDependencies.Dependencies, Is.Not.Null.Or.Empty);
+            Assert.That(_taskWithBehaviors.Dependencies, Is.Not.Null.Or.Empty);
             
-            var dependency = _flowableWithDependencies.Dependencies.Find(dependencyId);
+            var dependency = _taskWithBehaviors.Dependencies.Find(dependencyId);
             if (dependency == null)
             {
                 Assert.Fail("Task [{0}] does not depend on task [{1}]", _identity.Value, dependencyId);    
@@ -100,7 +100,7 @@ namespace Rosalia.TestingSupport.Helpers
         public TaskDefinitionAssertions AssertExecutableIs(ITask<object> task)
         {
             AssertDefined();
-            Assert.That(FlowableWithDependencies.Task, Is.EqualTo(task));
+            Assert.That(TaskWithBehaviors.Task, Is.EqualTo(task));
 
             return this;
         }

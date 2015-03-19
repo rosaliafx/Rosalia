@@ -31,6 +31,8 @@
                     }.AsTaskResult();
                 });
 
+            string x = greet2.FetchValue(null).Name;
+
             Task(
                 "Greet3",
                 context =>
