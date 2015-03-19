@@ -1,25 +1,39 @@
 # Rosalia #
 
-Rosalia is an automation tool written in C#. It could be used for
+Rosalia is a concurrency-aware build automation tool that utilize monadic query-comprehension syntax to allow writing tasks in concise and strongly-typed manner using C#.
 
-- build automation;
-- install automation;
-- ...any other kind of automation
+* use the same language for both main codebase and build script
+* get debugging, refactoring and testing tools to work for build "scripts" out of the box
+* utilize any third-party .NET library for build task purposes
 
-## Features ##
+```C#
+var fooTask = Task(                /**********************/
+    "fooTask",                     /* define a task as   */
+    () => {                        /* a simple action... */
+		// do something here       /**********************/
+	});
 
-- uses MSBuild and native csproj/sln files for direct compiling -- no custom compiler calls;
-- explicit workflow definition -- no (task)->(depends on task) stuff.
-- tasks are defined in pure C#. Debug, refactoring, unit testing and all the features of IDE are available;
-- you can use standard task or define your own as normal C# classes;
-- any external .NET library can be used in task body;
-- use NuGet for quick start and tasks importing;
+var barTask = Task(                /**********************/
+    "barTask",                     /* ..or use a func if */
+    () => {                        /* you need to return */
+		return "bar";              /* a result...        */
+	});                            /**********************/
 
-## Quick Start ##
+var bazTask = Task(                /**********************/ 
+	"bazTask",                     /* ...or use a class  */
+	new MyCustomTask());           /* to encapsulate     */
+                                   /* task logic         */
+                                   /**********************/
 
-1. Create a Class Library project in your solution.
-2. Add [Rosalia NuGet package](https://nuget.org/packages/Rosalia) to this project:
+var mainTask = Task(               /***********************************************/
+	"mainTask",                    /* Use Linq query-comprehension to fetch       */                    
+	from barResult in barTask      /* results from prior tasks (actually monads)  */
+    from bazResult in bazTask      /* and define dependencies at the same time.   */  
+	select new MyMainTask(         /***********************************************/
+		barResult,                 
+		bazResult),
 
-  **PM> Install-Package Rosalia**
+	Default(),                     /* This task is default */
+	DependsOn(fooTask));           /* Add one more dependency manually */
+```
 
-That is it. Now your Class Library could be ran (Debug->Start New Instance) and a sample workflow was created for you.
