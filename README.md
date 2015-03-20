@@ -10,30 +10,30 @@ Rosalia is a concurrency-aware build automation tool that utilize monadic query-
 var fooTask = Task(                   /**********************/
     "fooTask",                        /* define a task as   */
     () => {                           /* a simple action... */
-		// do something here          /**********************/
-	});
+        // do something here          /**********************/
+    });
 
 var barTask = Task(                   /**********************/
     "barTask",                        /* ..or use a func if */
     () => {                           /* you need to return */
-		return "bar".AsTaskResult();  /* a result...        */
-	});                               /**********************/
+        return "bar".AsTaskResult();  /* a result...        */
+    });                               /**********************/
 
-var bazTask = Task(                   /**********************/ 
+var bazTask = Task(                   /**********************/
 	"bazTask",                        /* ...or use a class  */
 	new MyCustomTask());              /* to encapsulate     */
                                       /* task logic         */
                                       /**********************/
-								   
-var mainTask = Task(                  /***********************************************/
-	"mainTask",                       /* Use Linq query-comprehension to fetch       */                    
-	from barResult in barTask         /* results from prior tasks (actually monads)  */
-    from bazResult in bazTask         /* and define dependencies at the same time.   */  
-	select new MyMainTask(            /***********************************************/
-		barResult,                 
-		bazResult).AsTask(),
 
-	Default(),                        /* This task is default */
-	DependsOn(fooTask));              /* Add one more dependency manually */
+var mainTask = Task(                  /***********************************************/
+    "mainTask",                       /* Use Linq query-comprehension to fetch       */
+    from barResult in barTask         /* results from prior tasks (actually monads)  */
+    from bazResult in bazTask         /* and define dependencies at the same time.   */
+    select new MyMainTask(            /***********************************************/
+        barResult,                 
+        bazResult).AsTask(),
+
+    Default(),                        /* This task is default */
+    DependsOn(fooTask));              /* Add one more dependency manually */
 ```
 
