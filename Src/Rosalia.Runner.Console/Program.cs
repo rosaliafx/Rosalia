@@ -41,7 +41,24 @@
             int result = steps.Execute(context);
             bool hold = context.Options != null && context.Options.Hold;
 
+            DisposeLogRenderer(context);
+
             return Exit(hold, result);
+        }
+
+        private static void DisposeLogRenderer(ProgramContext context)
+        {
+            if (context.LogRenderer != null)
+            {
+                try
+                {
+                    context.LogRenderer.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error occured while disposing: {0}", ex.Message);
+                }
+            }
         }
     }
 }
