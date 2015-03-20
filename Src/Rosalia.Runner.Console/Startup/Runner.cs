@@ -66,7 +66,7 @@
                 throw new Exception("LogRenderer is not set");
             }
 
-            logRenderer.Init();
+            //logRenderer.Init();
 
             return new LogHelper(m => logRenderer.Render(m, Id));
         }
