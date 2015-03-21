@@ -31,7 +31,9 @@
                 }
             }
 
-            context.LogRenderer = new CompositeLogRenderer(logRenderers.ToArray());
+            ILogRenderer logRenderer = new CompositeLogRenderer(logRenderers.ToArray());
+
+            context.LogRenderer = context.Options.LogLevel == null ? logRenderer : new FilterLogRenderer(logRenderer, context.Options.LogLevel.Value);
             context.LogRenderer.Init();
             context.Log = new LogHelper(message => context.LogRenderer.Render(message, "Runner"));
 

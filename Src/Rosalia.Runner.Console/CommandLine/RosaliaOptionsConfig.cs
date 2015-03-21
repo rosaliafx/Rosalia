@@ -1,6 +1,8 @@
 ﻿namespace Rosalia.Runner.Console.CommandLine
 {
+    using System;
     using Rosalia.Core;
+    using Rosalia.Core.Logging;
     using Rosalia.Runner.Console.CommandLine.Support;
 
     public static class RosaliaOptionsConfig
@@ -36,6 +38,10 @@
                 {
                     new Option("wd|workDirectory", "Work directory"), 
                     (v, s) => options.WorkDirectory = v
+                },
+                {
+                    new Option("ll|logLevel", "Log Level"), 
+                    (v, s) => options.LogLevel = (MessageLevel?) Enum.Parse(typeof(MessageLevel), v)
                 },
                 {
                     new Option("workflowBuildOutput", "Workflow project build output path"), 

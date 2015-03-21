@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Rosalia.Core;
+    using Rosalia.Core.Logging;
 
     public class RosaliaOptions
     {
@@ -33,5 +34,7 @@
         public IList<string> OutputFiles { get; private set; }
 
         public IDictionary<string, string> Properties { get; private set; }
+
+        public MessageLevel? LogLevel { get; set; }
     }
 }
