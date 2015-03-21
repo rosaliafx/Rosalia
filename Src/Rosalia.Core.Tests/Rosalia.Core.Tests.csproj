@@ -62,6 +62,7 @@
     <Compile Include="Engine\Execution\ExecutionStrategyTests.cs" />
     <Compile Include="Engine\Execution\ParallelExecutionStrategyTests.cs" />
     <Compile Include="Engine\Execution\SequenceExecutionStrategyTests.cs" />
+    <Compile Include="Logging\FilterLogRendererTests.cs" />
     <Compile Include="Tasks\PreconditionExecutableTests.cs" />
     <Compile Include="Tasks\RecoverExecutableTests.cs" />
     <Compile Include="IdentitiesTests.cs" />

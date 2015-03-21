@@ -52,6 +52,7 @@
             return this;
         }
 
+        [Obsolete("todo: use SpuLogRendererMethods")]
         public void AssertHasMessage(MessageLevel level, string message)
         {
             foreach (var messageTuple in _messages)
