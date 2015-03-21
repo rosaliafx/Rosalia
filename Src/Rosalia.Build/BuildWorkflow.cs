@@ -14,6 +14,11 @@
 
     public class BuildWorkflow : Workflow
     {
+        public static bool IsRunningOnMono()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
+
         protected override void RegisterTasks()
         {
             /* ======================================================================================== */
@@ -75,6 +80,7 @@
                 from data in solutionTreeTask
                 select new MsBuildTask
                 {
+                    ToolPath = IsRunningOnMono() ? "xbuild" : null,
                     ProjectFile = data.SolutionFile,
                     Switches =
                     {
