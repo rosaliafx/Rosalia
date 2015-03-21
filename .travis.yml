@@ -9,4 +9,4 @@ script:
   - export EnableNuGetPackageRestore="true"
   - export MONO_IOMAP=all
   - mozroots --import --sync
-  - xbuild ci_build.xml
+  - Tools/Rasalia/Rosalia.exe "Src/Rosalia.Build/Rosalia.Build.csproj"
