@@ -1,9 +1,6 @@
 ﻿namespace $rootnamespace$
 {
-    using Rosalia.Core;
-    using Rosalia.Core.Context;
-    using Rosalia.FileSystem;
-    using Rosalia.Core.Logging;
+    using Rosalia.Core.Api;
 
     public class MainWorkflow : Workflow
     {
@@ -12,13 +9,13 @@
             var task1 = Task(
                 "Task1",
                 context => {
-                    context.Log.Info("Hello...")
+                    context.Log.Info("Hello...");
                 });
 
             Task(
                 "Task2",
                 context => {
-                    context.Log.Info("...world")
+                    context.Log.Info("...world");
                 },
 				DependsOn(task1));
         }
