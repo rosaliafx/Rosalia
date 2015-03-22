@@ -92,6 +92,7 @@
                 from data in solutionTreeTask
                 select _ =>
                 {
+                    data.Artifacts.EnsureExists();
                     data.Artifacts.Files.IncludeByExtension("nupkg", "nuspec").DeleteAll();
                 });
 
