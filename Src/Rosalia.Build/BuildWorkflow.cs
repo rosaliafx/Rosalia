@@ -83,8 +83,8 @@
                 from data in solutionTreeTask
                 select new ExecTask
                 {
-                    ToolPath = (Type.GetType("Mono.Runtime") != null ? "mono ": string.Empty) + data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath,
-                    Arguments = "restore " + data.SolutionFile.AbsolutePath
+                    ToolPath = Type.GetType("Mono.Runtime") != null ? "mono ": data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath,
+                    Arguments = (Type.GetType("Mono.Runtime") != null ? data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath + " ": "") + "restore " + data.SolutionFile.AbsolutePath
                 }.AsTask());
 
             /* ======================================================================================== */
