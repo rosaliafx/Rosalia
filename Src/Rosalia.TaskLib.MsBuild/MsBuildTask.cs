@@ -19,6 +19,7 @@
         {
             ToolVersion = MsBuildToolVersion.V40;
             Switches = new List<MsBuildSwitch>();
+            
         }
 
         public IFile ProjectFile { get; set; }
@@ -26,6 +27,22 @@
         public MsBuildToolVersion ToolVersion { get; set; }
 
         public IList<MsBuildSwitch> Switches { get; set; }
+
+        public override string ToolPath
+        {
+            get
+            {
+                return IsRunningOnMono() ? "xbuild" : base.ToolPath;
+            }
+
+            set { base.ToolPath = value; }
+        }
+
+        // todo think if it should be moved to environment obkect
+        public static bool IsRunningOnMono()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
 
         protected override string DefaultToolPath
         {

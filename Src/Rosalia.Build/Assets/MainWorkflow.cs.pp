@@ -4,7 +4,7 @@
 
     public class MainWorkflow : Workflow
     {
-        public override void RegisterTasks()
+        protected override void RegisterTasks()
         {
             var task1 = Task(
                 "Task1",
