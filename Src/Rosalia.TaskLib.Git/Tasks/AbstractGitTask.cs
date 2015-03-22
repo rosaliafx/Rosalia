@@ -43,8 +43,17 @@
                 yield return gitHomeDirectory.GetDirectory("bin").GetFile("git.exe");
             }
 
-            yield return context.Environment.ProgramFilesX86()["Git"]["bin"]["git.exe"];
-            yield return context.Environment.ProgramFiles()["Git"]["bin"]["git.exe"];
+            var programFilesX86 = context.Environment.ProgramFilesX86();
+            if (programFilesX86 != null)
+            {
+                yield return programFilesX86["Git"]["bin"]["git.exe"];    
+            }
+
+            var programFiles = context.Environment.ProgramFiles();
+            if (programFiles != null)
+            {
+                yield return programFiles["Git"]["bin"]["git.exe"];    
+            }
         }
 
         protected override void FillMessageLevelDetectors(IList<Func<string, MessageLevel?>> detectors)
