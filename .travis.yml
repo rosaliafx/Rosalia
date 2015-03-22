@@ -10,4 +10,4 @@ script:
   - export MONO_IOMAP=all
   - mozroots --import --sync
   - mono --version
-  - mono --runtime=v4.5 Tools/Rosalia/Rosalia.exe ./Src/Rosalia.Build/Rosalia.Build.csproj
+  - mono Tools/Rosalia/Rosalia.exe "./Src/Rosalia.Build/Rosalia.Build.csproj"
