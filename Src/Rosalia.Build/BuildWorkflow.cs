@@ -11,6 +11,7 @@
     using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.MsBuild;
     using Rosalia.TaskLib.NuGet.Tasks;
+    using Rosalia.TaskLib.Standard.Tasks;
 
     public class BuildWorkflow : Workflow
     {
@@ -77,6 +78,17 @@
 
             /* ======================================================================================== */
 
+            var restorePackages = Task(
+                "restorePackages",
+                from data in solutionTreeTask
+                select new ExecTask
+                {
+                    ToolPath = data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath,
+                    Arguments = "restore " + data.SolutionFile.AbsolutePath
+                }.AsTask());
+
+            /* ======================================================================================== */
+
             var buildSolution = Task(
                 "Build solution",
                 from data in solutionTreeTask
@@ -88,7 +100,9 @@
                         MsBuildSwitch.Configuration(data.Configuration)
                     }
                 }.AsTask(),
-                DependsOn(generateAssemblyInfoTask));
+
+                DependsOn(generateAssemblyInfoTask),
+                DependsOn(restorePackages));
 
             /* ======================================================================================== */
             
