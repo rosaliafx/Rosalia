@@ -5,5 +5,5 @@ script:
   - export EnableNuGetPackageRestore="true"
   - export MONO_IOMAP=all
   - mozroots --import --sync
-  - mono Src/.nuget/NuGet.exe
+  - mono Src/.nuget/NuGet.exe restore /home/travis/build/rosaliafx/Rosalia/Src/Rosalia.sln
   - mono Tools/Rosalia/Rosalia.exe "Src/Rosalia.Build/Rosalia.Build.csproj"
