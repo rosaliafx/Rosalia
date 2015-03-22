@@ -106,6 +106,7 @@ using {{Name}};
 
             var result = Render.StringToString(Template, model);
 
+            _destination.EnsureExists();
             _destination.WriteStringToFile(result);
 
             return Success;
