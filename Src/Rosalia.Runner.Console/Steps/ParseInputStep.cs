@@ -27,13 +27,25 @@
             }
             catch (Exception ex)
             {
-                Utils.ShowLogo();
-                Utils.ShowHelp(context.OptionsConfig);
+                DisplayLogoAndHelp(context);
 
                 throw new Exception("An error occured while parsing input arguments", ex);
             }
 
             return null;
+        }
+
+        private static void DisplayLogoAndHelp(ProgramContext context)
+        {
+            try
+            {
+                Utils.ShowLogo();
+                Utils.ShowHelp(context.OptionsConfig);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
