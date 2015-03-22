@@ -23,7 +23,12 @@
                 "Initialize context",
                 context =>
                 {
-                    var projectRoot = context.WorkDirectory.Parent.Parent;
+                    var projectRoot = context.WorkDirectory;
+                    while (!(projectRoot["Src"].AsDirectory().Exists && projectRoot["Tools"].AsDirectory().Exists))
+                    {
+                        projectRoot = projectRoot.Parent;
+                    }
+                    
                     var src = projectRoot.GetDirectory("Src");
 
                     return new BuildData
