@@ -90,7 +90,7 @@
             /* ======================================================================================== */
 
             var buildSolution = Task(
-                "Build solution",
+                "buildSolution",
                 from data in solutionTreeTask
                 select new MsBuildTask
                 {
@@ -157,15 +157,17 @@
                 "nuspecTaskLibs",
                 from data in solutionTreeTask
                 from version in solutionVersionTask
-                select ForEach(data.FindTaskLibDirectories()).Do(tasklibDir =>
-                {
-                    var libCode = tasklibDir.Name.Replace("Rosalia.TaskLib.", string.Empty);
-                    var taskLibNuspec = string.Format("Rosalia.TaskLib.{0}.nuspec", libCode);
+                select ForEach(data.FindTaskLibDirectories()).Do(
+                    tasklibDir =>
+                    {
+                        var libCode = tasklibDir.Name.Replace("Rosalia.TaskLib.", string.Empty);
+                        var taskLibNuspec = string.Format("Rosalia.TaskLib.{0}.nuspec", libCode);
 
-                    return new GenerateNuGetSpecTask(data.Artifacts[taskLibNuspec])
-                        .FillCommonProperties(version.NuGetVersion)
-                        .FillTaskLibProperties(data, version.NuGetVersion, libCode);
-                }),
+                        return new GenerateNuGetSpecTask(data.Artifacts[taskLibNuspec])
+                            .FillCommonProperties(version.NuGetVersion)
+                            .FillTaskLibProperties(data, version.NuGetVersion, libCode);
+                    },
+                    tasklibDir => "nuspec" + tasklibDir.Name.Replace("Rosalia.TaskLib.", string.Empty)),
                 
                 DependsOn(nuspecRosaliaExe));
 
@@ -174,11 +176,12 @@
             Task(
                 "Generate NuGet packages",
                 from data in solutionTreeTask
-                select ForEach(data.Artifacts.Files.IncludeByExtension(".nuspec")).Do(file => 
-                    new GeneratePackageTask(file)
+                select ForEach(data.Artifacts.Files.IncludeByExtension(".nuspec")).Do(
+                    file => new GeneratePackageTask(file)
                     {
                         ToolPath = data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath
-                    }),
+                    },
+                    file => "pack " + file.Name),
                 
                 Default(),
 
