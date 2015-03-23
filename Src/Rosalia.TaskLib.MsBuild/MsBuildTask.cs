@@ -28,22 +28,6 @@
 
         public IList<MsBuildSwitch> Switches { get; set; }
 
-        public override string ToolPath
-        {
-            get
-            {
-                return IsRunningOnMono() ? "xbuild" : base.ToolPath;
-            }
-
-            set { base.ToolPath = value; }
-        }
-
-        // todo think if it should be moved to environment obkect
-        public static bool IsRunningOnMono()
-        {
-            return Type.GetType("Mono.Runtime") != null;
-        }
-
         protected override string DefaultToolPath
         {
             get { return "msbuild"; }
@@ -55,6 +39,16 @@
 
             detectors.Add(message => message.IndexOf(" error ") >= 0 ? MessageLevel.Error : (MessageLevel?)null);
             detectors.Add(message => message.IndexOf(" warning ") >= 0 ? MessageLevel.Warn : (MessageLevel?)null);
+        }
+
+        protected override string GetToolPath(TaskContext context)
+        {
+            if (context.Environment.IsMono)
+            {
+                return "xbuild";
+            }
+
+            return base.GetToolPath(context);
         }
 
         protected override IEnumerable<IFile> GetToolPathLookup(TaskContext context)
