@@ -38,7 +38,10 @@
                         ProjectRootDirectory = projectRoot,
                         Src = src,
                         SolutionFile = src.GetFile("Rosalia.sln"),
-                        Artifacts = projectRoot.GetDirectory("Artifacts")
+                        Artifacts =
+                            context.Environment.IsMono ?
+                            projectRoot :
+                            projectRoot.GetDirectory("Artifacts")
                     }.AsTaskResult();
                 });
 
