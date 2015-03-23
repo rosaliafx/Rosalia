@@ -6,4 +6,3 @@ script:
   - export MONO_IOMAP=all
   - mozroots --import --sync
   - mono Tools/Rosalia/Rosalia.exe "Src/Rosalia.Build/Rosalia.Build.csproj"
-  - cat Artifacts/Rosalia.Core.nuspec
