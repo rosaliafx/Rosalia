@@ -94,10 +94,15 @@
             Options.Add(optionWithSameName);
         }
 
-        protected override string GetToolPath(TaskContext context)
+        protected override string DefaultToolPath
         {
-            return "nuget";
+            get { return "nuget"; }
         }
+
+//        protected override string GetToolPath(TaskContext context)
+//        {
+//            return "nuget";
+//        }
 
         protected override string GetToolArguments(TaskContext context)
         {
