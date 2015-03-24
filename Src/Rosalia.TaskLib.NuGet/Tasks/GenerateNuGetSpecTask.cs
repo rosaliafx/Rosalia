@@ -214,7 +214,9 @@
 
         public GenerateNuGetSpecTask WithFile(IFile file, string target, string exclude = null)
         {
-            return WithFile(file.AbsolutePath, target, exclude);
+            var path = file.GetRelativePath(_destination.Directory); // todo: check
+                //file.AbsolutePath;
+            return WithFile(path, target, exclude);
         }
 
         public GenerateNuGetSpecTask WithContentFiles(FileList files, string target = null)
@@ -236,7 +238,8 @@
         {
             foreach (var file in files)
             {
-                Files.Add(new File(file.AbsolutePath, target, exclude));
+                //Files.Add(new File(file.AbsolutePath, target, exclude));
+                WithFile(file, target, exclude);
             }
 
             return this;

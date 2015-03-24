@@ -27,6 +27,15 @@
 
         public virtual string Arguments { get; set; }
 
+        /// <summary>
+        /// Gets or sets a flag indicating whether this task wors with manged tool.
+        /// If the tool is managed, the command will be passed to mono runtime automatically.
+        /// </summary>
+        public virtual bool IsManagedTool
+        {
+            get { return false; }
+        }
+
         public IProcessStarter ProcessStarter
         {
             get { return _processStarter; }
@@ -56,6 +65,13 @@
 
             var workDirectory = GetToolWorkDirectory(context);
             var aggregatedOutput = new List<Message>();
+
+            if (IsManagedTool && context.Environment.IsMono)
+            {
+                toolArguments = toolPath + " " + toolArguments;
+                toolPath = "mono";
+            }
+
             var exitCode = ProcessStarter.StartProcess(
                 toolPath,
                 toolArguments,
@@ -130,8 +146,8 @@
         }
 
         protected virtual void HandleOutput(
-            string message, 
-            MessageLevel level, 
+            string message,
+            MessageLevel level,
             IList<Message> aggregatedOutput,
             TaskContext context)
         {

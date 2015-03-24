@@ -18,6 +18,11 @@
             get { return _specFile; }
         }
 
+        public override bool IsManagedTool
+        {
+            get { return true; }
+        }
+
         protected override string DefaultToolPath
         {
             get { return "nuget"; }

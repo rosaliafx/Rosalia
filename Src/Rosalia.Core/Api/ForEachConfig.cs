@@ -17,16 +17,17 @@
             _items = items;
         }
 
-        public ITaskRegistry<Nothing> Do(Func<T, ITask<Nothing>> task)
+        public ITaskRegistry<Nothing> Do(Func<T, ITask<Nothing>> task, Func<T, string> name)
         {
-            return Do(task, _ => Nothing.Value);
+            return Do(task, _ => Nothing.Value, name);
         }
 
         public ITaskRegistry<TAggregatedResult> Do<TTaskResult, TAggregatedResult>(
             Func<T, ITask<TTaskResult>> task,
-            Func<IEnumerable<TTaskResult>, TAggregatedResult> aggregator) where TTaskResult : class where TAggregatedResult : class
+            Func<IEnumerable<TTaskResult>, TAggregatedResult> aggregator,
+            Func<T, string> name) where TTaskResult : class where TAggregatedResult : class
         {
-            return new RepeaterRegistry<T, TTaskResult, TAggregatedResult>(_items, task, aggregator);
+            return new RepeaterRegistry<T, TTaskResult, TAggregatedResult>(_items, task, aggregator, name);
         }
     }
 
@@ -35,28 +36,33 @@
         private readonly IEnumerable<TItem> _source;
         private readonly Func<TItem, ITask<TTaskResult>> _task;
         private readonly Func<IEnumerable<TTaskResult>, TAggregatedResult> _aggregator;
+        private readonly Func<TItem, string> _name;
 
-        public RepeaterRegistry(IEnumerable<TItem> source, Func<TItem, ITask<TTaskResult>> task, Func<IEnumerable<TTaskResult>, TAggregatedResult> aggregator)
+        public RepeaterRegistry(
+            IEnumerable<TItem> source, 
+            Func<TItem, ITask<TTaskResult>> task, 
+            Func<IEnumerable<TTaskResult>, 
+            TAggregatedResult> aggregator, 
+            Func<TItem, string> name)
         {
             _source = source;
             _task = task;
             _aggregator = aggregator;
+            _name = name;
         }
 
         public RegisteredTasks GetRegisteredTasks()
         {
             var map = new TaskMap();
-            var index = 1;
             var taskDefinitions = new List<ITaskFuture<TTaskResult>>();
 
             foreach (TItem item in _source)
             {
-                taskDefinitions.Add(map.Register(/* todo: check task name */ "task_" + index, _task.Invoke(item), new ITaskBehavior[] {}));
-                index++;
+                taskDefinitions.Add(map.Register(_name(item), _task.Invoke(item), new ITaskBehavior[] {}));
             }
 
             var resultTask = map.Register(
-                "result",
+                Guid.NewGuid().ToString(),
                 new FuncTask<TAggregatedResult>(context =>
                 {
                     var itemResults = taskDefinitions.Select(def => def.FetchValue(context)).ToList();
