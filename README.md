@@ -37,3 +37,4 @@ var mainTask = Task(                  /*****************************************
     DependsOn(fooTask));              /* Add one more dependency manually */
 ```
 
+Rosalia uses Rosalia to build itself on Travis CI: [![Build Status](https://travis-ci.org/rosaliafx/Rosalia.svg?branch=master)](https://travis-ci.org/rosaliafx/Rosalia)
