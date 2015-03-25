@@ -6,6 +6,6 @@
     {
         void Init();
 
-        void Render(Message message, Identity source);
+        void Render(Message message, Identities source);
     }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
 
     public class HtmlLogRenderer : ILogRenderer
     {
@@ -52,11 +53,11 @@
 <tbody>");
         }
 
-        public void Render(Message message, Identity source)
+        public void Render(Message message, Identities source)
         {
             _writerProvider.Value.WriteLine("<tr class='item {0}'>", message.Level);
             _writerProvider.Value.WriteLine("<td>{0}</td>", message.Level);
-            _writerProvider.Value.WriteLine("<td>{0}</td>", source.Value);
+            _writerProvider.Value.WriteLine("<td>{0}</td>", string.Join(" -> ", source.Items.Select(id => id.Value).ToArray()));
             _writerProvider.Value.WriteLine("<td><pre>{0}</pre></td>", message.Text);
             _writerProvider.Value.WriteLine("</tr>");
         }

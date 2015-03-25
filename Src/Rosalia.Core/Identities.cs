@@ -4,6 +4,32 @@
 
     public class Identities
     {
+        protected bool Equals(Identities other)
+        {
+            if (other.Items.Length != Items.Length)
+            {
+                return false;
+            }
+
+            for (int index = 0; index < other.Items.Length; index++)
+            {
+                Identity identity = other.Items[index];
+                Identity thisIdentity = Items[index];
+
+                if (!identity.Equals(thisIdentity))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return (_items != null ? _items.GetHashCode() : 0);
+        }
+
         private readonly Identity[] _items;
 
         public Identities(params Identity[] items)
@@ -52,6 +78,17 @@
         public bool Contains(Identity key)
         {
             return _items.Contains(key);
+        }
+
+        public override bool Equals(object obj)
+        {
+            Identities other = obj as Identities;
+            if (other != null)
+            {
+                return Equals(other);    
+            }
+
+            return false;
         }
     }
 }

@@ -14,7 +14,7 @@
             var nestedRenderer = new SpyLogRenderer();
             var logger = new FilterLogRenderer(nestedRenderer, MessageLevel.Info);
 
-            logger.Render(new Message("foo", MessageLevel.Info), "test");
+            logger.Render(new Message("foo", MessageLevel.Info), new Identities("test"));
 
             Assert.That(nestedRenderer.Messages, Is.Not.Null);
             Assert.That(nestedRenderer.Messages, Is.Not.Empty);
@@ -28,7 +28,7 @@
             var nestedRenderer = new SpyLogRenderer();
             var logger = new FilterLogRenderer(nestedRenderer, MessageLevel.Error);
 
-            logger.Render(new Message("foo", MessageLevel.Info), "test");
+            logger.Render(new Message("foo", MessageLevel.Info), new Identities("test"));
 
             Assert.That(nestedRenderer.Messages, Is.Empty);
         }

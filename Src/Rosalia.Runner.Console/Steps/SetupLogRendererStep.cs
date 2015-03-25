@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Rosalia.Core;
     using Rosalia.Core.Logging;
     using Rosalia.Core.Tasks;
     using Rosalia.Runner.Console.CommandLine;
@@ -35,7 +36,7 @@
 
             context.LogRenderer = context.Options.LogLevel == null ? logRenderer : new FilterLogRenderer(logRenderer, context.Options.LogLevel.Value);
             context.LogRenderer.Init();
-            context.Log = new LogHelper(message => context.LogRenderer.Render(message, "Runner"));
+            context.Log = new LogHelper(message => context.LogRenderer.Render(message, new Identities("Runner")));
 
             return null;
         }

@@ -48,7 +48,7 @@
                 new CompositeInterceptor(
                     new LoggingInterceptor()));
 
-            return executer.Execute(context.CreateFor("Executer"));
+            return executer.Execute(context);
         }
     }
 }

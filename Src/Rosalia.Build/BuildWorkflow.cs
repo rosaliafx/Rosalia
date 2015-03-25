@@ -174,9 +174,11 @@
                 
                 DependsOn(nuspecRosaliaExe));
 
+            
+
             /* ======================================================================================== */
 
-            Task(
+            var generateNuGetPackages = Task(
                 "Generate NuGet packages",
                 from data in solutionTreeTask
                 select ForEach(data.Artifacts.Files.IncludeByExtension(".nuspec")).Do(
@@ -191,6 +193,21 @@
                 DependsOn(nuspecCore),
                 DependsOn(nuspecRosaliaExe),
                 DependsOn(nuspecTaskLibs));
+
+            /* ======================================================================================== */
+
+            Task(
+                "pushNuGetPackages",
+                from data in solutionTreeTask
+                select 
+                    ForEach(data.Artifacts.Files.IncludeByExtension(".nupkg")).Do(
+                        task: file => new PushPackageTask(file)
+                        {
+                            ToolPath = data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath
+                        },
+                        name: file => "push" + file.NameWithoutExtension),
+
+                DependsOn(generateNuGetPackages));
         }
     }
 }
