@@ -42,3 +42,4 @@ var mainTask = Task(                  /*****************************************
 ---
 
 [![Rosalia uses Rosalia to build itself on Travis CI](https://travis-ci.org/rosaliafx/Rosalia.svg?branch=master)](https://travis-ci.org/rosaliafx/Rosalia)
+![](https://img.shields.io/nuget/vpre/Rosalia.svg)
