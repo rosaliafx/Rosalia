@@ -8,9 +8,9 @@
 
     public class SpyLogRenderer : ILogRenderer
     {
-        private readonly IList<Tuple<Message, Identity>> _messages = new List<Tuple<Message, Identity>>();
+        private readonly IList<Tuple<Message, Identities>> _messages = new List<Tuple<Message, Identities>>();
 
-        public IList<Tuple<Message, Identity>> Messages
+        public IList<Tuple<Message, Identities>> Messages
         {
             get { return _messages; }
         }
@@ -19,9 +19,9 @@
         {
         }
 
-        public void Render(Message message, Identity source)
+        public void Render(Message message, Identities source)
         {
-            Messages.Add(new Tuple<Message, Identity>(message, source));
+            Messages.Add(new Tuple<Message, Identities>(message, source));
         }
 
         public void Dispose()

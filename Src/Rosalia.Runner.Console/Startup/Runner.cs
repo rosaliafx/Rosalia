@@ -68,7 +68,7 @@
 
             //logRenderer.Init();
 
-            return new LogHelper(m => logRenderer.Render(m, Id));
+            return new LogHelper(m => logRenderer.Render(m, new Identities(Id)));
         }
 
         protected WorkflowInfo GetWorkflowInfo(RunningOptions options, IList<IWorkflowLookup> lookups, LogHelper log)

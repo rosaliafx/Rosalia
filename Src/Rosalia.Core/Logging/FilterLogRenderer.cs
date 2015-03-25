@@ -21,7 +21,7 @@
             _nestedRenderer.Init();
         }
 
-        public void Render(Message message, Identity source)
+        public void Render(Message message, Identities source)
         {
             if (message.Level >= _level)
             {

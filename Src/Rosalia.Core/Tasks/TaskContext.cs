@@ -1,6 +1,5 @@
 ﻿namespace Rosalia.Core.Tasks
 {
-    using System;
     using System.Linq;
     using Rosalia.Core.Engine.Execution;
     using Rosalia.Core.Environment;
@@ -13,17 +12,31 @@
         private readonly IResultsStorage _results;
         private readonly IExecutionStrategy _executionStrategy;
         private readonly Identity _identity;
+        private readonly Identities _identitiesTail;
         private readonly ILogRenderer _logRenderer;
         private readonly LogHelper _log;
         private readonly IDirectory _workDirectory;
         private readonly IEnvironment _environment;
         private readonly ITaskInterceptor _interceptor;
 
-        public TaskContext(IExecutionStrategy executionStrategy, ILogRenderer logRenderer, IDirectory workDirectory, IEnvironment environment, ITaskInterceptor interceptor) : this(ResultsStorage.Empty, executionStrategy, null, logRenderer, workDirectory, environment, interceptor)
+        public TaskContext(
+            IExecutionStrategy executionStrategy, 
+            ILogRenderer logRenderer, 
+            IDirectory workDirectory, 
+            IEnvironment environment, 
+            ITaskInterceptor interceptor) : this(ResultsStorage.Empty, executionStrategy, null, logRenderer, workDirectory, environment, interceptor, Identities.Empty)
         {
         }
 
-        private TaskContext(IResultsStorage results, IExecutionStrategy executionStrategy, Identity identity, ILogRenderer logRenderer, IDirectory workDirectory, IEnvironment environment, ITaskInterceptor interceptor)
+        private TaskContext(
+            IResultsStorage results, 
+            IExecutionStrategy executionStrategy, 
+            Identity identity, 
+            ILogRenderer logRenderer, 
+            IDirectory workDirectory, 
+            IEnvironment environment, 
+            ITaskInterceptor interceptor, 
+            Identities identitiesTail)
         {
             _identity = identity;
             _results = results;
@@ -32,7 +45,8 @@
             _workDirectory = workDirectory;
             _environment = environment;
             _interceptor = interceptor;
-            _log = new LogHelper(message => logRenderer.Render(message, Identity));
+            _identitiesTail = identitiesTail;
+            _log = new LogHelper(message => logRenderer.Render(message, GetFullIdentitiesPath()));
         }
 
         public IResultsStorage Results
@@ -75,6 +89,11 @@
             get { return _interceptor; }
         }
 
+        public Identities IdentitiesTail
+        {
+            get { return _identitiesTail; }
+        }
+
         public TaskContext CreateFor(Identity task)
         {
             return new TaskContext(
@@ -84,7 +103,13 @@
                 LogRenderer,
                 WorkDirectory,
                 Environment,
-                Interceptor);
+                Interceptor,
+                GetFullIdentitiesPath());
+        }
+
+        private Identities GetFullIdentitiesPath()
+        {
+            return _identity == null ? Identities.Empty : IdentitiesTail + _identity;
         }
 
         public TaskContext CreateDerived(IdentityWithResult[] resultsToAdd)
@@ -98,7 +123,8 @@
                 LogRenderer,
                 WorkDirectory,
                 Environment,
-                Interceptor);
+                Interceptor,
+                IdentitiesTail);
         }
     }
 }

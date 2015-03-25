@@ -11,14 +11,14 @@
     public class ResultWrapper<T>
     {
         private readonly ITaskResult<T> _result;
-        private readonly IList<Tuple<Message, Identity>> _messages;
+        private readonly IList<Tuple<Message, Identities>> _messages;
 
         public T Data
         {
             get { return _result.Data; }
         }
 
-        public ResultWrapper(ITaskResult<T> result, IList<Tuple<Message, Identity>> messages)
+        public ResultWrapper(ITaskResult<T> result, IList<Tuple<Message, Identities>> messages)
         {
             _result = result;
             _messages = messages;
@@ -29,7 +29,7 @@
             get { return _result; }
         }
 
-        public IList<Tuple<Message, Identity>> Messages
+        public IList<Tuple<Message, Identities>> Messages
         {
             get { return _messages; }
         }

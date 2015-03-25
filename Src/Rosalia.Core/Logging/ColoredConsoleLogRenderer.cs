@@ -8,7 +8,7 @@
     {
         private readonly object _lockObject = new object();
         private int _consoleWidth;
-        private Identity _lastSource;
+        private Identities _lastSource;
 
         public void Init()
         {
@@ -28,7 +28,7 @@
         {
         }
 
-        public void Render(Message message, Identity source)
+        public void Render(Message message, Identities source)
         {
             lock (_lockObject)
             {
@@ -36,8 +36,21 @@
 
                 if (_lastSource == null || !Equals(_lastSource, source))
                 {
-                    WriteColored(string.Format("[{0}]", source.Value), ConsoleColor.DarkMagenta);
-                    Console.WriteLine();    
+                    for (int index = 0; index < source.Items.Length; index++)
+                    {
+                        Identity identity = source.Items[index];
+
+                        WriteColored("[", ConsoleColor.DarkMagenta);
+                        WriteColored(identity.Value, ConsoleColor.DarkMagenta);
+                        WriteColored("]", ConsoleColor.DarkMagenta);
+
+                        if (index < source.Items.Length - 1)
+                        {
+                            WriteColored("->", ConsoleColor.DarkCyan);    
+                        }
+                    }
+
+                    Console.WriteLine();
                 }
 
                 var lines = message.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();

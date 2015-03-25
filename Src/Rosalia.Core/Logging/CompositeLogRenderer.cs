@@ -17,7 +17,7 @@
             }
         }
 
-        public void Render(Message message, Identity source)
+        public void Render(Message message, Identities source)
         {
             foreach (var nestedRenderer in _nestedRenderers)
             {
