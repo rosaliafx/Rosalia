@@ -59,7 +59,7 @@
     <Compile Include="FileSystem\IFileSystemStub.cs" />
     <Compile Include="Helpers\ResultWrapper.cs" />
     <Compile Include="Helpers\TaskExtensions.cs" />
-    <Compile Include="Helpers\Subflow.cs" />
+    <Compile Include="Helpers\QuickSubflow.cs" />
     <Compile Include="Helpers\SubflowExtensions.cs" />
     <Compile Include="Helpers\TaskDefinitionsMapExtensions.cs" />
     <Compile Include="Helpers\TaskResultExtensions.cs" />

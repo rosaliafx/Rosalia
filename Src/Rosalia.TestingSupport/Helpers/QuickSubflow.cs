@@ -1,15 +1,14 @@
-﻿using System;
-
-namespace Rosalia.TestingSupport.Helpers
+﻿namespace Rosalia.TestingSupport.Helpers
 {
+    using System;
     using Rosalia.Core.Api;
     using Rosalia.Core.Tasks.Futures;
 
-    public class Subflow<T> : TaskRegistry<T> where T : class
+    public class QuickSubflow<T> : TaskRegistry<T> where T : class
     {
         private readonly Func<TaskRegistry<T>, ITaskFuture<T>> _defineAction;
 
-        public Subflow(Func<TaskRegistry<T>, ITaskFuture<T>> defineAction)
+        public QuickSubflow(Func<TaskRegistry<T>, ITaskFuture<T>> defineAction)
         {
             _defineAction = defineAction;
         }
@@ -19,9 +18,9 @@ namespace Rosalia.TestingSupport.Helpers
             return _defineAction.Invoke(this);
         }
 
-        public static Subflow<T> Define(Func<TaskRegistry<T>, ITaskFuture<T>> defineAction)
+        public static QuickSubflow<T> Define(Func<TaskRegistry<T>, ITaskFuture<T>> defineAction)
         {
-            return new Subflow<T>(defineAction);
+            return new QuickSubflow<T>(defineAction);
         }
     }
 }
