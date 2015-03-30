@@ -1,10 +1,14 @@
 # Rosalia #
 
-Rosalia is a concurrency-aware build automation tool that utilize monadic query-comprehension syntax to allow writing tasks in concise and strongly-typed manner using C#.
+Rosalia is a concurrency-aware build automation tool that utilize monadic query-comprehension syntax for writing tasks in concise and strongly-typed manner using C#.
+
+## Why?
 
 * use the same language for both main codebase and build script
 * get debugging, refactoring and testing tools to work for build "scripts" out of the box
 * utilize any third-party .NET library for build task purposes
+
+## Quick example
 
 ```C#
 var fooTask = Task(                   /**********************/
@@ -37,3 +41,9 @@ var mainTask = Task(                  /*****************************************
     DependsOn(fooTask));              /* Add one more dependency manually */
 ```
 
+- **[Getting Started with Rosalia &rarr;](https://github.com/rosaliafx/Rosalia/wiki/Getting-Started)**
+
+---
+
+[![Rosalia uses Rosalia to build itself on Travis CI](https://travis-ci.org/rosaliafx/Rosalia.svg?branch=master)](https://travis-ci.org/rosaliafx/Rosalia)
+![](https://img.shields.io/nuget/vpre/Rosalia.svg)
