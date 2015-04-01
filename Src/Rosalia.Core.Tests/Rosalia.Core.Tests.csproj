@@ -67,6 +67,7 @@
     <Compile Include="Tasks\RecoverExecutableTests.cs" />
     <Compile Include="IdentitiesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\TransformTaskTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">
