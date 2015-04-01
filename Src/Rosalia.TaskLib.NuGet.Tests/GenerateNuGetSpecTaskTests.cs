@@ -18,13 +18,13 @@
                 .Execute()
                 .AssertSuccess();
 
-            Assert.That(destination.Content, Does.Contain(
+            Assert.That(destination.Content.NormalizeLineEnding(), Does.Contain(
 @"<?xml version='1.0' encoding='utf-8'?>
 <package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
   <metadata>
     <id>testId</id>
   </metadata>
-</package>"));
+</package>".NormalizeLineEnding()));
         }
 
         [Test]
@@ -39,7 +39,7 @@
                 .Execute()
                 .AssertSuccess();
 
-            Assert.That(destination.Content.Trim(), Is.EqualTo(
+            Assert.That(destination.Content.Trim().NormalizeLineEnding(), Is.EqualTo(
 @"<?xml version='1.0' encoding='utf-8'?>
 <package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
   <metadata>
@@ -53,7 +53,7 @@
       </group>
     </dependencies>
   </metadata>
-</package>"));
+</package>".NormalizeLineEnding()));
         }
 
         [Test]
@@ -66,7 +66,7 @@
                 .WithReference("My.Reference2.dll")
                 .Execute();
 
-            Assert.That(destination.Content.Trim(), Is.EqualTo(
+            Assert.That(destination.Content.Trim().NormalizeLineEnding(), Is.EqualTo(
 @"<?xml version='1.0' encoding='utf-8'?>
 <package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
   <metadata>
@@ -75,7 +75,7 @@
       <reference file='My.Reference2.dll' />
     </references>
   </metadata>
-</package>"));
+</package>".NormalizeLineEnding()));
         }
 
         [Test]
@@ -88,7 +88,7 @@
                 .WithFrameworkAssembly("System.SomethingElse")
                 .Execute();
 
-            Assert.That(destination.Content.Trim(), Is.EqualTo(
+            Assert.That(destination.Content.Trim().NormalizeLineEnding(), Is.EqualTo(
 @"<?xml version='1.0' encoding='utf-8'?>
 <package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
   <metadata>
@@ -97,7 +97,7 @@
       <frameworkAssembly assemblyName='System.SomethingElse' />
     </frameworkAssemblies>
   </metadata>
-</package>"));
+</package>".NormalizeLineEnding()));
         }
 
         [Test]
@@ -111,7 +111,7 @@
                 .WithFile(@"tools\**\*.*", null, @"**\*.log")
                 .Execute();
 
-            Assert.That(destination.Content.Trim(), Is.EqualTo(
+            Assert.That(destination.Content.Trim().NormalizeLineEnding(), Is.EqualTo(
 @"<?xml version='1.0' encoding='utf-8'?>
 <package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
   <metadata>
@@ -121,7 +121,7 @@
     <file src='bin\Debug\*.pdb' target='lib' />
     <file src='tools\**\*.*' exclude='**\*.log' />
   </files>
-</package>"));
+</package>".NormalizeLineEnding()));
         }
     }
 }
