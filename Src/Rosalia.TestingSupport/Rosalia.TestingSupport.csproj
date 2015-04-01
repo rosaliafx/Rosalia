@@ -58,6 +58,7 @@
     <Compile Include="FileSystem\FileStub.cs" />
     <Compile Include="FileSystem\IFileSystemStub.cs" />
     <Compile Include="Helpers\ResultWrapper.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\TaskExtensions.cs" />
     <Compile Include="Helpers\QuickSubflow.cs" />
     <Compile Include="Helpers\SubflowExtensions.cs" />
