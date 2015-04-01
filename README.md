@@ -47,3 +47,4 @@ var mainTask = Task(                  /*****************************************
 
 [![Rosalia uses Rosalia to build itself on Travis CI](https://travis-ci.org/rosaliafx/Rosalia.svg?branch=master)](https://travis-ci.org/rosaliafx/Rosalia)
 ![](https://img.shields.io/nuget/vpre/Rosalia.svg)
+[![Build status](https://ci.appveyor.com/api/projects/status/wpj45p2yw44lkkjd/branch/master?svg=true)](https://ci.appveyor.com/project/rosaliafx/rosalia/branch/master)
