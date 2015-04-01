@@ -15,8 +15,6 @@
 
     public class BuildWorkflow : Workflow
     {
-        
-
         protected override void RegisterTasks()
         {
             /* ======================================================================================== */
@@ -46,21 +44,25 @@
                 });
 
             /* ======================================================================================== */
-            
-            var gitVersionTask = Task(
+
+            var solutionVersionTask = Task(
                 "gitVersion",
-                new GetVersionTask());
+                new GetVersionTask().TransformWith(gitVersion => new
+                    {
+                        SolutionVersion = gitVersion.Tag.Replace("v", string.Empty) + "." + gitVersion.CommitsCount,
+                        NuGetVersion = gitVersion.Tag.Replace("v", string.Empty) + "." + gitVersion.CommitsCount + "-alpha"
+                    }));
 
             /* ======================================================================================== */
 
-            var solutionVersionTask = Task(
-                "solutionVersion",
-                from value in gitVersionTask
-                select new
-                {
-                    SolutionVersion = value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount,
-                    NuGetVersion = value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount + "-alpha"
-                }.AsTaskResult());
+//            var solutionVersionTask = Task(
+//                "solutionVersion",
+//                from value in gitVersionTask
+//                select new
+//                {
+//                    SolutionVersion = value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount,
+//                    NuGetVersion = value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount + "-alpha"
+//                }.AsTaskResult());
 
             /* ======================================================================================== */
 
