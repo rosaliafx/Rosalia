@@ -25,8 +25,12 @@
         public void Compose_IndependentTasks_ShouldGoToTheSameLayer()
         {
             var map = new TaskMap();
-            map[new Identity()] = new TaskWithBehaviors(FakeFlowable());
-            map[new Identity()] = new TaskWithBehaviors(FakeFlowable());
+
+            map.Register("1", FakeFlowable(), new ITaskBehavior[0]);
+            map.Register("2", FakeFlowable(), new ITaskBehavior[0]);
+
+//            map[new Identity()] = new TaskWithBehaviors(FakeFlowable());
+//            map[new Identity()] = new TaskWithBehaviors(FakeFlowable());
 
             var result = ComposeWithAllTasksAsFilter(map).ToList();
 
@@ -39,11 +43,11 @@
         public void Compose_TaskWithDependency_ShouldGoToDifferentLayer()
         {
             var map = new TaskMap();
-            var idPrimary = new Identity();
-            var idSecondary = new Identity();
+            var idPrimary = new Identity("primary");
+            var idSecondary = new Identity("secondary");
 
-            map[idPrimary] = new TaskWithBehaviors(FakeFlowable());
-            map[idSecondary] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
+            map.Register("primary", FakeFlowable(), new ITaskBehavior[0]);
+            map.Register("secondary", FakeFlowable(), new ITaskBehavior[] { new DependsOnBehavior(idPrimary) });
 
             var result = ComposeWithAllTasksAsFilter(map).ToList();
 
@@ -61,13 +65,12 @@
         public void Compose_WithFilter_ShouldPassOnlyAllowedTasks()
         {
             var map = new TaskMap();
-            var idPrimary = new Identity();
-            var idSecondary1 = new Identity();
-            var idSecondary2 = new Identity();
+            var idPrimary = new Identity("primary");
+            var idSecondary2 = new Identity("secondary2");
 
-            map[idPrimary] = new TaskWithBehaviors(FakeFlowable());
-            map[idSecondary1] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
-            map[idSecondary2] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
+            map.Register("primary", FakeFlowable(), new ITaskBehavior[0]);
+            map.Register("secondary1", FakeFlowable(), new ITaskBehavior[] { new DependsOnBehavior(idPrimary) });
+            map.Register("secondary2", FakeFlowable(), new ITaskBehavior[] { new DependsOnBehavior(idPrimary) });
 
             var result = ComposeWithFilter(map, Identities.Empty + idSecondary2).ToList();
 
@@ -87,11 +90,15 @@
             Assert.Throws<Exception>(() =>
             {
                 var map = new TaskMap();
-                var idPrimary = new Identity();
-                var idSecondary = new Identity();
 
-                map[idPrimary] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idSecondary));
-                map[idSecondary] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
+                var idPrimary = new Identity("primary");
+                var idSecondary = new Identity("secondary");
+
+                map.Register("primary", FakeFlowable(), new ITaskBehavior[] { new DependsOnBehavior(idSecondary) });
+                map.Register("secondary", FakeFlowable(), new ITaskBehavior[] { new DependsOnBehavior(idPrimary) });
+
+//                map[idPrimary] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idSecondary));
+//                map[idSecondary] = new TaskWithBehaviors(FakeFlowable(), new DependsOnBehavior(idPrimary));
 
                 ComposeWithAllTasksAsFilter(map);
             });
