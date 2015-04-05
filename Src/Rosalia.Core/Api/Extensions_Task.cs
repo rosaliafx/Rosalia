@@ -13,5 +13,10 @@
         {
             return task;
         }
+
+        public static ITaskRegistry<TResult> AsTask<TResult>(this ITaskRegistry<TResult> task) where TResult : class
+        {
+            return task;
+        }
     }
 }
