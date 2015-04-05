@@ -1,5 +1,6 @@
 ﻿namespace Rosalia.Core.Api
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Rosalia.Core.Api.Behaviors;
@@ -19,6 +20,11 @@
         {
             Identity identity = CreateIdentity(id);
 
+            if (Map.ContainsKey(identity))
+            {
+                throw new Exception(string.Format("Task with id [{0}] has already been registered", identity.Value));
+            }
+
             this[identity] = new TaskWithBehaviors(task, behaviors);
 
             return new RegistrationTaskFuture<T>(identity);
@@ -27,7 +33,7 @@
         public TaskWithBehaviors this[Identity identity]
         {
             get { return Map[identity]; }
-            set { Map[identity] = value; }
+            private set { Map[identity] = value; }
         }
 
         private static Identity CreateIdentity(string id)

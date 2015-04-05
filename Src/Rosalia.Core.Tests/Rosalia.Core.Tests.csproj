@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\TaskMapTests.cs" />
     <Compile Include="Api\AbstractTaskRegistry_Syntax_LinqAction.cs" />
     <Compile Include="Api\AbstractTaskRegistry_Syntax_LinqTaskResult.cs" />
     <Compile Include="Api\AbstractTaskRegistry_Syntax_LinqTask.cs" />

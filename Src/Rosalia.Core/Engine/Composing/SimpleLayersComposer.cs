@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using Rosalia.Core.Api;
 
     public class SimpleLayersComposer : ILayersComposer
@@ -19,7 +20,7 @@
 
                 if (layer.IsEmpty)
                 {
-                    throw new Exception("Could not compose layers");
+                    throw new Exception(GetErrorMessage(allTasks, result));
                 }
 
                 result.Add(layer);
@@ -27,6 +28,37 @@
             }
 
             return result.ToArray();
+        }
+
+        private static string GetErrorMessage(List<ExecutableWithIdentity> allTasks, List<Layer> result)
+        {
+            var errorBuilder = new StringBuilder();
+            errorBuilder.AppendLine(
+                "Could not compose layers (probably caused by circular references). The tasks that could not be layered:");
+
+            foreach (ExecutableWithIdentity executableWithIdentity in allTasks)
+            {
+                errorBuilder.AppendFormat("    [{0}]", executableWithIdentity.Id.Value);
+                errorBuilder.AppendLine();
+            }
+
+            errorBuilder.AppendLine("Composed layers:");
+            if (result.Count == 0)
+            {
+                errorBuilder.AppendLine("    none");
+            }
+
+            for (int index = 0; index < result.Count; index++)
+            {
+                Layer composedLayer = result[index];
+                errorBuilder.AppendLine(string.Format("    {{{0}}}", index));
+                foreach (ExecutableWithIdentity executableWithIdentity in composedLayer.Items)
+                {
+                    errorBuilder.AppendLine(string.Format("        [{0}]", executableWithIdentity.Id.Value));
+                }
+            }
+
+            return errorBuilder.ToString();
         }
 
         private static List<ExecutableWithIdentity> GetAllTasks(RegisteredTasks map, Identities filter)
