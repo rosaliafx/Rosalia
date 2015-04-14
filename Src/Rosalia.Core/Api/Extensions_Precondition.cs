@@ -1,10 +1,7 @@
 ﻿namespace Rosalia.Core.Api
 {
     using System;
-    using System.Collections.Generic;
     using Rosalia.Core.Tasks;
-    using Rosalia.Core.Tasks.Futures;
-    using Rosalia.Core.Tasks.Results;
 
     public static partial class Extensions
     {

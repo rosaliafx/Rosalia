@@ -58,7 +58,7 @@
 
             foreach (TItem item in _source)
             {
-                taskDefinitions.Add(map.Register(_name(item), _task.Invoke(item), new ITaskBehavior[] {}));
+                taskDefinitions.Add(map.Register(_name(item), _task(item), new ITaskBehavior[] {}));
             }
 
             var resultTask = map.Register(

@@ -13,5 +13,10 @@
         {
             return task;
         }
+
+        public static ITaskRegistry<TResult> AsSubflow<TResult>(this ITaskRegistry<TResult> task) where TResult : class
+        {
+            return task;
+        }
     }
 }

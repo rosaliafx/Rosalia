@@ -23,7 +23,7 @@ namespace Rosalia.Core.Tasks.Results
             get { return _data; }
         }
 
-        public Exception Error
+        public IError Error
         {
             get { return null; }
         }

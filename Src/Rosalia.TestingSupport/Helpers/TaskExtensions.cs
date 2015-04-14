@@ -6,6 +6,7 @@
     using NUnit.Framework;
     using NUnit.Framework.Internal;
     using Rosalia.Core;
+    using Rosalia.Core.Api;
     using Rosalia.Core.Engine.Execution;
     using Rosalia.Core.Environment;
     using Rosalia.Core.Interception;
@@ -19,6 +20,11 @@
 
     public static class TaskExtensions
     {
+        public static ResultWrapper<Nothing> Execute(this IWorkflow workflow, IDirectory workDirectory = null, params Identity[] tasks)
+        {
+            return new SubflowTask<Nothing>(workflow, new Identities(tasks)).Execute();
+        }
+
         public static ResultWrapper<T> Execute<T>(this ITask<T> task, IDirectory workDirectory = null) where T : class
         {
             var spyLogRenderer = new SpyLogRenderer();
@@ -44,7 +50,7 @@
                 logRenderer ?? new SimpleLogRenderer(), 
                 workDirectory ?? new DirectoryStub(Directory.GetCurrentDirectory()),
                 environment ?? new DefaultEnvironment(),
-                interceptor);
+                interceptor ?? new LoggingInterceptor());
         }
 
         public static void AssertCommand<TResult>(this ExternalToolTask<TResult> task, Action<string, string> assertAction) where TResult : class
