@@ -131,8 +131,7 @@
         {
             if (exitCode != 0)
             {
-                context.Log.Error("Pocess exit with code {0}", exitCode);
-                return new FailureResult<TResult>(null);
+                return new FailureResult<TResult>(string.Format("Pocess exit with code {0}", exitCode));
             }
 
             return new SuccessResult<TResult>(CreateResult(exitCode, context, aggregatedOutput));
