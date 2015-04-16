@@ -1,5 +1,6 @@
 ﻿namespace Rosalia.Core.Api
 {
+    using System;
     using System.Collections.Generic;
     using Rosalia.Core.Api.Behaviors;
     using Rosalia.Core.Tasks.Futures;
@@ -33,6 +34,21 @@
         public ForEachConfig<T> ForEach<T>(IEnumerable<T> items)
         {
             return new ForEachConfig<T>(items);
+        }
+
+        public ITaskResult<T> Success<T>(T data)
+        {
+            return new SuccessResult<T>(data);
+        }
+
+        public ITaskResult<T> Failure<T>(string error)
+        {
+            return new FailureResult<T>(error);
+        }
+
+        public ITaskResult<T> Failure<T>(Exception error)
+        {
+            return new FailureResult<T>(error);
         }
     }
 }
