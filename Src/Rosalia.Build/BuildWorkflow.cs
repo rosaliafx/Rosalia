@@ -4,7 +4,6 @@
     using System.Reflection;
     using Rosalia.Build.Helpers;
     using Rosalia.Core.Api;
-    using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
     using Rosalia.TaskLib.AssemblyInfo;
@@ -52,17 +51,6 @@
                         SolutionVersion = gitVersion.Tag.Replace("v", string.Empty) + "." + gitVersion.CommitsCount,
                         NuGetVersion = gitVersion.Tag.Replace("v", string.Empty) + "." + gitVersion.CommitsCount + "-alpha"
                     }));
-
-            /* ======================================================================================== */
-
-//            var solutionVersionTask = Task(
-//                "solutionVersion",
-//                from value in gitVersionTask
-//                select new
-//                {
-//                    SolutionVersion = value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount,
-//                    NuGetVersion = value.Tag.Replace("v", string.Empty) + "." + value.CommitsCount + "-alpha"
-//                }.AsTaskResult());
 
             /* ======================================================================================== */
 
@@ -121,6 +109,7 @@
                 });
 
             /* ======================================================================================== */
+
             var nuspecCore = Task(
                 "nuspecCore",
                 
@@ -158,6 +147,7 @@
                 DependsOn(nuspecCore));
 
             /* ======================================================================================== */
+
             ITaskFuture<Nothing> nuspecTaskLibs = Task(
                 "nuspecTaskLibs",
                 from data in solutionTreeTask
@@ -175,8 +165,6 @@
                     tasklibDir => "nuspec" + tasklibDir.Name.Replace("Rosalia.TaskLib.", string.Empty)),
                 
                 DependsOn(nuspecRosaliaExe));
-
-            
 
             /* ======================================================================================== */
 

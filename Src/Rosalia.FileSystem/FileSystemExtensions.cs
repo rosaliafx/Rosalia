@@ -1,5 +1,6 @@
 ﻿namespace Rosalia.FileSystem
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
 
@@ -29,12 +30,18 @@
             }
         }
 
+        [Obsolete("Use SearchFilesRecursively")]
+        public static FileList SearchFilesIn(this IDirectory directory)
+        {
+            return new FileList(GetFilesRecursivelySource(directory), directory);
+        }
+
         /// <summary>
         /// Retrieves all directory files recursively.
         /// </summary>
         /// <param name="directory">target directory</param>
         /// <returns>a list of files</returns>
-        public static FileList SearchFilesIn(this IDirectory directory)
+        public static FileList SearchFilesRecursively(this IDirectory directory)
         {
             return new FileList(GetFilesRecursivelySource(directory), directory);
         }

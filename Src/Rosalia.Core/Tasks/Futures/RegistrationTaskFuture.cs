@@ -22,14 +22,5 @@
         {
             return context.Results.GetValueOf<T>(_identity);
         }
-
-        public RegistrationTaskFuture<T> this[ITaskBehavior behavior]
-        {
-            get
-            {
-                _behaviors.Add(behavior);
-                return this;
-            }
-        }
     }
 }

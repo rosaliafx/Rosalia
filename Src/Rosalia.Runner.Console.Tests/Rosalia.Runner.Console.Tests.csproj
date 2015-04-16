@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9F949343-DE42-40C3-9B05-0B1F53E32865}</ProjectGuid>
+    <ProjectGuid>{559DFA12-9EF7-4707-AF81-B51326DC004B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rosalia.Core.Tests</RootNamespace>
-    <AssemblyName>Rosalia.Core.Tests</AssemblyName>
+    <RootNamespace>Rosalia.Runner.Console.Tests</RootNamespace>
+    <AssemblyName>Rosalia.Runner.Console.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -23,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,16 +30,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Moq, Version=4.2.1502.911, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.0.5509.17454, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.3.0.0-alpha-5\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.3.0.0-beta-1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,42 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\AbstractTaskRegistry_Execution.cs" />
-    <Compile Include="Api\AbstractTaskRegistry_Execution_ForEach.cs" />
-    <Compile Include="Api\TaskMapTests.cs" />
-    <Compile Include="Api\AbstractTaskRegistry_Syntax_LinqAction.cs" />
-    <Compile Include="Api\AbstractTaskRegistry_Syntax_LinqTaskResult.cs" />
-    <Compile Include="Api\AbstractTaskRegistry_Syntax_LinqTask.cs" />
-    <Compile Include="Api\AbstractTaskRegistry_Syntax_RegisterAction.cs" />
-    <Compile Include="Api\AbstractTaskRegistry_Syntax_RegisterFunc.cs" />
-    <Compile Include="Api\AbstractTaskRegistry_Syntax_RegisterTask.cs" />
-    <Compile Include="Engine\Composing\SimpleLayersComposerTests.cs" />
-    <Compile Include="Engine\Execution\ExecutionStrategyTests.cs" />
-    <Compile Include="Engine\Execution\ParallelExecutionStrategyTests.cs" />
-    <Compile Include="Engine\Execution\SequenceExecutionStrategyTests.cs" />
-    <Compile Include="Logging\FilterLogRendererTests.cs" />
-    <Compile Include="Tasks\PreconditionExecutableTests.cs" />
-    <Compile Include="Tasks\RecoverExecutableTests.cs" />
-    <Compile Include="IdentitiesTests.cs" />
+    <Compile Include="OptionsParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\TransformTaskTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Rosalia.Core\Rosalia.Core.csproj">
-      <Project>{EDD2B71B-404F-4E73-8833-2D74ACE77F8F}</Project>
-      <Name>Rosalia.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rosalia.FileSystem\Rosalia.FileSystem.csproj">
-      <Project>{38b399dc-a34c-440b-8dad-7f0a280f9531}</Project>
-      <Name>Rosalia.FileSystem</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rosalia.TestingSupport\Rosalia.TestingSupport.csproj">
-      <Project>{b56e1ced-ee5f-4d25-93b4-3d25a72aa9b0}</Project>
-      <Name>Rosalia.TestingSupport</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rosalia.Runner.Console\Rosalia.Runner.Console.csproj">
+      <Project>{05DDC662-C7F2-4B03-AD10-6C5A4288C6BD}</Project>
+      <Name>Rosalia.Runner.Console</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

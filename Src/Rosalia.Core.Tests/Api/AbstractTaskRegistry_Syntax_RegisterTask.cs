@@ -75,5 +75,18 @@
                 .GetRegisteredTasks()
                 .DefinitionById("child").AssertDependsOn("parent");
         }
+
+        [Test]
+        public void Test_ManualDependencyById()
+        {
+            QuickWorkflow
+                .Define(w =>
+                {
+                    w.Task("parent", Task.Const("foo"));
+                    w.Task("child", Task.Const("foo"), DependsOn("parent"));
+                })
+                .GetRegisteredTasks()
+                .DefinitionById("child").AssertDependsOn("parent");
+        }
     }
 }
