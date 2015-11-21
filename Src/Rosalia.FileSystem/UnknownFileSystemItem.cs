@@ -19,6 +19,11 @@
             }
         }
 
+        public static UnknownFileSystemItem operator /(UnknownFileSystemItem current, string path)
+        {
+            return current[path];
+        }
+
         public IFile AsFile()
         {
             return _parent.GetFile(_name);
@@ -37,6 +42,11 @@
         public static implicit operator IFile(UnknownFileSystemItem item)
         {
             return item.AsFile();
+        }
+
+        public static implicit operator string(UnknownFileSystemItem item)
+        {
+            return item.AsFile().AbsolutePath;
         }
     }
 }

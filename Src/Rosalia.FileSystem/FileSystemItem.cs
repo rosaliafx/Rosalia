@@ -36,5 +36,10 @@
                     .ToString()
                     .Replace('/', Path.DirectorySeparatorChar));
         }
+
+        public static implicit operator string(FileSystemItem item)
+        {
+            return item.AbsolutePath;
+        }
     }
 }

@@ -24,5 +24,10 @@
         {
             return new DefaultDirectory(path);
         }
+
+        public static UnknownFileSystemItem operator /(IDirectory current, string path)
+        {
+            return current[path];
+        }
     }
 }
