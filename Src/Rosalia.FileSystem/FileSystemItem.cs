@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    public abstract class FileSystemItem /*: IFileSystemItem*/
+    public abstract class FileSystemItem
     {
         protected FileSystemItem(string absolutePath)
         {
@@ -35,6 +35,12 @@
                 baseItem.MakeRelativeUri(thisItem)
                     .ToString()
                     .Replace('/', Path.DirectorySeparatorChar));
+        }
+
+        public override string ToString()
+        {
+            /* do implicit conversion to string */
+            return this;
         }
 
         public static implicit operator string(FileSystemItem item)

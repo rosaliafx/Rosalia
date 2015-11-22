@@ -34,6 +34,12 @@
             return _parent.GetDirectory(_name);
         }
 
+        public override string ToString()
+        {
+            /* do implicit conversion to string */
+            return this;
+        }
+
         public static implicit operator IDirectory(UnknownFileSystemItem item)
         {
             return item.AsDirectory();
