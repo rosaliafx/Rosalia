@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// A set of helpful extension methods for file system objects
@@ -44,6 +45,29 @@
         public static FileList SearchFilesRecursively(this IDirectory directory)
         {
             return new FileList(GetFilesRecursivelySource(directory), directory);
+        }
+
+        /// <summary>
+        /// Finds closest directory matching the predicate. 
+        /// Checks the directory itself and it's parents.
+        /// Returns null if none of parent directories match the predicate.
+        /// </summary>
+        public static IDirectory Closest(this IDirectory directory, Predicate<IDirectory> predicate)
+        {
+            return directory.GetParentsChain().FirstOrDefault(dir => predicate(dir));
+        }
+
+        /// <summary>
+        /// Yields directory itself and all it's children.
+        /// </summary>
+        public static IEnumerable<IDirectory> GetParentsChain(this IDirectory directory)
+        {
+            IDirectory currentDirectory = directory;
+            while (currentDirectory != null)
+            {
+                yield return currentDirectory;
+                currentDirectory = currentDirectory.Parent;
+            }
         }
 
         private static IEnumerable<IFile> GetFilesRecursivelySource(this IDirectory directory)
