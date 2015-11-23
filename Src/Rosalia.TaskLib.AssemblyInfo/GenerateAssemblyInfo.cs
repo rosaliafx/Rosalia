@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using Nustache.Core;
@@ -44,8 +45,23 @@ using {{Name}};
         {
             foreach (var expression in body.Arguments)
             {
-                var rawValue = Expression.Lambda(expression).Compile().DynamicInvoke().ToString();
-                yield return Expression.Constant(rawValue).ToString();
+                var dynamicArg = Expression.Lambda(expression).Compile().DynamicInvoke();
+
+                //// It turned out that .NET has no clear way to get string representation
+                //// of the expression. So we have no other options but handle each case manually.
+                if (dynamicArg is string)
+                {
+                    yield return string.Format("\"{0}\"", dynamicArg);
+                }
+                else if (dynamicArg is bool)
+                {
+                    yield return ((bool) dynamicArg) ? "true" : "false";
+                }
+                /* todo: more options here if needed */
+                else
+                {
+                    yield return Convert.ToString(dynamicArg, CultureInfo.InvariantCulture);
+                }
             }
         }
 
