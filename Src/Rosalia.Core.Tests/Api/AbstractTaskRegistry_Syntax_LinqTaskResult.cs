@@ -66,7 +66,7 @@
                         from foo in fooTask
                         from bar in barTask
                         from baz in bazTask
-                        select "result".AsTaskResult());
+                        select (foo + bar + baz + "result").AsTaskResult());
                 })
                 .GetRegisteredTasks()
                 .DefinitionById("result")

@@ -17,7 +17,7 @@
             };
 
             task.AssertCommand(
-                (path, args) => Assert.That(args, Is.StringStarting("-c ").Or.EqualTo("-c")));
+                (path, args) => Assert.That(args, Does.StartWith("-c ").Or.EqualTo("-c")));
         }
 
         [Test]
