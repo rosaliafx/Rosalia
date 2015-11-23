@@ -4,14 +4,26 @@
     using System.Collections.Generic;
     using System.Linq;
     using Rosalia.Core.Api.Behaviors;
+    using Rosalia.Core.Environment;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
+    using Rosalia.FileSystem;
 
     public class AbstractTasksRegistry : TaskRegistryApiHelper, ITaskRegistryApi
     {
         private readonly TaskMap _taskMap = new TaskMap();
         private Identity _lastRegisteredTask;
+
+        /// <summary>
+        /// Gets work directory
+        /// </summary>
+        public IDirectory WorkDirectory { get; set; }
+
+        /// <summary>
+        /// Gets environment helper
+        /// </summary>
+        public IEnvironment Environment { get; set; }
 
         protected TaskMap TaskMap
         {

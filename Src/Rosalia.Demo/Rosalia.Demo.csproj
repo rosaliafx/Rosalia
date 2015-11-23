@@ -47,6 +47,10 @@
       <Project>{EDD2B71B-404F-4E73-8833-2D74ACE77F8F}</Project>
       <Name>Rosalia.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rosalia.FileSystem\Rosalia.FileSystem.csproj">
+      <Project>{38B399DC-A34C-440B-8DAD-7F0A280F9531}</Project>
+      <Name>Rosalia.FileSystem</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

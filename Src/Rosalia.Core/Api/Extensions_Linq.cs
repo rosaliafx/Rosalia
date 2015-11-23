@@ -8,22 +8,36 @@
 
     public static partial class Extensions
     {
-        public static ITaskFuture<TResult> Select<TResult, TInput>(this ITaskFuture<TInput> input, Func<TInput, ITask<TResult>> map)
+        /// <summary>
+        /// Core implementation of select.
+        /// </summary>
+        private static ITaskFuture<TResult> SelectCore<TResult, TInput>(this ITaskFuture<TInput> input, Func<TaskContext, TInput, ITaskResult<TResult>> map)
             where TResult : class
             where TInput : class
         {
-            ITask<TResult> delegatingTask = new FuncTask<TResult>(context => map.Invoke(input.FetchValue(context)).Execute(context));
+            ITask<TResult> delegatingTask = new FuncTask<TResult>(context => map.Invoke(context, input.FetchValue(context)));
 
-            return new LinqTaskFuture<TResult>(delegatingTask, new ITaskFuture<object>[] { input });
+            return new LinqTaskFuture<TResult>(delegatingTask, input);
         }
 
         public static ITaskFuture<TResult> Select<TResult, TInput>(this ITaskFuture<TInput> input, Func<TInput, ITaskResult<TResult>> map)
             where TResult : class
             where TInput : class
         {
-            ITask<TResult> delegatingTask = new FuncTask<TResult>(context => map.Invoke(input.FetchValue(context)));
+            return input.SelectCore((_, inputValue) => map(inputValue));
+//            ITask<TResult> delegatingTask = new FuncTask<TResult>(context => map.Invoke(input.FetchValue(context)));
+//
+//            return new LinqTaskFuture<TResult>(delegatingTask, input);
+        }
 
-            return new LinqTaskFuture<TResult>(delegatingTask, new ITaskFuture<object>[] { input });
+        public static ITaskFuture<TResult> Select<TResult, TInput>(this ITaskFuture<TInput> input, Func<TInput, ITask<TResult>> map)
+            where TResult : class
+            where TInput : class
+        {
+            return input.SelectCore((context, inputValue) => map(inputValue).Execute(context));
+//            ITask<TResult> delegatingTask = new FuncTask<TResult>(context => map.Invoke(input.FetchValue(context)).Execute(context));
+//
+//            return new LinqTaskFuture<TResult>(delegatingTask, input);
         }
 
         public static ITaskFuture<TResult> Select<TResult, TInput>(this ITaskFuture<TInput> input, Func<TInput, ITaskRegistry<TResult>> map)
@@ -36,7 +50,7 @@
         public static ITaskFuture<Nothing> Select<TInput>(this ITaskFuture<TInput> input, Func<TInput, Action<TaskContext>> map)
             where TInput : class
         {
-            ITask<Nothing> delegatingTask = new FuncTask<Nothing>(context =>
+            return input.SelectCore((context, inputValue) =>
             {
                 var action = map.Invoke(input.FetchValue(context));
                 action.Invoke(context);
@@ -44,7 +58,15 @@
                 return Nothing.Value.AsTaskResult();
             });
 
-            return new LinqTaskFuture<Nothing>(delegatingTask, new ITaskFuture<object>[] { input });
+//            ITask<Nothing> delegatingTask = new FuncTask<Nothing>(context =>
+//            {
+//                var action = map.Invoke(input.FetchValue(context));
+//                action.Invoke(context);
+//
+//                return Nothing.Value.AsTaskResult();
+//            });
+//
+//            return new LinqTaskFuture<Nothing>(delegatingTask, input);
         }
         
         public static ITaskFuture<TResult> SelectMany<TInput, TIntermediate, TResult>(
@@ -171,7 +193,7 @@
         private readonly ITask<TResult> _task;
         private readonly ITaskFuture<object>[] _dependencies;
 
-        public LinqTaskFuture(ITask<TResult> task, ITaskFuture<object>[] dependencies)
+        public LinqTaskFuture(ITask<TResult> task, params ITaskFuture<object>[] dependencies)
         {
             _task = task;
             _dependencies = dependencies;
