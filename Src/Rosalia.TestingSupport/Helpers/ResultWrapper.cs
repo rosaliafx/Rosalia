@@ -11,17 +11,19 @@
     public class ResultWrapper<T>
     {
         private readonly ITaskResult<T> _result;
-        private readonly IList<Tuple<Message, Identities>> _messages;
+        //private readonly IList<Tuple<Message, Identities>> _messages;
+        private readonly SpyLogRenderer _log;
 
         public T Data
         {
             get { return _result.Data; }
         }
 
-        public ResultWrapper(ITaskResult<T> result, IList<Tuple<Message, Identities>> messages)
+        public ResultWrapper(ITaskResult<T> result, /*IList<Tuple<Message, Identities>> messages,*/ SpyLogRenderer log)
         {
             _result = result;
-            _messages = messages;
+            _log = log;
+            //_messages = messages;
         }
 
         public ITaskResult<T> Result
@@ -31,7 +33,12 @@
 
         public IList<Tuple<Message, Identities>> Messages
         {
-            get { return _messages; }
+            get { return Log.Messages; }
+        }
+
+        public SpyLogRenderer Log
+        {
+            get { return _log; }
         }
 
         public ResultWrapper<T> AssertSuccess()
@@ -50,20 +57,6 @@
             Assert.That(_result.Data, Is.EqualTo(expected));
 
             return this;
-        }
-
-        [Obsolete("todo: use SpuLogRendererMethods")]
-        public void AssertHasMessage(MessageLevel level, string message)
-        {
-            foreach (var messageTuple in _messages)
-            {
-                if (messageTuple.Item1.Level == level && messageTuple.Item1.Text == message)
-                {
-                    return;
-                }
-            }
-
-            Assert.Fail("Message [{0}] with level {1} not found", message, level);
         }
 
         public void AssertFailure()

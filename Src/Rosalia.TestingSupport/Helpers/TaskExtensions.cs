@@ -36,7 +36,7 @@
 
             return new ResultWrapper<T>(
                 result,
-                spyLogRenderer.Messages);
+                spyLogRenderer);
         }
 
         public static TaskContext CreateContext(

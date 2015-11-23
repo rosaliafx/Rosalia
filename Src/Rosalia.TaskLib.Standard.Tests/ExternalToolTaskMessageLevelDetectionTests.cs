@@ -23,7 +23,7 @@
                 "Test message",
                 result =>
                     {
-                        result.AssertHasMessage(MessageLevel.Error, "Test message");
+                        result.Log.AssertHasMessage(MessageLevel.Error, "Test message");
                     });
         }
 

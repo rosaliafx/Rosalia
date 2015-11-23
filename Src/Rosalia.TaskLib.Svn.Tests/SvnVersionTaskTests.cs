@@ -1,7 +1,6 @@
 ﻿namespace Rosalia.TaskLib.Svn.Tests
 {
     using NUnit.Framework;
-    using Rosalia.Core.Logging;
     using Rosalia.TestingSupport.Helpers;
 
     [TestFixture]
@@ -30,7 +29,7 @@
             };
 
             task.AssertCommand(
-                (path, args) => Assert.That(args, Is.Not.StringStarting("-c ").And.Not.EqualTo("-c")));
+                (path, args) => Assert.That(args, Does.Not.StartWith("-c ").And.Not.EqualTo("-c")));
         }
 
         [Test]
@@ -42,7 +41,7 @@
             };
             
             task.AssertCommand(
-                (path, args) => Assert.That(args, Is.StringContaining("WC_PATH")));
+                (path, args) => Assert.That(args, Does.Contain("WC_PATH")));
         }
 
         [Test]
@@ -55,7 +54,7 @@
             };
             
             task.AssertCommand(
-                (path, args) => Assert.That(args, Is.StringContaining("WC_PATH TRAIL")));
+                (path, args) => Assert.That(args, Does.Contain("WC_PATH TRAIL")));
         }
 
         [Test]
