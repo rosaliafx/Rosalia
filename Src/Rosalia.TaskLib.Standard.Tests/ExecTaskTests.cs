@@ -17,7 +17,7 @@
                 Arguments = string.Format("/c echo {0}", "Hello, Rosalia!")
             };
 
-            TaskExtensions.Execute(echoTask).AssertSuccess();
+            echoTask.Execute().AssertSuccess();
         }
 
         [Test]
@@ -29,9 +29,9 @@
                 Arguments = string.Format("/c echo {0}", "Hello, Rosalia!")
             };
 
-            TaskExtensions.Execute(echoTask)
+            echoTask.Execute()
                 .AssertSuccess()
-                .AssertHasMessage(MessageLevel.Info, "Hello, Rosalia!");
+                .Log.AssertHasMessage(MessageLevel.Info, "Hello, Rosalia!");
         }
     }
 }

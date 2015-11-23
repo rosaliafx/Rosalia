@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using Rosalia.Core.Api.Behaviors;
+    using Rosalia.Core.Environment;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
+    using Rosalia.FileSystem;
 
     public class ForEachConfig<T>
     {
@@ -49,6 +51,16 @@
             _task = task;
             _aggregator = aggregator;
             _name = name;
+        }
+
+        public IDirectory WorkDirectory
+        {
+            set {  }
+        }
+
+        public IEnvironment Environment
+        {
+            set {  }
         }
 
         public RegisteredTasks GetRegisteredTasks()

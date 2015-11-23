@@ -33,7 +33,7 @@
                 "fatal: No names found, cannot describe anything.",
                 (result) =>
                     {
-                        result.AssertHasMessage(MessageLevel.Error, "fatal: No names found, cannot describe anything.");
+                        result.Log.AssertHasMessage(MessageLevel.Error, "fatal: No names found, cannot describe anything.");
                         result.AssertFailure();
                     });
         }

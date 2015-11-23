@@ -4,6 +4,7 @@
     using Rosalia.Core.Api;
     using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Results;
+    using Rosalia.FileSystem;
 
     public class DemoWorkflow : Workflow
     {

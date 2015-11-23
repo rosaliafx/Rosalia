@@ -18,6 +18,9 @@
 
         protected override ITaskResult<T> SafeExecute(TaskContext context)
         {
+            _taskRegistry.Environment = context.Environment;
+            _taskRegistry.WorkDirectory = context.WorkDirectory;
+
             RegisteredTasks definitions = _taskRegistry.GetRegisteredTasks();
             Identities tasksToExecute = _tasksToExecute.IsEmpty ? definitions.StartupTaskIds : _tasksToExecute;
             Layer[] layers = _layersComposer.Compose(definitions, tasksToExecute);
