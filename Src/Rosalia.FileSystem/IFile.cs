@@ -8,6 +8,9 @@
         {
         }
 
+        /// <summary>
+        /// Gets file name without extension.
+        /// </summary>
         public abstract string NameWithoutExtension { get; }
 
         public abstract Stream ReadStream { get; }
@@ -16,8 +19,14 @@
 
         public abstract ExtensionInfo Extension { get; }
 
+        /// <summary>
+        /// Gets size of the file in bytes.
+        /// </summary>
         public abstract long Length { get; }
 
+        /// <summary>
+        /// Gets parent directory.
+        /// </summary>
         public abstract IDirectory Directory { get; }
 
         public abstract void CopyTo(IFile destination);
