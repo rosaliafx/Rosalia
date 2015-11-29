@@ -1,11 +1,11 @@
 ﻿namespace Rosalia.Build
 {
-    using System;
     using System.Reflection;
     using Rosalia.Build.Helpers;
     using Rosalia.Core.Api;
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
+    using Rosalia.FileSystem;
     using Rosalia.TaskLib.AssemblyInfo;
     using Rosalia.TaskLib.Git.Tasks;
     using Rosalia.TaskLib.MsBuild;
@@ -19,15 +19,12 @@
             /* ======================================================================================== */
             var solutionTreeTask = Task(
                 "Initialize context",
-                context =>
+                () =>
                 {
-                    var projectRoot = context.WorkDirectory;
-                    while (!(projectRoot["Src"].AsDirectory().Exists && projectRoot["Tools"].AsDirectory().Exists))
-                    {
-                        projectRoot = projectRoot.Parent;
-                    }
-                    
-                    var src = projectRoot.GetDirectory("Src");
+                    var projectRoot = WorkDirectory
+                        .Closest(dir => dir.GetDirectory("Src").Exists && dir.GetDirectory("Tools").Exists);
+
+                    IDirectory src = projectRoot/"Src";
 
                     return new BuildData
                     {
@@ -35,8 +32,7 @@
                         ProjectRootDirectory = projectRoot,
                         Src = src,
                         SolutionFile = src.GetFile("Rosalia.sln"),
-                        Artifacts =
-                            context.Environment.IsMono ?
+                        Artifacts = Environment.IsMono ?
                             projectRoot :
                             projectRoot.GetDirectory("Artifacts")
                     }.AsTaskResult();
@@ -46,11 +42,19 @@
 
             var solutionVersionTask = Task(
                 "gitVersion",
-                new GetVersionTask().TransformWith(gitVersion => new
+                new GetVersionTask().TransformWith(gitVersion =>
+                {
+                    string version = string.Format(
+                        "{0}.{1}", 
+                        gitVersion.Tag.Replace("v", string.Empty), 
+                        gitVersion.CommitsCount);
+
+                    return new
                     {
-                        SolutionVersion = gitVersion.Tag.Replace("v", string.Empty) + "." + gitVersion.CommitsCount,
-                        NuGetVersion = gitVersion.Tag.Replace("v", string.Empty) + "." + gitVersion.CommitsCount + "-alpha"
-                    }));
+                        SolutionVersion = version,
+                        NuGetVersion = version + "-alpha"
+                    };
+                }));
 
             /* ======================================================================================== */
 
@@ -59,7 +63,7 @@
                 
                 from version in solutionVersionTask
                 from data in solutionTreeTask
-                select new GenerateAssemblyInfo(data.Src["CommonAssemblyInfo.cs"])
+                select new GenerateAssemblyInfo(data.Src/"CommonAssemblyInfo.cs")
                 {
                     Attributes =
                     {
@@ -76,8 +80,8 @@
                 from data in solutionTreeTask
                 select new ExecTask
                 {
-                    ToolPath = Type.GetType("Mono.Runtime") != null ? "mono": data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath,
-                    Arguments = (Type.GetType("Mono.Runtime") != null ? data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath + " ": "") + "restore " + data.SolutionFile.AbsolutePath
+                    ToolPath = Environment.IsMono ? "mono": data.Src/".nuget"/"NuGet.exe",
+                    Arguments = (Environment.IsMono ? data.Src/".nuget"/"NuGet.exe" + " ": "") + "restore " + data.SolutionFile
                 }.AsTask());
 
             /* ======================================================================================== */
@@ -158,7 +162,7 @@
                         var libCode = tasklibDir.Name.Replace("Rosalia.TaskLib.", string.Empty);
                         var taskLibNuspec = string.Format("Rosalia.TaskLib.{0}.nuspec", libCode);
 
-                        return new GenerateNuGetSpecTask(data.Artifacts[taskLibNuspec])
+                        return new GenerateNuGetSpecTask(data.Artifacts/taskLibNuspec)
                             .FillCommonProperties(version.NuGetVersion)
                             .FillTaskLibProperties(data, version.NuGetVersion, libCode);
                     },
@@ -174,7 +178,7 @@
                 select ForEach(data.Artifacts.Files.IncludeByExtension(".nuspec")).Do(
                     file => new GeneratePackageTask(file)
                     {
-                        ToolPath = data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath
+                        ToolPath = data.Src/".nuget"/"NuGet.exe"
                     },
                     file => "pack " + file.Name),
                 
@@ -193,7 +197,7 @@
                     ForEach(data.Artifacts.Files.IncludeByExtension(".nupkg")).Do(
                         task: file => new PushPackageTask(file)
                         {
-                            ToolPath = data.Src[".nuget"]["NuGet.exe"].AsFile().AbsolutePath
+                            ToolPath = data.Src/".nuget"/"NuGet.exe"
                         },
                         name: file => "push" + file.NameWithoutExtension),
 
