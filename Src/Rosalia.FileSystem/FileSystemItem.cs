@@ -12,6 +12,9 @@
 
         public virtual string AbsolutePath { get; private set; }
 
+        /// <summary>
+        /// Gets the flag indicating whether file or directory exists.
+        /// </summary>
         public abstract bool Exists { get; }
 
         public abstract string Name { get; }
