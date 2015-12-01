@@ -52,7 +52,7 @@
                     return new
                     {
                         SolutionVersion = version,
-                        NuGetVersion = version + "-alpha"
+                        NuGetVersion = version // use "-alpha" or "-beta" here
                     };
                 }));
 
