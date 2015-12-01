@@ -1,10 +1,13 @@
 ﻿namespace Rosalia.Core.Tests.Api
 {
+    using System;
     using NUnit.Framework;
     using Rosalia.TestingSupport.Executables;
     using Rosalia.TestingSupport.Helpers;
     using Rosalia.Core.Api;
+    using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Futures;
+    using Rosalia.Core.Tasks.Results;
 
     [TestFixture]
     public class AbstractTaskRegistry_Syntax_LinqTask

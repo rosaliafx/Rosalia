@@ -34,7 +34,7 @@
         {
             return input.SelectCore((context, inputValue) => context.ApplyActionAsTask(map.Invoke(inputValue)));
         }
-        
+
         public static ITaskFuture<TResult> SelectMany<TInput, TIntermediate, TResult>(
             this ITaskFuture<TInput> input,
             Func<TInput, ITaskFuture<TIntermediate>> func,
@@ -178,6 +178,9 @@
         ITaskFuture<object>[] Dependencies { get; }
     }
 
+    /// <summary>
+    /// A special kind of future used to register tasks via LINQ.
+    /// </summary>
     public class LinqTaskFuture<TResult> : TaskFuture<TResult>, ILinqTaskFuture where TResult : class
     {
         private readonly ITask<TResult> _task;
