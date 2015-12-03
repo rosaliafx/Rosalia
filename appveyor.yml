@@ -3,7 +3,9 @@ branches:
     - master
     - production
 
+
 skip_tags: true
 
+clone_folder: c:\projects\Rosalia
 build_script:
-  Tools/Rosalia/Rosalia.exe "Src/Rosalia.Build/Rosalia.Build.csproj"
+  c:\projects\Rosalia\Tools\Rosalia\Rosalia.exe -wd="c:\projects\Rosalia" "Src/Rosalia.Build/Rosalia.Build.csproj"
