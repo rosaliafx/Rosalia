@@ -1,0 +1,9 @@
+branches:
+  only:
+    - master
+    - production
+
+skip_tags: true
+
+build_script:
+  Tools/Rosalia/Rosalia.exe "Src/Rosalia.Build/Rosalia.Build.csproj"
