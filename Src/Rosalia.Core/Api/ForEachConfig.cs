@@ -73,7 +73,7 @@
                 taskDefinitions.Add(map.Register(_name(item), _task(item), new ITaskBehavior[] {}));
             }
 
-            var resultTask = map.Register(
+            RegistrationTaskFuture<TAggregatedResult> resultTask = map.Register(
                 Guid.NewGuid().ToString(),
                 new FuncTask<TAggregatedResult>(context =>
                 {
