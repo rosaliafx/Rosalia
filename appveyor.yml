@@ -1,0 +1,14 @@
+branches:
+  only:
+    - master
+    - production
+
+
+skip_tags: true
+
+clone_folder: c:\projects\Rosalia
+
+build_script:
+  c:\projects\Rosalia\Tools\Rosalia\Rosalia.exe -wd="c:\projects\Rosalia" "Src/Rosalia.Build/Rosalia.Build.csproj"
+
+test: off
