@@ -58,7 +58,7 @@
         }
 
         /// <summary>
-        /// Yields directory itself and all it's children.
+        /// Yields directory itself and all it's parents.
         /// </summary>
         public static IEnumerable<IDirectory> GetParentsChain(this IDirectory directory)
         {

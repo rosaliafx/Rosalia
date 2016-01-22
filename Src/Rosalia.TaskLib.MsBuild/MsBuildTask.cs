@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using Microsoft.Win32;
@@ -17,9 +18,7 @@
     {
         public MsBuildTask()
         {
-            ToolVersion = MsBuildToolVersion.V40;
             Switches = new List<MsBuildSwitch>();
-            
         }
 
         public IFile ProjectFile { get; set; }
@@ -55,8 +54,27 @@
         {
             try
             {
-                var toolDirectory = (string)Registry.GetValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSBuild\ToolsVersions\{0}", ToolVersion.Value), "MSBuildToolsPath", null);
-                return new[] { new DefaultFile(Path.Combine(toolDirectory, "MsBuild.exe")) };
+                string[] registryKeys = ToolVersion == null ?
+                    /*
+                     * If no specific version provided we look up for 
+                     * the mosk fresh version of MsBuild
+                     */
+                    LookUpMsBuildRegistryKeys()
+                    : new [] { ToolVersion.Value };
+
+                if (registryKeys.Length == 0)
+                {
+                    context.Log.Warning("No MsBuild registry entries have been found. MsBuild probably hav not been installed.");
+                }
+
+                return registryKeys
+                    .Select(key =>
+                    {
+                        string registryKey = string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSBuild\ToolsVersions\{0}", key);
+                        string toolDirectory = (string) Registry.GetValue(registryKey, "MSBuildToolsPath", null);
+
+                        return new DefaultFile(Path.Combine(toolDirectory, "MsBuild.exe"));
+                    });
             }
             catch (Exception ex)
             {
@@ -66,10 +84,41 @@
             return new IFile[0];
         }
 
+        private static string[] LookUpMsBuildRegistryKeys()
+        {
+            RegistryKey msBuildToolsVersions = Registry
+                .LocalMachine
+                .OpenSubKey(@"SOFTWARE\Microsoft\MSBuild\ToolsVersions");
+
+            if (msBuildToolsVersions == null)
+            {
+                return new string[0];
+            }
+
+            return msBuildToolsVersions
+                .GetSubKeyNames()
+                .Select(key =>
+                {
+                    double version;
+                    bool isParsed = double.TryParse(key, NumberStyles.Float, CultureInfo.InvariantCulture, out version);
+
+                    return new
+                    {
+                        Key = key,
+                        isParsed = isParsed,
+                        Version = version
+                    };
+                })
+                .Where(item => item.isParsed)
+                .OrderByDescending(item => item.Version)
+                .Select(item => item.Key)
+                .ToArray();
+        }
+
         protected override string GetToolArguments(TaskContext context)
         {
-            var projectFile = GetProjectFile(context);
-            var switches = string.Join(" ", Switches.Select(s => s.CommandLinePart));
+            string projectFile = GetProjectFile(context);
+            string switches = string.Join(" ", Switches.Select(s => s.CommandLinePart));
             
             return string.Format("{0} {1}", switches, projectFile);
         }
