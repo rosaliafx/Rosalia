@@ -71,8 +71,8 @@ var mainTask = Task(                  /*****************************************
 <li><a class="internal present" href="/rosaliafx/Rosalia/wiki/Using-Subflows-to-organize-tasks">Using Subflows to organize tasks</a></li>
 <li><a class="internal present" href="/rosaliafx/Rosalia/wiki/Tasks-Preconditions">Tasks Preconditions</a></li>
 <li><a class="internal present" href="/rosaliafx/Rosalia/wiki/Recovering-failure-results">Recovering failure results</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Declaring-dynamic-tasks">Declaring dynamic tasks</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Creating-Custom-Tasks">Creating Custom Tasks</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Declaring-dynamic-tasks" style="color: #FF0000"><code>absent</code> Declaring dynamic tasks</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Creating-Custom-Tasks"><code>absent</code> Creating Custom Tasks</a></li>
 </ul>
 
 <p><strong>Running Tasks</strong></p>
@@ -85,8 +85,8 @@ var mainTask = Task(                  /*****************************************
 
 <ul>
 <li><a class="internal present" href="/rosaliafx/Rosalia/wiki/Travis-CI">Travis CI</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Team-City">Team City</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/AppVeyor">AppVeyor</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Team-City"><code>absent</code> Team City</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/AppVeyor"><code>absent</code> AppVeyor</a></li>
 </ul>
 </li>
 </ul>
@@ -103,17 +103,17 @@ var mainTask = Task(                  /*****************************************
 <li><a class="internal present" href="/rosaliafx/Rosalia/wiki/FileList">FileList</a></li>
 </ul>
 </li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/TaskContext">TaskContext</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/TaskContext"><code>absent</code> TaskContext</a></li>
 </ul>
 
 <p><strong>Tasklib</strong></p>
 
 <ul>
 <li><a class="internal present" href="/rosaliafx/Rosalia/wiki/AssemblyInfo">AssemblyInfo</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Compression">Compression</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Git">Git</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Compression"><code>absent</code> Compression</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Git"><code>absent</code> Git</a></li>
 <li><a class="internal present" href="/rosaliafx/Rosalia/wiki/MsBuild">MsBuild</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/NuGet">NuGet</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Standard">Standard</a></li>
-<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Svn">Svn</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/NuGet"><code>absent</code> NuGet</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Standard"><code>absent</code> Standard</a></li>
+<li><a class="internal absent" href="/rosaliafx/Rosalia/wiki/Svn"><code>absent</code> Svn</a></li>
 </ul>        
