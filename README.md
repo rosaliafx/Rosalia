@@ -45,18 +45,14 @@ var mainTask = Task(                  /*****************************************
 
 - **[Getting Started with Rosalia &rarr;](https://github.com/rosaliafx/Rosalia/wiki/Getting-Started)**
 
----
-
 [![Rosalia uses Rosalia to build itself on Travis CI](https://travis-ci.org/rosaliafx/Rosalia.svg?branch=master)](https://travis-ci.org/rosaliafx/Rosalia)
 [![NuGet package](https://img.shields.io/nuget/vpre/Rosalia.svg)](https://www.nuget.org/packages/Rosalia/)
 [![Build status](https://ci.appveyor.com/api/projects/status/wpj45p2yw44lkkjd/branch/master?svg=true)](https://ci.appveyor.com/project/rosaliafx/rosalia/branch/master)
 
----
-
 ## Explore Wiki
 
 <ul>
-<li><a class="internal present" href="/rosaliafx/Rosalia/wiki/Home">Home</a></li>
+<li><a class="internal present" href="//github.com/rosaliafx/Rosalia/wiki/Home">Home</a></li>
 <li><a class="internal present" href="/rosaliafx/Rosalia/wiki/Getting-Started">Getting Started</a></li>
 </ul>
 
