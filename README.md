@@ -2,6 +2,8 @@
 
 Rosalia is a concurrency-aware build automation tool that utilize monadic query-comprehension syntax for writing tasks in concise and strongly-typed manner using C#.
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/rosaliafx/Rosalia?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 ## Why?
 
 * use the same language for both main codebase and build script
@@ -46,5 +48,5 @@ var mainTask = Task(                  /*****************************************
 ---
 
 [![Rosalia uses Rosalia to build itself on Travis CI](https://travis-ci.org/rosaliafx/Rosalia.svg?branch=master)](https://travis-ci.org/rosaliafx/Rosalia)
-![](https://img.shields.io/nuget/vpre/Rosalia.svg)
+[![NuGet package](https://img.shields.io/nuget/vpre/Rosalia.svg)](https://www.nuget.org/packages/Rosalia/)
 [![Build status](https://ci.appveyor.com/api/projects/status/wpj45p2yw44lkkjd/branch/master?svg=true)](https://ci.appveyor.com/project/rosaliafx/rosalia/branch/master)
