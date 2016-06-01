@@ -160,12 +160,12 @@
         /// <summary>
         /// Reads dependencies from packages.config file.
         /// </summary>
-        public GenerateNuGetSpecTask WithDependenciesFromPackagesConfig(IDirectory projectDirectory)
+        public GenerateNuGetSpecTask WithDependenciesFromPackagesConfig(IDirectory projectDirectory, bool ignoreFrameworkVersion = false)
         {
             var packagesConfigFile = projectDirectory.GetFile("packages.config");
             if (packagesConfigFile.Exists)
             {
-                WithDependenciesFromPackagesConfig(packagesConfigFile);
+                WithDependenciesFromPackagesConfig(packagesConfigFile, ignoreFrameworkVersion);
             }
 
             return this;
@@ -174,20 +174,24 @@
         /// <summary>
         /// Reads dependencies from packages.config file.
         /// </summary>
-        public GenerateNuGetSpecTask WithDependenciesFromPackagesConfig(IFile packagesConfigFile)
+        public GenerateNuGetSpecTask WithDependenciesFromPackagesConfig(IFile packagesConfigFile, bool ignoreFrameworkVersion = false)
         {
-            using (var stream = packagesConfigFile.ReadStream)
+            using (Stream stream = packagesConfigFile.ReadStream)
             {
-                var document = XDocument.Load(stream);
+                XDocument document = XDocument.Load(stream);
                 foreach (var package in document.Descendants("package"))
                 {
-                    var versionAttribute = package.Attribute("version");
-                    var frameworkVersionAttribute = package.Attribute("targetFramework");
+                    XAttribute versionAttribute = package.Attribute("version");
+                    XAttribute frameworkVersionAttribute = package.Attribute("targetFramework");
+
+                    string frameworkVersion = (ignoreFrameworkVersion || frameworkVersionAttribute == null) ? 
+                        null : 
+                        frameworkVersionAttribute.Value;
 
                     WithDependency(
                         package.Attribute("id").Value,
                         versionAttribute == null ? null : versionAttribute.Value,
-                        frameworkVersionAttribute == null ? null : frameworkVersionAttribute.Value);
+                        frameworkVersion);
                 }
             }
 

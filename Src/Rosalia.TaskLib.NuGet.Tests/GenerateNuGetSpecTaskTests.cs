@@ -101,6 +101,70 @@
         }
 
         [Test]
+        public void Execute_WithDependenciesFromPackagesConfig_ShouldRenderDependencies()
+        {
+            FileStub destination = new FileStub("output");
+
+            new GenerateNuGetSpecTask(destination)
+                .WithDependenciesFromPackagesConfig(new FileStub("packages.config")
+                {
+                    Content = @"<?xml version='1.0' encoding='utf-8'?>
+<packages>
+  <package id='Common.Logging' version='3.0.0' targetFramework='net35' />
+  <package id='Common.Logging.Core' version='3.0.0' targetFramework='net35' />
+  <package id='Quartz' version='2.3.3' targetFramework='net35' />
+</packages>"
+                })
+                .Execute();
+
+            Assert.That(destination.Content.Trim().NormalizeLineEnding(), Is.EqualTo(
+@"<?xml version='1.0' encoding='utf-8'?>
+<package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
+  <metadata>
+    <dependencies>
+      <group targetFramework='net35'>
+        <dependency id='Common.Logging' version='3.0.0' />
+        <dependency id='Common.Logging.Core' version='3.0.0' />
+        <dependency id='Quartz' version='2.3.3' />
+      </group>
+    </dependencies>
+  </metadata>
+</package>".NormalizeLineEnding()));
+        }
+
+        [Test]
+        public void Execute_WithDependenciesFromPackagesConfigIgnoreTargetFramework_ShouldRenderDependencies()
+        {
+            FileStub destination = new FileStub("output");
+
+            new GenerateNuGetSpecTask(destination)
+                .WithDependenciesFromPackagesConfig(new FileStub("packages.config")
+                {
+                    Content = @"<?xml version='1.0' encoding='utf-8'?>
+<packages>
+  <package id='Common.Logging' version='3.0.0' targetFramework='net35' />
+  <package id='Common.Logging.Core' version='3.0.0' targetFramework='net35' />
+  <package id='Quartz' version='2.3.3' targetFramework='net35' />
+</packages>"
+                }, ignoreFrameworkVersion: true)
+                .Execute();
+
+            Assert.That(destination.Content.Trim().NormalizeLineEnding(), Is.EqualTo(
+@"<?xml version='1.0' encoding='utf-8'?>
+<package xmlns='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd'>
+  <metadata>
+    <dependencies>
+      <group>
+        <dependency id='Common.Logging' version='3.0.0' />
+        <dependency id='Common.Logging.Core' version='3.0.0' />
+        <dependency id='Quartz' version='2.3.3' />
+      </group>
+    </dependencies>
+  </metadata>
+</package>".NormalizeLineEnding()));
+        }
+
+        [Test]
         public void Execute_WithFiles_ShouldRenderFiles()
         {
             var destination = new FileStub("output");
