@@ -1,9 +1,11 @@
 ﻿namespace Rosalia.Core.Api
 {
+    using Rosalia.Core.Interception;
+    using Rosalia.Core.Tasks;
     using Rosalia.Core.Tasks.Futures;
     using Rosalia.Core.Tasks.Results;
 
-    public abstract class TaskRegistry<T>: AbstractTasksRegistry, ITaskRegistry<T> where T : class
+    public abstract class TaskRegistry<T>: AbstractTasksRegistry, ITaskRegistry<T>, ITaskRegistryInterceptor<T> where T : class
     {
         protected abstract ITaskFuture<T> RegisterTasks();
 
@@ -15,9 +17,14 @@
                 resultTaskId,
                 GetDefaultTasks() + resultTaskId);
         }
+
+        public virtual ITaskResult<T> AfterExecute(TaskContext context, ITaskResult<T> result)
+        {
+            return result;
+        }
     }
 
-    public abstract class TaskRegistry : AbstractTasksRegistry, ITaskRegistry<Nothing>
+    public abstract class TaskRegistry : AbstractTasksRegistry, ITaskRegistry<Nothing>, ITaskRegistryInterceptor<Nothing>
     {
         public Identity ResultTaskId
         {
@@ -33,6 +40,11 @@
                 TaskMap.Map,
                 null,
                 GetDefaultTasks());
+        }
+
+        public virtual ITaskResult<Nothing> AfterExecute(TaskContext context, ITaskResult<Nothing> result)
+        {
+            return result;
         }
     }
 }

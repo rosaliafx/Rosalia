@@ -57,6 +57,7 @@
     <Compile Include="Api\TaskRegistryApiHelper.cs" />
     <Compile Include="Api\Workflow.cs" />
     <Compile Include="Interception\CompositeInterceptor.cs" />
+    <Compile Include="Interception\ITaskRegistryInterceptor.cs" />
     <Compile Include="Logging\FilterLogRenderer.cs" />
     <Compile Include="Logging\LoggingInterceptor.cs" />
     <Compile Include="Tasks\IdentityWithResult.cs" />

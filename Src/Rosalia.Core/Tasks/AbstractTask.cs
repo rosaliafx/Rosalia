@@ -31,7 +31,7 @@
                 {
                     if (UnswallowedExceptionTypes.Any(type => type.IsInstanceOfType(ex)))
                     {
-                        throw ex;
+                        throw;
                     }
                 }
 

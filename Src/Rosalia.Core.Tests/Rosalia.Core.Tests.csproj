@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\AbstractTaskRegistry_AfterExecute.cs" />
     <Compile Include="Api\AbstractTaskRegistry_Execution.cs" />
     <Compile Include="Api\AbstractTaskRegistry_Execution_ForEach.cs" />
     <Compile Include="Api\TaskMapTests.cs" />

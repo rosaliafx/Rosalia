@@ -63,7 +63,8 @@
             task.UnswallowedExceptionTypes = new[]
             {
                 typeof (NUnitException),
-                typeof (ResultStateException)
+                typeof (ResultStateException),
+                typeof (AssertionException)
             };
 
             var processStarter = new Mock<IProcessStarter>();
