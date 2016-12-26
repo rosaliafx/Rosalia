@@ -109,7 +109,7 @@ var mainTask = Task(                  /*****************************************
 <li><a class="internal absent" href="//github.com/rosaliafx/Rosalia/wiki/Compression"><code>absent</code> Compression</a></li>
 <li><a class="internal absent" href="//github.com/rosaliafx/Rosalia/wiki/Git"><code>absent</code> Git</a></li>
 <li><a class="internal present" href="//github.com/rosaliafx/Rosalia/wiki/MsBuild">MsBuild</a></li>
-<li><a class="internal absent" href="//github.com/rosaliafx/Rosalia/wiki/NuGet"><code>absent</code> NuGet</a></li>
+<li><a class="internal present" href="//github.com/rosaliafx/Rosalia/wiki/NuGet">NuGet</a></li>
 <li><a class="internal absent" href="//github.com/rosaliafx/Rosalia/wiki/Standard"><code>absent</code> Standard</a></li>
 <li><a class="internal absent" href="//github.com/rosaliafx/Rosalia/wiki/Svn"><code>absent</code> Svn</a></li>
 </ul>        
