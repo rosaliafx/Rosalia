@@ -192,6 +192,22 @@
 
             Task(
                 "pushNuGetPackages",
+
+                from data in solutionTreeTask
+                select
+                    ForEach(data.Artifacts.Files.IncludeByExtension(".nupkg")).Do(
+                        package => new ExecTask
+                        {
+                            WorkDirectory = data.Artifacts,
+                            ToolPath = data.Src / ".nuget" / "NuGet.exe",
+                            Arguments = "push " + package.AbsolutePath + " -Source https://api.nuget.org/v3/index.json -NonInteractive"
+                        },
+                        package => "Push" + package.NameWithoutExtension),
+
+                DependsOn(generateNuGetPackages));
+            /*
+            Task(
+                "pushNuGetPackages",
                 from data in solutionTreeTask
                 select 
                     ForEach(data.Artifacts.Files.IncludeByExtension(".nupkg")).Do(
@@ -201,7 +217,7 @@
                         },
                         name: file => "push" + file.NameWithoutExtension),
 
-                DependsOn(generateNuGetPackages));
+                DependsOn(generateNuGetPackages));*/
         }
     }
 }

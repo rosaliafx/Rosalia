@@ -22,6 +22,10 @@
                 // let the console be as wide as possible
                 _consoleWidth = 1000;
             }
+
+            Console.WriteLine("Console width:");
+            Console.WriteLine(_consoleWidth);
+            Console.WriteLine();
         }
 
         public void Dispose()
@@ -59,16 +63,19 @@
                 const int fullIndentSize = 8;
 
                 var maxWidth = _consoleWidth - fullIndentSize - 1;
-                foreach (var line in lines)
+                if (maxWidth > 0)
                 {
-                    var currentLine = line;
-                    while (currentLine.Length > maxWidth)
+                    foreach (var line in lines)
                     {
-                        procesedLines.Add(currentLine.Substring(0, maxWidth));
-                        currentLine = currentLine.Substring(maxWidth);
-                    }
+                        var currentLine = line;
+                        while (currentLine.Length > maxWidth)
+                        {
+                            procesedLines.Add(currentLine.Substring(0, maxWidth));
+                            currentLine = currentLine.Substring(maxWidth);
+                        }
 
-                    procesedLines.Add(currentLine);
+                        procesedLines.Add(currentLine);
+                    }
                 }
 
                 if (procesedLines.Count > 0)
