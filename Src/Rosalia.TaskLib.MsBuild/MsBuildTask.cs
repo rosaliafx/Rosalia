@@ -57,14 +57,14 @@
                 string[] registryKeys = ToolVersion == null ?
                     /*
                      * If no specific version provided we look up for 
-                     * the mosk fresh version of MsBuild
+                     * the most fresh version of MsBuild
                      */
                     LookUpMsBuildRegistryKeys()
                     : new [] { ToolVersion.Value };
 
                 if (registryKeys.Length == 0)
                 {
-                    context.Log.Warning("No MsBuild registry entries have been found. MsBuild probably hav not been installed.");
+                    context.Log.Warning("No MsBuild registry entries have been found. MsBuild probably have not been installed.");
                 }
 
                 return registryKeys

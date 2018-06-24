@@ -34,7 +34,7 @@
                 }
                 catch (Exception ex)
                 {
-                    LogErrorMessage(context, ex);
+                    LogErrorMessage(index, context, ex);
 
                     return GetStepErrorCode(index);
                 }
@@ -43,9 +43,9 @@
             return ExitCode.Ok;
         }
 
-        private static void LogErrorMessage(ProgramContext context, Exception ex)
+        private static void LogErrorMessage(int stepIndex, ProgramContext context, Exception ex)
         {
-            var errorMessage = string.Format("Unexpected error occured: {0}", ex.Message);
+            var errorMessage = string.Format("Unexpected error occured at step {0}: {1}", stepIndex, ex.Message);
             if (context.Log != null)
             {
                 try
@@ -65,7 +65,7 @@
             var innerException = ex.InnerException;
             if (innerException != null)
             {
-                LogErrorMessage(context, innerException);
+                LogErrorMessage(stepIndex, context, innerException);
             }
         }
 

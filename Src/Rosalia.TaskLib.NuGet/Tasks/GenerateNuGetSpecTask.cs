@@ -11,6 +11,9 @@
     using Rosalia.TaskLib.NuGet.Input;
     using File = Rosalia.TaskLib.NuGet.Input.File;
 
+    /// <summary>
+    /// Generates PACKAGE_NAME.nuspec file according to the spec (https://docs.nuget.org/ndocs/schema/nuspec).
+    /// </summary>
     public class GenerateNuGetSpecTask : AbstractTask
     {
         private readonly IDictionary<string, string> _metadata = new Dictionary<string, string>();
