@@ -12,20 +12,20 @@
 
         public void Init()
         {
+            const int fallbackConsoleWidth = 1000;
+
             try
             {
-                _consoleWidth = Console.WindowWidth;
+                int consoleWidth = Console.WindowWidth;
+
+                _consoleWidth = consoleWidth > 0 ? consoleWidth : fallbackConsoleWidth;
             }
             catch (Exception)
             {
                 // we are in the redirected output mode
                 // let the console be as wide as possible
-                _consoleWidth = 1000;
+                _consoleWidth = fallbackConsoleWidth;
             }
-
-            Console.WriteLine("Console width:");
-            Console.WriteLine(_consoleWidth);
-            Console.WriteLine();
         }
 
         public void Dispose()
