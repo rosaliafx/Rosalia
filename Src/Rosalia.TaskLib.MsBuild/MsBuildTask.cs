@@ -1,4 +1,6 @@
-﻿namespace Rosalia.TaskLib.MsBuild
+﻿using Rosalia.Core.Environment;
+
+namespace Rosalia.TaskLib.MsBuild
 {
     using System;
     using System.Collections.Generic;
@@ -52,6 +54,33 @@
 
         protected override IEnumerable<IFile> GetToolPathLookup(TaskContext context)
         {
+            return 
+                /*
+                 * Fresh MsBuild is no longer in windows registry
+                 * so hardcoded program files locations go first.
+                 */
+                GetToolPathLookupFromProgramFiles(context) 
+                /*
+                 * MSBuild version prior to v15 could be read from registry.
+                 */
+                .Concat(GetToolPathLookupFromRegistry(context));
+        }
+
+        protected virtual IEnumerable<IFile> GetToolPathLookupFromProgramFiles(TaskContext context)
+        {
+            if (ToolVersion == null || ToolVersion == MsBuildToolVersion.V150)
+            {
+                yield return context.Environment.ProgramFilesX86()/"Microsoft Visual Studio"/"2017"/"Community"/"MSBuild"/"15.0"/"Bin"/ "MSBuild.exe";
+                yield return context.Environment.ProgramFiles()/"Microsoft Visual Studio"/"2017"/"Community"/"MSBuild"/"15.0"/"Bin"/ "MSBuild.exe";
+                yield return context.Environment.ProgramFilesX86()/"Microsoft Visual Studio"/"2017"/"BuildTools"/"MSBuild"/"15.0"/"Bin"/ "MSBuild.exe";
+                yield return context.Environment.ProgramFiles()/"Microsoft Visual Studio"/"2017"/ "BuildTools" / "MSBuild"/"15.0"/"Bin"/ "MSBuild.exe";
+            }
+
+            // Note: add newer MsBuild references here as they come up.
+        }
+
+        protected virtual IEnumerable<IFile> GetToolPathLookupFromRegistry(TaskContext context)
+        {
             try
             {
                 string[] registryKeys = ToolVersion == null ?
@@ -60,7 +89,7 @@
                      * the most fresh version of MsBuild
                      */
                     LookUpMsBuildRegistryKeys()
-                    : new [] { ToolVersion.Value };
+                    : new[] { ToolVersion.Value };
 
                 if (registryKeys.Length == 0)
                 {
@@ -71,7 +100,7 @@
                     .Select(key =>
                     {
                         string registryKey = string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSBuild\ToolsVersions\{0}", key);
-                        string toolDirectory = (string) Registry.GetValue(registryKey, "MSBuildToolsPath", null);
+                        string toolDirectory = (string)Registry.GetValue(registryKey, "MSBuildToolsPath", null);
 
                         return new DefaultFile(Path.Combine(toolDirectory, "MsBuild.exe"));
                     });
@@ -119,7 +148,7 @@
         {
             string projectFile = GetProjectFile(context);
             string switches = string.Join(" ", Switches.Select(s => s.CommandLinePart));
-            
+
             return string.Format("{0} {1}", switches, projectFile);
         }
 
@@ -132,7 +161,7 @@
 
             context.Log.Info(
 @"No project file defined. Start solution file lookup from directory 
-{0}", 
+{0}",
                 context.WorkDirectory.AbsolutePath);
 
             var currentDirectory = context.WorkDirectory;
@@ -146,7 +175,7 @@
                         context.Log.Info(
 @"Multiple solution files found in directory 
 {0}
-The first file will be used.", 
+The first file will be used.",
                              currentDirectory.AbsolutePath);
                     }
 
@@ -160,7 +189,7 @@ The first file will be used.",
                 context.Log.Info(
 @"No solution files found in 
 {0}
-Go to parent directory.", 
+Go to parent directory.",
                         currentDirectory.AbsolutePath);
                 currentDirectory = currentDirectory.Parent;
             }
