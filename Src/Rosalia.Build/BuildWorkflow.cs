@@ -89,13 +89,10 @@
             var buildSolution = Task(
                 "buildSolution",
                 from data in solutionTreeTask
-                select new MsBuildTask
+                select new ExecTask
                 {
-                    ProjectFile = data.SolutionFile,
-                    Switches =
-                    {
-                        MsBuildSwitch.Configuration(data.Configuration)
-                    }
+                    ToolPath = "dotnet",
+                    Arguments = "build " + data.SolutionFile + " --configuration=" + data.Configuration
                 }.AsTask(),
 
                 DependsOn(generateAssemblyInfoTask),

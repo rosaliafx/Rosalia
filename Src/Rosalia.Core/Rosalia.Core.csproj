@@ -1,122 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EDD2B71B-404F-4E73-8833-2D74ACE77F8F}</ProjectGuid>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rosalia.Core</RootNamespace>
-    <AssemblyName>Rosalia.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\Rosalia.FileSystem\Rosalia.FileSystem.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\Behaviors\DefaultBehavior.cs" />
-    <Compile Include="Api\Behaviors\DependsOnBehavior.cs" />
-    <Compile Include="Api\Behaviors\ITaskBehavior.cs" />
-    <Compile Include="Api\DefaultTaskDetection.cs" />
-    <Compile Include="Api\Extensions_Recovery.cs" />
-    <Compile Include="Api\Extensions_Precondition.cs" />
-    <Compile Include="Api\Extensions_Task.cs" />
-    <Compile Include="Api\Extensions_Result.cs" />
-    <Compile Include="Api\Extensions_Transformation.cs" />
-    <Compile Include="Api\ForEachConfig.cs" />
-    <Compile Include="Api\ITaskRegistryApi.cs" />
-    <Compile Include="Api\RegisteredTasks.cs" />
-    <Compile Include="Api\Subflow.cs" />
-    <Compile Include="Api\TaskMap.cs" />
-    <Compile Include="Api\TaskRegistry.cs" />
-    <Compile Include="Api\TaskRegistryApiHelper.cs" />
-    <Compile Include="Api\Workflow.cs" />
-    <Compile Include="Interception\CompositeInterceptor.cs" />
-    <Compile Include="Logging\FilterLogRenderer.cs" />
-    <Compile Include="Logging\LoggingInterceptor.cs" />
-    <Compile Include="Tasks\IdentityWithResult.cs" />
-    <Compile Include="Environment\DefaultEnvironment.cs" />
-    <Compile Include="Environment\EnvironmentExtensions.cs" />
-    <Compile Include="Environment\IEnvironment.cs" />
-    <Compile Include="Interception\ITaskInterceptor.cs" />
-    <Compile Include="Logging\ColoredConsoleLogRenderer.cs" />
-    <Compile Include="Logging\CompositeLogRenderer.cs" />
-    <Compile Include="Logging\HtmlLogRenderer.cs" />
-    <Compile Include="Logging\ILogRenderer.cs" />
-    <Compile Include="Tasks\Results\Nothing.cs" />
-    <Compile Include="Tasks\Futures\ITaskFuture.cs" />
-    <Compile Include="Tasks\Futures\TaskFuture.cs" />
-    <Compile Include="Tasks\Futures\RegistrationTaskFuture.cs" />
-    <Compile Include="Tasks\Results\ITaskResult.cs" />
-    <Compile Include="Tasks\Results\SuccessResult.cs" />
-    <Compile Include="Tasks\Results\FailureResult.cs" />
-    <Compile Include="Api\Extensions_Linq.cs" />
-    <Compile Include="Identity.cs" />
-    <Compile Include="Api\AbstractTasksRegistry.cs" />
-    <Compile Include="Tasks\AbstractTask.cs" />
-    <Compile Include="Engine\Composing\ExecutableWithIdentity.cs" />
-    <Compile Include="Engine\Composing\ILayersComposer.cs" />
-    <Compile Include="Engine\Composing\SimpleLayersComposer.cs" />
-    <Compile Include="Tasks\PreconditionTask.cs" />
-    <Compile Include="Tasks\RecoverTask.cs" />
-    <Compile Include="Tasks\SubflowTask.cs" />
-    <Compile Include="Tasks\DelayTask.cs" />
-    <Compile Include="Engine\Execution\IExecutionStrategy.cs" />
-    <Compile Include="Engine\Execution\ParallelExecutionStrategy.cs" />
-    <Compile Include="Engine\Execution\SequenceExecutionStrategy.cs" />
-    <Compile Include="Engine\Composing\Layer.cs" />
-    <Compile Include="Api\TaskWithBehaviors.cs" />
-    <Compile Include="Tasks\FuncTask.cs" />
-    <Compile Include="Tasks\ITask.cs" />
-    <Compile Include="Identities.cs" />
-    <Compile Include="Tasks\IResultsStorage.cs" />
-    <Compile Include="Api\ITaskRegistry.cs" />
-    <Compile Include="Api\IWorkflow.cs" />
-    <Compile Include="Tasks\LogHelper.cs" />
-    <Compile Include="Logging\Message.cs" />
-    <Compile Include="Logging\MessageLevel.cs" />
-    <Compile Include="Tasks\ResultsStorage.cs" />
-    <Compile Include="Tasks\TaskContext.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\TransformTask.cs" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rosalia.FileSystem\Rosalia.FileSystem.csproj">
-      <Project>{38b399dc-a34c-440b-8dad-7f0a280f9531}</Project>
-      <Name>Rosalia.FileSystem</Name>
-    </ProjectReference>
+    <Compile Remove="Engine\TaskInfo.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

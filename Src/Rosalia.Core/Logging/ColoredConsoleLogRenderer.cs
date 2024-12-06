@@ -15,6 +15,11 @@
             try
             {
                 _consoleWidth = Console.WindowWidth;
+
+                if (_consoleWidth <= 0)
+                {
+                    _consoleWidth = 1000;
+                }
             }
             catch (Exception)
             {
