@@ -16,6 +16,7 @@ Write-Host "installPath: $installPath"
 Write-Host "toolsPath: $toolsPath"
 Write-Host "package: $package"
 Write-Host "project: $project"
+Write-Host "Get-Location: $(Get-Location)"
 
 # Load the EnvDTE project model
 try {
@@ -28,12 +29,10 @@ catch {
     if ($project -is [string] -and (Test-Path $project)) {
         $projectPath = Split-Path $project -Parent
     }
-    # Otherwise, try to use the parent of $toolsPath (which is usually under packages/rosalia.../tools)
-    elseif ($toolsPath -and (Test-Path $toolsPath)) {
-        $projectPath = Split-Path $toolsPath -Parent
-    }
     else {
-        $projectPath = $installPath
+        # Try using the current directory
+        $cwd = Get-Location
+        $projectPath = $cwd
     }
 }
 
