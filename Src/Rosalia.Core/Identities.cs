@@ -4,6 +4,13 @@
 
     public class Identities
     {
+        private readonly Identity[] _items;
+
+        public Identities(params Identity[] items)
+        {
+            _items = items;
+        }
+
         protected bool Equals(Identities other)
         {
             if (other.Items.Length != Items.Length)
@@ -27,14 +34,7 @@
 
         public override int GetHashCode()
         {
-            return (_items != null ? _items.GetHashCode() : 0);
-        }
-
-        private readonly Identity[] _items;
-
-        public Identities(params Identity[] items)
-        {
-            _items = items;
+            return _items.GetHashCode();
         }
 
         public static readonly Identities Empty = new Identities();
@@ -60,35 +60,14 @@
             return new Identities(resultItems.Distinct().ToArray());
         }
 
-        public bool IsEmpty
-        {
-            get { return _items.Length == 0; }
-        }
+        public bool IsEmpty => _items.Length == 0;
 
-        public Identity[] Items
-        {
-            get { return _items; }
-        }
+        public Identity[] Items => _items;
 
-        public Identity Find(string value)
-        {
-            return _items.FirstOrDefault(item => item.Value == value);
-        }
+        public Identity? Find(string value) => _items.FirstOrDefault(item => item.Value == value);
 
-        public bool Contains(Identity key)
-        {
-            return _items.Contains(key);
-        }
+        public bool Contains(Identity key) => _items.Contains(key);
 
-        public override bool Equals(object obj)
-        {
-            Identities other = obj as Identities;
-            if (other != null)
-            {
-                return Equals(other);    
-            }
-
-            return false;
-        }
+        public override bool Equals(object? obj) => obj is Identities other && Equals(other);
     }
 }

@@ -4,6 +4,8 @@
 
     public class BuildData
     {
+        public static readonly string LibsTargetFramework = "netstandard2.0";
+
         public string Configuration { get; set; }
 
         public IDirectory ProjectRootDirectory { get; set; }
@@ -26,7 +28,7 @@
         {
             get
             {
-                return BuildAssets["Install.ps1"];
+                return BuildAssets["init.ps1"];
             }
         }
 
@@ -37,7 +39,7 @@
 
         public IDirectory RosaliaRunnerConsoleBin
         {
-            get { return RosaliaRunnerConsole.GetDirectory(@"bin").GetDirectory(Configuration); }
+            get { return RosaliaRunnerConsole.GetDirectory(@"bin").GetDirectory(Configuration).GetDirectory("net7.0"); }
         }
 
         public IFile RosaliaRunnerConsoleExe

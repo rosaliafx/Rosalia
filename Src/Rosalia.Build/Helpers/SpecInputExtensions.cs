@@ -23,7 +23,7 @@
                 .Description(string.Format("{0} tasks bundle for Rosalia.", taskLib))
                 .Tags("rosalia", "tasklib", taskLib.ToLower())
                 .WithFile(
-                   projectDirectory.GetDirectory("bin").GetDirectory(data.Configuration).GetFile(string.Format("Rosalia.TaskLib.{0}.dll", taskLib)),
+                   projectDirectory.GetDirectory("bin").GetDirectory(data.Configuration).GetDirectory(BuildData.LibsTargetFramework).GetFile(string.Format("Rosalia.TaskLib.{0}.dll", taskLib)),
                    "lib")
                 .WithDependency("Rosalia.Core", version)
                 .WithDependenciesFromPackagesConfig(projectDirectory);
