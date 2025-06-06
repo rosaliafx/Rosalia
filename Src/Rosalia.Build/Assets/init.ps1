@@ -18,8 +18,18 @@ try {
     $projectPath = Split-Path $dteProject.FullName -Parent
 }
 catch {
-    Write-Host "Warning: Could not access project properties. Using basic installation path."
-    $projectPath = $installPath
+    Write-Host "Warning: Could not access project properties. Trying to infer project path."
+    # Try to infer from $project if it's a string path
+    if ($project -is [string] -and (Test-Path $project)) {
+        $projectPath = Split-Path $project -Parent
+    }
+    # Otherwise, try to use the parent of $toolsPath (which is usually under packages/rosalia.../tools)
+    elseif ($toolsPath -and (Test-Path $toolsPath)) {
+        $projectPath = Split-Path $toolsPath -Parent
+    }
+    else {
+        $projectPath = $installPath
+    }
 }
 
 # Get the Rosalia version from the package
