@@ -31,8 +31,8 @@ function Set-Or-UpdateProperty($group, $name, $value) {
 }
 
 Set-Or-UpdateProperty $propertyGroup "StartAction" "Program"
-Set-Or-UpdateProperty $propertyGroup "StartProgram" ("$(MSBuildProjectDirectory)\" + $toolsRelativePath + "\Rosalia.exe")
-Set-Or-UpdateProperty $propertyGroup "StartWorkingDirectory" ("$(MSBuildProjectDirectory)\" + $toolsRelativePath)
+Set-Or-UpdateProperty $propertyGroup "StartProgram" ('$(MSBuildProjectDirectory)\' + $toolsRelativePath + "\Rosalia.exe")
+Set-Or-UpdateProperty $propertyGroup "StartWorkingDirectory" ('$(MSBuildProjectDirectory)\' + $toolsRelativePath)
 Set-Or-UpdateProperty $propertyGroup "StartArguments" ('/hold ' + $projectRelativePath + '\bin\$(Configuration)\' + $project.Name + '.dll')
 
 # Save the modified XML back to the csproj file
