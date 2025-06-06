@@ -17,6 +17,7 @@ Write-Host "toolsPath: $toolsPath"
 Write-Host "package: $package"
 Write-Host "project: $project"
 Write-Host "Get-Location: $(Get-Location)"
+Write-Host "$($project.ProjectName)"
 
 # Load the EnvDTE project model
 try {
