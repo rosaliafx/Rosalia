@@ -12,6 +12,11 @@ param(
     [string]$project
 )
 
+Write-Host "installPath: $installPath"
+Write-Host "toolsPath: $toolsPath"
+Write-Host "package: $package"
+Write-Host "project: $project"
+
 # Load the EnvDTE project model
 try {
     $dteProject = Get-Interface $project.Object ([EnvDTE.Project])
