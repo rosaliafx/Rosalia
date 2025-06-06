@@ -1,39 +1,63 @@
-﻿param($installPath, $toolsPath, $package, $project)
+﻿<#
+.SYNOPSIS
+    Adds Rosalia launch profile to project's launchSettings.json
+.NOTES
+    This script runs automatically when the NuGet package is installed
+#>
 
-$csprojPath = $project.FileName
-$projectRootDirectory = Split-Path $csprojPath -parent
+param(
+    [string]$installPath,
+    [string]$toolsPath,
+    [string]$package,
+    [string]$project
+)
 
-Set-Location $projectRootDirectory
-
-$toolsRelativePath = Resolve-Path $toolsPath -relative
-Set-Location $toolsPath
-$projectRelativePath = Resolve-Path $projectRootDirectory -relative
-
-# Load the csproj as XML
-[xml]$xml = Get-Content $csprojPath
-
-# Find a PropertyGroup without a Condition, or create one if none exists
-$propertyGroup = $xml.Project.PropertyGroup | Where-Object { -not $_.Condition }
-if (-not $propertyGroup) {
-    $propertyGroup = $xml.CreateElement("PropertyGroup")
-    $xml.Project.AppendChild($propertyGroup) | Out-Null
+# Load the EnvDTE project model
+try {
+    $dteProject = Get-Interface $project.Object ([EnvDTE.Project])
+    $projectPath = Split-Path $dteProject.FullName -Parent
+}
+catch {
+    Write-Host "Warning: Could not access project properties. Using basic installation path."
+    $projectPath = $installPath
 }
 
-function Set-Or-UpdateProperty($group, $name, $value) {
-    $property = $group.SelectSingleNode($name)
-    if ($property) {
-        $property.InnerText = $value
-    } else {
-        $newProperty = $xml.CreateElement($name)
-        $newProperty.InnerText = $value
-        $group.AppendChild($newProperty) | Out-Null
+# Get the Rosalia version from the package
+$rosaliaVersion = $package.Split('.')[-1] -replace '[^\d\.]',''
+if (-not $rosaliaVersion) {
+    $rosaliaVersion = "2.5.83"  # fallback version
+}
+
+# Path to launchSettings.json
+$launchSettingsPath = Join-Path $projectPath "Properties\launchSettings.json"
+$propertiesPath = Join-Path $projectPath "Properties"
+
+# Create Properties directory if needed
+if (-not (Test-Path $propertiesPath)) {
+    New-Item -ItemType Directory -Path $propertiesPath | Out-Null
+}
+
+# Load existing settings or create new
+$settings = @{profiles = @{}}
+if (Test-Path $launchSettingsPath) {
+    try {
+        $settings = Get-Content $launchSettingsPath -Raw | ConvertFrom-Json -AsHashtable
+    }
+    catch {
+        Write-Host "Warning: Existing launchSettings.json is invalid. Creating new one."
     }
 }
 
-Set-Or-UpdateProperty $propertyGroup "StartAction" "Program"
-Set-Or-UpdateProperty $propertyGroup "StartProgram" ('$(MSBuildProjectDirectory)\' + $toolsRelativePath + "\Rosalia.exe")
-Set-Or-UpdateProperty $propertyGroup "StartWorkingDirectory" ('$(MSBuildProjectDirectory)\' + $toolsRelativePath)
-Set-Or-UpdateProperty $propertyGroup "StartArguments" ('/hold ' + $projectRelativePath + '\bin\$(Configuration)\' + $project.Name + '.dll')
+# Add/update Rosalia profile
+$settings.profiles["Run with Rosalia"] = @{
+    commandName = "Executable"
+    executablePath = "`$(NuGetPackageRoot)rosalia\$rosaliaVersion\tools\Rosalia.exe"
+    commandLineArgs = "-c echo `$(TargetPath)"
+    workingDirectory = "`$(ProjectDir)"
+}
 
-# Save the modified XML back to the csproj file
-$xml.Save($csprojPath)
+# Save with pretty formatting
+$json = $settings | ConvertTo-Json -Depth 5
+[System.IO.File]::WriteAllText($launchSettingsPath, $json)
+
+Write-Host "Successfully added Rosalia launch profile to $launchSettingsPath"
