@@ -139,6 +139,8 @@
                     .Description("Automation tool that allows writing build, install or other workflows in C#. This package automatically integrates Rosalia to your Class Library project.")
                     .WithFile(data.RosaliaPackageInstallScript, "tools")
                     .WithFile(data.RosaliaRunnerConsoleExe, "tools")
+                    .WithFile(data.BuildAssets.GetDirectory("build").GetFile("Directory.Build.targets"), "build")
+                    .WithFile(data.BuildAssets.GetDirectory("build").GetFile("Rosalia.launchSettings.json"), "build")
                     .WithFiles(data.GetRunnerDllFiles(), "tools")
                     .WithFiles(data.BuildAssets.Files.IncludeByExtension(".pp"), "content")
                     .WithDependency("Rosalia.Core", version.NuGetVersion)
