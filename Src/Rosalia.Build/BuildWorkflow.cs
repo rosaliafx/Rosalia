@@ -140,6 +140,7 @@
                     .WithFile(data.RosaliaPackageInstallScript, "tools")
                     .WithFile(data.RosaliaRunnerConsoleExe, "tools")
                     .WithFile(data.BuildAssets.GetDirectory("build").GetFile("Rosalia.Build.targets"), "build")
+                    .WithFile(data.BuildAssets.GetDirectory("build").GetFile("Rosalia.targets"), "build")
                     .WithFile(data.BuildAssets.GetDirectory("build").GetFile("Rosalia.launchSettings.json"), "build")
                     .WithFiles(data.GetRunnerDllFiles(), "tools")
                     .WithFiles(data.BuildAssets.Files.IncludeByExtension(".pp"), "content")
